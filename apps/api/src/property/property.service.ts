@@ -18,10 +18,6 @@ export class PropertyService {
   ) {}
 
   async create(data: Prisma.PropertyCreateInput & { estateId?: string; developmentId?: string }, user: AuthenticatedUser) {
-    if (!data.estateId && !data.developmentId) {
-      throw new BadRequestException('Property must belong to an Estate or Development (Rule 5)');
-    }
-
     const count = await this.prisma.property.count();
     const internalNumber = generateReference('PROP');
     const slug = slugify(data.title) + '-' + Date.now().toString(36);

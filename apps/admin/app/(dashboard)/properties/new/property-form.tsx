@@ -75,18 +75,20 @@ export function PropertyForm({ estates }: { estates: Estate[] }) {
       <div className="space-y-4">
         <h2 className="text-sm font-semibold text-foreground border-b pb-2">Estate</h2>
         <div className="grid gap-2">
-          <Label htmlFor="estateId">Estate *</Label>
+          <Label htmlFor="estateId">Estate</Label>
           <select
             name="estateId"
             id="estateId"
-            required
             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
-            <option value="">Select an estate…</option>
+            <option value="">None — standalone property</option>
             {estates.map((e) => (
               <option key={e.id} value={e.id}>{e.name} ({e.code})</option>
             ))}
           </select>
+          <p className="text-xs text-muted-foreground">
+            Leave blank if this property is not part of an estate.
+          </p>
         </div>
       </div>
 

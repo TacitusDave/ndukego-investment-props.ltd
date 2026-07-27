@@ -27,15 +27,6 @@ export default async function NewPropertyPage() {
       </Header>
 
       <div className="flex-1 p-6">
-        {estates.length === 0 && (
-          <div className="mb-6 rounded-md bg-amber-50 border border-amber-200 p-4 text-sm text-amber-800">
-            No estates found. Properties must belong to an estate —{" "}
-            <Link href="/estates/new" className="underline font-medium">
-              create an estate first
-            </Link>
-            .
-          </div>
-        )}
         <PropertyForm estates={estates} />
       </div>
     </div>
