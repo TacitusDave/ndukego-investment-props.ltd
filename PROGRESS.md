@@ -38,7 +38,12 @@ _Updated: 2026-07-27 | Session 1_
 
 ### Admin Portal (apps/admin) — Next.js 16, React 19, Tailwind CSS 4
 
-- [ ] No real UI built yet — default Next.js placeholder
+- [x] **shadcn/ui component library** — Button, Input, Label, Badge, Card, Table, Select, DropdownMenu, Separator installed manually (Tailwind CSS v4 compatible)
+- [x] **Admin auth** — Login page, `proxy.ts` route guard (Next.js 16 middleware equivalent), JWT stored in httpOnly cookies, server actions for login/logout/refresh
+- [x] **Dashboard layout** — Dark sidebar with nav (Properties, Estates, Customers, Documents, Reports, Settings), header component
+- [x] **Property list page** (`/properties`) — Server component, fetches from `GET /api/v1/properties`, searchable, filterable by status + category, paginated, colour-coded status badges
+- [x] **Stub pages** — Estates, Customers, Documents, Reports, Settings (placeholder, won't 404)
+- [x] **CSS variables** — Full shadcn/ui design tokens wired into Tailwind v4 `@theme`
 
 ### Public Website (apps/web) — Next.js
 
@@ -54,15 +59,14 @@ _Nothing in progress — session 1 ended cleanly._
 
 ## Next steps (Phase 1 build order)
 
-1. **Admin: Property list page** — `/admin/properties` — table of all properties with status badges, search, filters. Uses `GET /api/v1/properties`. Install shadcn/ui first.
-2. **Admin: Create property form** — `/admin/properties/new` — full form matching the EAS fields needed to create a property (title, category, type, state, estate/development link, price, etc.)
-3. **Admin: Property detail/edit page** — `/admin/properties/:id` — view + edit + status transition buttons
-4. **Admin: Estate list + create** — needed before properties (properties must belong to an estate)
-5. **Admin: Auth** — login page, protect all admin routes, session management
-6. **Customer registration + login** — public-facing registration, email verification
-7. **Public property website** — browse/search, property detail pages
-8. **Reservation workflow** — customer request → staff view → status updates
-9. **Basic email notifications** — registration, inquiry, status changes
+1. **Admin: Estate create page** — `/estates/new` — needed to create estates that properties belong to
+2. **Admin: Create property form** — `/properties/new` — full form matching EAS fields (title, category, type, state, estate link, price, bedrooms, etc.)
+3. **Admin: Property detail/edit page** — `/properties/:id` — view + edit + status transition buttons (Submit for Review, Approve, Publish, etc.)
+4. **Admin: Estate list + detail** — full estate management
+5. **Customer registration + login** — public-facing registration, email verification
+6. **Public property website** — browse/search, property detail pages
+7. **Reservation workflow** — customer request → staff view → status updates
+8. **Basic email notifications** — registration, inquiry, status changes
 
 ---
 
