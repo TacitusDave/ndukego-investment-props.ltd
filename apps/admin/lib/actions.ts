@@ -161,3 +161,28 @@ export async function updateProperty(
   if (error) return { error };
   return { error: null };
 }
+
+export async function createCustomer(prevState: { error: string | null }, formData: FormData) {
+  const body: Record<string, unknown> = {
+    type: str(formData.get("type")) ?? "INDIVIDUAL",
+    firstName: str(formData.get("firstName")),
+    lastName: str(formData.get("lastName")),
+    middleName: str(formData.get("middleName")),
+    companyName: str(formData.get("companyName")),
+    email: str(formData.get("email")),
+    phone: str(formData.get("phone")),
+    whatsapp: str(formData.get("whatsapp")),
+    alternatePhone: str(formData.get("alternatePhone")),
+    address: str(formData.get("address")),
+    city: str(formData.get("city")),
+    state: str(formData.get("state")),
+    occupation: str(formData.get("occupation")),
+    leadSource: str(formData.get("leadSource")),
+    notes: str(formData.get("notes")),
+  };
+
+  const { data, error } = await authPost("/customers", body);
+  if (error) return { error };
+
+  redirect(`/customers/${(data as { id: string }).id}`);
+}

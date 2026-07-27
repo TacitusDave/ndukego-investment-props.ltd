@@ -1,10 +1,12 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Building2,
   Home,
+  LayoutDashboard,
   MapPin,
   Users,
   FileText,
@@ -14,10 +16,10 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logout } from "@/lib/auth";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
-const navItems = [
+const navItems: { label: string; href: string; icon: React.ElementType; exact?: boolean }[] = [
+  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, exact: true },
   { label: "Properties", href: "/properties", icon: Home },
   { label: "Estates", href: "/estates", icon: MapPin },
   { label: "Customers", href: "/customers", icon: Users },
@@ -43,10 +45,9 @@ export function Sidebar() {
       <nav className="flex-1 space-y-1 p-3">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive =
-            item.href === "/properties"
-              ? pathname === "/properties" || pathname.startsWith("/properties/")
-              : pathname.startsWith(item.href);
+          const isActive = item.exact
+            ? pathname === item.href
+            : pathname === item.href || pathname.startsWith(item.href + "/");
           return (
             <Link
               key={item.href}
