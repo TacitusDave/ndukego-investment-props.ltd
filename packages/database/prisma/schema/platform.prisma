@@ -1,0 +1,277 @@
+// ─── Document & Digital Vault ──────────────────────────────────
+
+model Document {
+  id                    String                 @id @default(uuid()) @db.Uuid
+  documentNumber        String                 @unique @map("document_number")
+  title                 String
+  referenceNumber       String?                @map("reference_number")
+  barcode               String?                @unique
+  qrCode                String?                @map("qr_code")
+
+  // Classification
+  category              DocumentCategory
+  documentType          DocumentType           @map("document_type")
+  subcategory           String?
+  businessModule        String?                @map("business_module")
+  securityClassification SecurityClassification @default(INTERNAL) @map("security_classification")
+  department            String?
+
+  // Entity ownership (Rule 1: no orphan documents)
+  entityType            EntityType             @map("entity_type")
+  entityId              String                 @map("entity_id") @db.Uuid
+
+  // File info
+  originalFilename      String                 @map("original_filename")
+  fileExtension         String                 @map("file_extension")
+  fileSize              BigInt                 @map("file_size")
+  mimeType              String                 @map("mime_type")
+  storagePath           String                 @map("storage_path")
+  storageProvider       String                 @default("local") @map("storage_provider")
+  checksum              String
+  isEncrypted           Boolean                @default(true) @map("is_encrypted")
+  thumbnailUrl          String?                @map("thumbnail_url")
+  previewUrl            String?                @map("preview_url")
+
+  // Lifecycle
+  status                DocumentStatus         @default(UPLOADED)
+  currentVersion        Int                    @default(1) @map("current_version")
+  uploadDate            DateTime               @default(now()) @map("upload_date")
+  verificationDate      DateTime?              @map("verification_date")
+  approvalDate          DateTime?              @map("approval_date")
+  expirationDate        DateTime?              @map("expiration_date")
+  archiveDate           DateTime?              @map("archive_date")
+  retentionPeriodDays   Int?                   @map("retention_period_days")
+
+  // Ownership
+  uploadedById          String                 @map("uploaded_by_id") @db.Uuid
+  verifiedById          String?                @map("verified_by_id") @db.Uuid
+  approvedById          String?                @map("approved_by_id") @db.Uuid
+
+  // Security
+  watermarkEnabled      Boolean                @default(false) @map("watermark_enabled")
+  downloadRestricted    Boolean                @default(false) @map("download_restricted")
+  tags                  String[]
+
+  createdAt             DateTime               @default(now()) @map("created_at")
+  updatedAt             DateTime               @updatedAt @map("updated_at")
+  deletedAt             DateTime?              @map("deleted_at")
+
+  versions              DocumentVersion[]
+  accessLogs            DocumentAccessLog[]
+
+  @@index([entityType, entityId])
+  @@index([category, documentType])
+  @@index([status])
+  @@index([securityClassification])
+  @@map("documents")
+}
+
+model DocumentVersion {
+  id              String         @id @default(uuid()) @db.Uuid
+  documentId      String         @map("document_id") @db.Uuid
+  versionNumber   Int            @map("version_number")
+  originalFilename String        @map("original_filename")
+  fileSize        BigInt         @map("file_size")
+  mimeType        String         @map("mime_type")
+  storagePath     String         @map("storage_path")
+  checksum        String
+  changeSummary   String?        @map("change_summary")
+  reason          String?
+  approvalStatus  DocumentStatus @default(UPLOADED) @map("approval_status")
+  uploadedById    String         @map("uploaded_by_id") @db.Uuid
+  approvedById    String?        @map("approved_by_id") @db.Uuid
+  createdAt       DateTime       @default(now()) @map("created_at")
+
+  document        Document       @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, versionNumber])
+  @@map("document_versions")
+}
+
+model DocumentAccessLog {
+  id          String               @id @default(uuid()) @db.Uuid
+  documentId  String               @map("document_id") @db.Uuid
+  userId      String               @map("user_id") @db.Uuid
+  action      DocumentAccessAction
+  ipAddress   String?              @map("ip_address")
+  userAgent   String?              @map("user_agent")
+  denied      Boolean              @default(false)
+  denyReason  String?              @map("deny_reason")
+  createdAt   DateTime             @default(now()) @map("created_at")
+
+  document    Document             @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user        User                 @relation(fields: [userId], references: [id])
+
+  @@index([documentId])
+  @@index([userId])
+  @@map("document_access_logs")
+}
+
+// ─── Vendor & Contractor ───────────────────────────────────────
+
+model Vendor {
+  id              String         @id @default(uuid()) @db.Uuid
+  companyId       String         @map("company_id") @db.Uuid
+  vendorNumber    String         @unique @map("vendor_number")
+  companyName     String         @map("company_name")
+  contactPerson   String         @map("contact_person")
+  email           String
+  phone           String
+  category        VendorCategory
+  status          VendorStatus   @default(ACTIVE)
+  address         String?
+  city            String?
+  state           String?
+  country         String         @default("Nigeria")
+  taxId           String?        @map("tax_id")
+  registrationNo  String?        @map("registration_no")
+  contractStart   DateTime?      @map("contract_start")
+  contractEnd     DateTime?      @map("contract_end")
+  rating          Decimal?       @db.Decimal(3, 2)
+  notes           String?
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  deletedAt       DateTime?      @map("deleted_at")
+
+  company         Company        @relation(fields: [companyId], references: [id])
+
+  @@index([companyId, status])
+  @@index([category])
+  @@map("vendors")
+}
+
+// ─── Appointment ───────────────────────────────────────────────
+
+model Appointment {
+  id                  String            @id @default(uuid()) @db.Uuid
+  appointmentNumber   String            @unique @map("appointment_number")
+  type                AppointmentType
+  status              AppointmentStatus @default(SCHEDULED)
+  customerId          String            @map("customer_id") @db.Uuid
+  propertyId          String?           @map("property_id") @db.Uuid
+  assignedEmployeeId  String?           @map("assigned_employee_id") @db.Uuid
+  scheduledAt         DateTime          @map("scheduled_at")
+  durationMinutes     Int               @default(60) @map("duration_minutes")
+  location            String?
+  notes               String?
+  internalNotes       String?           @map("internal_notes")
+  reminderSent        Boolean           @default(false) @map("reminder_sent")
+  confirmedAt         DateTime?         @map("confirmed_at")
+  completedAt         DateTime?         @map("completed_at")
+  cancelledAt         DateTime?         @map("cancelled_at")
+  cancellationReason  String?           @map("cancellation_reason")
+  createdAt           DateTime          @default(now()) @map("created_at")
+  updatedAt           DateTime          @updatedAt @map("updated_at")
+
+  customer            Customer          @relation(fields: [customerId], references: [id])
+  property            Property?         @relation(fields: [propertyId], references: [id])
+  assignedEmployee    Employee?         @relation("AssignedEmployee", fields: [assignedEmployeeId], references: [id])
+
+  @@index([customerId])
+  @@index([assignedEmployeeId, scheduledAt])
+  @@index([status, scheduledAt])
+  @@map("appointments")
+}
+
+// ─── Notification ──────────────────────────────────────────────
+
+model Notification {
+  id            String              @id @default(uuid()) @db.Uuid
+  userId        String              @map("user_id") @db.Uuid
+  channel       NotificationChannel @default(IN_APP)
+  status        NotificationStatus  @default(PENDING)
+  type          String
+  title         String
+  body          String
+  entityType    EntityType?         @map("entity_type")
+  entityId      String?             @map("entity_id") @db.Uuid
+  actionUrl     String?             @map("action_url")
+  readAt        DateTime?           @map("read_at")
+  sentAt        DateTime?           @map("sent_at")
+  metadata      Json?
+  createdAt     DateTime            @default(now()) @map("created_at")
+
+  user          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([userId, readAt])
+  @@map("notifications")
+}
+
+// ─── AI Platform ───────────────────────────────────────────────
+
+model AiConversation {
+  id          String      @id @default(uuid()) @db.Uuid
+  userId      String      @map("user_id") @db.Uuid
+  mode        AiMode
+  title       String?
+  entityType  EntityType? @map("entity_type")
+  entityId    String?     @map("entity_id") @db.Uuid
+  isActive    Boolean     @default(true) @map("is_active")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages    AiMessage[]
+
+  @@index([userId, isActive])
+  @@map("ai_conversations")
+}
+
+model AiMessage {
+  id              String        @id @default(uuid()) @db.Uuid
+  conversationId  String        @map("conversation_id") @db.Uuid
+  role            AiMessageRole
+  content         String
+  tokenCount      Int?          @map("token_count")
+  model           String?
+  metadata        Json?
+  createdAt       DateTime      @default(now()) @map("created_at")
+
+  conversation    AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@map("ai_messages")
+}
+
+model AiKnowledgeEntry {
+  id          String     @id @default(uuid()) @db.Uuid
+  entityType  EntityType @map("entity_type")
+  entityId    String     @map("entity_id") @db.Uuid
+  title       String
+  content     String
+  embedding   Bytes?
+  tags        String[]
+  isActive    Boolean    @default(true) @map("is_active")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  @@index([entityType, entityId])
+  @@map("ai_knowledge_entries")
+}
+
+// ─── Audit Log (Immutable) ─────────────────────────────────────
+
+model AuditLog {
+  id          String      @id @default(uuid()) @db.Uuid
+  actorId     String?     @map("actor_id") @db.Uuid
+  actorEmail  String?     @map("actor_email")
+  action      AuditAction
+  entityType  EntityType? @map("entity_type")
+  entityId    String?     @map("entity_id") @db.Uuid
+  entityLabel String?     @map("entity_label")
+  oldValues   Json?       @map("old_values")
+  newValues   Json?       @map("new_values")
+  ipAddress   String?     @map("ip_address")
+  userAgent   String?     @map("user_agent")
+  metadata    Json?
+  createdAt   DateTime    @default(now()) @map("created_at")
+
+  actor       User?       @relation(fields: [actorId], references: [id])
+
+  @@index([entityType, entityId])
+  @@index([actorId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

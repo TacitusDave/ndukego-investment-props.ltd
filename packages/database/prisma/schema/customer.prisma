@@ -1,0 +1,230 @@
+// ─── Customer ──────────────────────────────────────────────────
+
+model Customer {
+  id                  String         @id @default(uuid()) @db.Uuid
+  customerNumber      String         @unique @map("customer_number")
+  type                CustomerType   @default(INDIVIDUAL)
+  status              CustomerStatus @default(PROSPECT)
+  kycStatus           KycStatus      @default(NOT_STARTED) @map("kyc_status")
+
+  // Individual
+  firstName           String?        @map("first_name")
+  lastName            String?        @map("last_name")
+  middleName          String?        @map("middle_name")
+  dateOfBirth         DateTime?      @map("date_of_birth")
+  gender              Gender?
+  maritalStatus       MaritalStatus? @map("marital_status")
+  nationality         String         @default("Nigerian")
+  occupation          String?
+
+  // Corporate
+  companyName         String?        @map("company_name")
+  companyRegNumber    String?        @map("company_reg_number")
+
+  // Contact
+  email               String         @unique
+  phone               String
+  whatsapp            String?
+  alternatePhone      String?        @map("alternate_phone")
+  address             String?
+  city                String?
+  state               String?
+  country             String         @default("Nigeria")
+  postalCode          String?        @map("postal_code")
+
+  // Identity
+  nationalId          String?        @map("national_id")
+  passportNumber      String?        @map("passport_number")
+  taxId               String?        @map("tax_id")
+  bvnEnc              String?        @map("bvn_enc")
+
+  // Preferences
+  preferredLocations  String[]       @map("preferred_locations")
+  budgetMin           Decimal?       @map("budget_min") @db.Decimal(18, 2)
+  budgetMax           Decimal?       @map("budget_max") @db.Decimal(18, 2)
+  preferredCategories PropertyCategory[] @map("preferred_categories")
+  notes               String?
+  leadSource          String?        @map("lead_source")
+  assignedAgentId     String?        @map("assigned_agent_id") @db.Uuid
+
+  profilePhotoUrl     String?        @map("profile_photo_url")
+  kycVerifiedAt       DateTime?      @map("kyc_verified_at")
+  createdAt           DateTime       @default(now()) @map("created_at")
+  updatedAt           DateTime       @updatedAt @map("updated_at")
+  deletedAt           DateTime?      @map("deleted_at")
+  createdById         String?        @map("created_by_id") @db.Uuid
+
+  user                User?
+  reservations        Reservation[]
+  sales               Sale[]
+  payments            Payment[]
+  inspections         Inspection[]
+  appointments        Appointment[]
+  favorites           PropertyFavorite[]
+
+  @@index([status])
+  @@index([kycStatus])
+  @@index([email])
+  @@map("customers")
+}
+
+// ─── Inspection ────────────────────────────────────────────────
+
+model Inspection {
+  id                String                   @id @default(uuid()) @db.Uuid
+  inspectionNumber  String                   @unique @map("inspection_number")
+  propertyId        String                   @map("property_id") @db.Uuid
+  customerId        String?                  @map("customer_id") @db.Uuid
+  inspectorId       String                   @map("inspector_id") @db.Uuid
+  type              InspectionType           @default(INITIAL)
+  status            InspectionStatus         @default(SCHEDULED)
+  scheduledAt       DateTime                 @map("scheduled_at")
+  startedAt         DateTime?                @map("started_at")
+  completedAt       DateTime?                @map("completed_at")
+  recommendation    InspectionRecommendation?
+  overallScore      Decimal?                 @map("overall_score") @db.Decimal(5, 2)
+  summary           String?
+  observations      Json?
+  defects           Json?
+  photos            String[]
+  reportUrl         String?                  @map("report_url")
+  notes             String?
+  createdAt         DateTime                 @default(now()) @map("created_at")
+  updatedAt         DateTime                 @updatedAt @map("updated_at")
+
+  property          Property                 @relation(fields: [propertyId], references: [id])
+  customer          Customer?                @relation(fields: [customerId], references: [id])
+  inspector         Employee                 @relation("Inspector", fields: [inspectorId], references: [id])
+
+  @@index([propertyId])
+  @@index([inspectorId, status])
+  @@map("inspections")
+}
+
+// ─── Reservation ───────────────────────────────────────────────
+
+model Reservation {
+  id                  String            @id @default(uuid()) @db.Uuid
+  reservationNumber   String            @unique @map("reservation_number")
+  propertyId          String            @map("property_id") @db.Uuid
+  customerId          String            @map("customer_id") @db.Uuid
+  status              ReservationStatus @default(PENDING)
+  reservationAmount   Decimal           @map("reservation_amount") @db.Decimal(18, 2)
+  currency            String            @default("NGN")
+  reservedAt          DateTime          @default(now()) @map("reserved_at")
+  expiresAt           DateTime          @map("expires_at")
+  confirmedAt         DateTime?         @map("confirmed_at")
+  cancelledAt         DateTime?         @map("cancelled_at")
+  cancellationReason  String?           @map("cancellation_reason")
+  notes               String?
+  terms               String?
+  createdById         String?           @map("created_by_id") @db.Uuid
+  createdAt           DateTime          @default(now()) @map("created_at")
+  updatedAt           DateTime          @updatedAt @map("updated_at")
+
+  property            Property          @relation(fields: [propertyId], references: [id])
+  customer            Customer          @relation(fields: [customerId], references: [id])
+  sale                Sale?
+
+  @@index([propertyId, status])
+  @@index([customerId])
+  @@map("reservations")
+}
+
+// ─── Sale ──────────────────────────────────────────────────────
+
+model Sale {
+  id                  String     @id @default(uuid()) @db.Uuid
+  saleNumber          String     @unique @map("sale_number")
+  propertyId          String     @map("property_id") @db.Uuid
+  customerId          String     @map("customer_id") @db.Uuid
+  reservationId       String?    @unique @map("reservation_id") @db.Uuid
+  salesAgentId        String?    @map("sales_agent_id") @db.Uuid
+  type                SaleType   @default(OUTRIGHT)
+  status              SaleStatus @default(DRAFT)
+  salePrice           Decimal    @map("sale_price") @db.Decimal(18, 2)
+  discountAmount      Decimal?   @map("discount_amount") @db.Decimal(18, 2)
+  finalPrice          Decimal    @map("final_price") @db.Decimal(18, 2)
+  currency            String     @default("NGN")
+  installmentMonths   Int?       @map("installment_months")
+  installmentAmount   Decimal?   @map("installment_amount") @db.Decimal(18, 2)
+  downPayment         Decimal?   @map("down_payment") @db.Decimal(18, 2)
+  totalPaid           Decimal    @default(0) @map("total_paid") @db.Decimal(18, 2)
+  balanceDue          Decimal    @map("balance_due") @db.Decimal(18, 2)
+  contractDate        DateTime?  @map("contract_date")
+  completionDate      DateTime?  @map("completion_date")
+  handoverDate        DateTime?  @map("handover_date")
+  approvedAt          DateTime?  @map("approved_at")
+  approvedById        String?    @map("approved_by_id") @db.Uuid
+  notes               String?
+  terms               String?
+  createdAt           DateTime   @default(now()) @map("created_at")
+  updatedAt           DateTime   @updatedAt @map("updated_at")
+  deletedAt           DateTime?  @map("deleted_at")
+
+  property            Property     @relation(fields: [propertyId], references: [id])
+  customer            Customer     @relation(fields: [customerId], references: [id])
+  reservation         Reservation? @relation(fields: [reservationId], references: [id])
+  salesAgent          Employee?    @relation("SalesAgent", fields: [salesAgentId], references: [id])
+  payments            Payment[]
+  installments        SaleInstallment[]
+
+  @@index([propertyId, status])
+  @@index([customerId])
+  @@index([salesAgentId])
+  @@map("sales")
+}
+
+model SaleInstallment {
+  id              String    @id @default(uuid()) @db.Uuid
+  saleId          String    @map("sale_id") @db.Uuid
+  installmentNumber Int     @map("installment_number")
+  dueDate         DateTime  @map("due_date")
+  amount          Decimal   @db.Decimal(18, 2)
+  paidAmount      Decimal   @default(0) @map("paid_amount") @db.Decimal(18, 2)
+  isPaid          Boolean   @default(false) @map("is_paid")
+  paidAt          DateTime? @map("paid_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  sale            Sale      @relation(fields: [saleId], references: [id], onDelete: Cascade)
+
+  @@unique([saleId, installmentNumber])
+  @@map("sale_installments")
+}
+
+// ─── Payment ───────────────────────────────────────────────────
+
+model Payment {
+  id                  String        @id @default(uuid()) @db.Uuid
+  paymentNumber       String        @unique @map("payment_number")
+  saleId              String?       @map("sale_id") @db.Uuid
+  customerId          String        @map("customer_id") @db.Uuid
+  type                PaymentType
+  method              PaymentMethod
+  status              PaymentStatus @default(PENDING_VERIFICATION)
+  amount              Decimal       @db.Decimal(18, 2)
+  currency            String        @default("NGN")
+  reference           String?
+  bankName            String?       @map("bank_name")
+  transactionDate     DateTime      @map("transaction_date")
+  verifiedAt          DateTime?     @map("verified_at")
+  verifiedById        String?       @map("verified_by_id") @db.Uuid
+  recordedById        String        @map("recorded_by_id") @db.Uuid
+  rejectionReason     String?       @map("rejection_reason")
+  receiptNumber       String?       @unique @map("receipt_number")
+  notes               String?
+  metadata            Json?
+  createdAt           DateTime      @default(now()) @map("created_at")
+  updatedAt           DateTime      @updatedAt @map("updated_at")
+
+  sale                Sale?         @relation(fields: [saleId], references: [id])
+  customer            Customer      @relation(fields: [customerId], references: [id])
+  verifiedBy          Employee?     @relation("PaymentVerifier", fields: [verifiedById], references: [id])
+  recordedBy          Employee      @relation("PaymentRecorder", fields: [recordedById], references: [id])
+
+  @@index([customerId])
+  @@index([saleId])
+  @@index([status])
+  @@map("payments")
+}
