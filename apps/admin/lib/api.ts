@@ -9,19 +9,25 @@ export async function apiFetch<T>(
   const cookieStore = await cookies();
   const token = cookieStore.get("access_token")?.value;
 
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(options.headers ?? {}),
-    },
-    cache: "no-store",
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(options.headers ?? {}),
+      },
+      cache: "no-store",
+    });
+  } catch {
+    return { data: null, error: "Cannot reach API server. Is it running?" };
+  }
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
-    return { data: null, error: body.message ?? `HTTP ${res.status}` };
+    const message = Array.isArray(body.message) ? body.message.join(", ") : (body.message ?? `HTTP ${res.status}`);
+    return { data: null, error: message };
   }
 
   const data: T = await res.json();

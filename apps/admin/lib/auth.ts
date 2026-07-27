@@ -6,15 +6,21 @@ import { redirect } from "next/navigation";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
 
 export async function login(email: string, password: string) {
-  const res = await fetch(`${API_BASE}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+  } catch {
+    return { error: "Cannot connect to server. Make sure the API is running (pnpm run dev from the project root)." };
+  }
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
-    return { error: body.message ?? "Login failed" };
+    const message = Array.isArray(body.message) ? body.message.join(", ") : (body.message ?? "Login failed");
+    return { error: message };
   }
 
   const { accessToken, refreshToken, user } = await res.json();
@@ -81,11 +87,16 @@ export async function refreshSession() {
   const refreshToken = cookieStore.get("refresh_token")?.value;
   if (!refreshToken) return false;
 
-  const res = await fetch(`${API_BASE}/auth/refresh`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ refreshToken }),
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}/auth/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    });
+  } catch {
+    return false;
+  }
 
   if (!res.ok) return false;
 
