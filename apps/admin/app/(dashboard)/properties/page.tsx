@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { Plus, Search } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { apiFetch } from "@/lib/api";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import {
@@ -18,29 +17,23 @@ import { PropertyFilters } from "./property-filters";
 
 interface Property {
   id: string;
+  internalNumber: string;
   title: string;
-  reference: string;
   status: string;
   category: string;
-  propertyType: string;
+  type: string;
   state: string;
-  city: string;
-  sellingPrice: number | null;
-  rentalPrice: number | null;
-  bedroomCount: number | null;
-  bathroomCount: number | null;
-  estate?: { name: string } | null;
+  city: string | null;
+  listingPrice: string | null;
+  bedrooms: number | null;
+  bathrooms: number | null;
+  estate: { id: string; name: string } | null;
   createdAt: string;
 }
 
 interface PropertiesResponse {
   items: Property[];
-  meta: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
+  meta: { page: number; limit: number; total: number; totalPages: number };
 }
 
 interface PageProps {
@@ -54,7 +47,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
   const category = params.category ?? "";
   const search = params.search ?? "";
 
-  const queryParts: string[] = [`page=${page}`, "limit=25"];
+  const queryParts = [`page=${page}`, "limit=25"];
   if (status) queryParts.push(`status=${status}`);
   if (category) queryParts.push(`category=${category}`);
   if (search) queryParts.push(`search=${encodeURIComponent(search)}`);
@@ -89,7 +82,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Reference</TableHead>
+                    <TableHead>Ref</TableHead>
                     <TableHead>Title</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Category</TableHead>
@@ -110,45 +103,38 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
                       </TableCell>
                     </TableRow>
                   )}
-                  {data.items.map((property) => (
-                    <TableRow key={property.id}>
-                      <TableCell className="font-mono text-xs text-muted-foreground">
-                        {property.reference}
+                  {data.items.map((p) => (
+                    <TableRow key={p.id}>
+                      <TableCell className="font-mono text-xs text-muted-foreground whitespace-nowrap">
+                        {p.internalNumber}
                       </TableCell>
                       <TableCell>
-                        <Link
-                          href={`/properties/${property.id}`}
-                          className="font-medium hover:underline"
-                        >
-                          {property.title}
+                        <Link href={`/properties/${p.id}`} className="font-medium hover:underline">
+                          {p.title}
                         </Link>
-                        {property.bedroomCount != null && (
+                        {p.bedrooms != null && (
                           <div className="text-xs text-muted-foreground mt-0.5">
-                            {property.bedroomCount} bed · {property.bathroomCount} bath
+                            {p.bedrooms} bed · {p.bathrooms ?? "—"} bath
                           </div>
                         )}
                       </TableCell>
                       <TableCell>
-                        <PropertyStatusBadge status={property.status} />
+                        <PropertyStatusBadge status={p.status} />
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground capitalize">
-                        {property.category.replace(/_/g, " ").toLowerCase()}
+                        {p.category.replace(/_/g, " ").toLowerCase()}
                       </TableCell>
                       <TableCell className="text-sm">
-                        {property.city}, {property.state}
+                        {p.city ? `${p.city}, ` : ""}{p.state}
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
-                        {property.estate?.name ?? "—"}
+                        {p.estate?.name ?? "—"}
                       </TableCell>
-                      <TableCell className="text-right text-sm font-medium">
-                        {property.sellingPrice
-                          ? formatCurrency(property.sellingPrice)
-                          : property.rentalPrice
-                            ? `${formatCurrency(property.rentalPrice)}/yr`
-                            : "—"}
+                      <TableCell className="text-right text-sm font-medium tabular-nums">
+                        {p.listingPrice ? formatCurrency(Number(p.listingPrice)) : "—"}
                       </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
-                        {formatDate(property.createdAt)}
+                      <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+                        {formatDate(p.createdAt)}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -159,25 +145,21 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             {data.meta.totalPages > 1 && (
               <div className="flex items-center justify-between text-sm text-muted-foreground">
                 <span>
-                  Showing {(data.meta.page - 1) * data.meta.limit + 1}–
+                  {(data.meta.page - 1) * data.meta.limit + 1}–
                   {Math.min(data.meta.page * data.meta.limit, data.meta.total)} of{" "}
-                  {data.meta.total} properties
+                  {data.meta.total}
                 </span>
                 <div className="flex gap-2">
                   {data.meta.page > 1 && (
                     <Button variant="outline" size="sm" asChild>
-                      <Link
-                        href={`/properties?page=${data.meta.page - 1}${status ? `&status=${status}` : ""}${category ? `&category=${category}` : ""}`}
-                      >
+                      <Link href={`/properties?page=${data.meta.page - 1}${status ? `&status=${status}` : ""}${category ? `&category=${category}` : ""}`}>
                         Previous
                       </Link>
                     </Button>
                   )}
                   {data.meta.page < data.meta.totalPages && (
                     <Button variant="outline" size="sm" asChild>
-                      <Link
-                        href={`/properties?page=${data.meta.page + 1}${status ? `&status=${status}` : ""}${category ? `&category=${category}` : ""}`}
-                      >
+                      <Link href={`/properties?page=${data.meta.page + 1}${status ? `&status=${status}` : ""}${category ? `&category=${category}` : ""}`}>
                         Next
                       </Link>
                     </Button>
