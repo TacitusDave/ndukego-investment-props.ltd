@@ -1,0 +1,490 @@
+// ─── Auth & User ───────────────────────────────────────────────
+enum UserType {
+  EMPLOYEE
+  CUSTOMER
+  SYSTEM
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING_VERIFICATION
+}
+
+// ─── Employee ──────────────────────────────────────────────────
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERN
+  CONSULTANT
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  ON_LEAVE
+  SUSPENDED
+  TERMINATED
+  RESIGNED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+// ─── Company ───────────────────────────────────────────────────
+enum CompanyStatus {
+  ACTIVE
+  INACTIVE
+  DISSOLVED
+}
+
+// ─── Estate & Development ──────────────────────────────────────
+enum EstateStatus {
+  PLANNING
+  UNDER_DEVELOPMENT
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+enum DevelopmentStatus {
+  PROPOSED
+  APPROVED
+  UNDER_CONSTRUCTION
+  COMPLETED
+  ON_HOLD
+  CANCELLED
+}
+
+enum InfrastructureStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  MAINTENANCE
+}
+
+// ─── Property ──────────────────────────────────────────────────
+enum PropertyCategory {
+  LAND
+  HOUSE
+  DUPLEX
+  BUNGALOW
+  APARTMENT
+  COMMERCIAL
+  WAREHOUSE
+  OFFICE
+  SHOP
+  HOTEL
+  ESTATE_PLOT
+  FARM_LAND
+  MIXED_USE
+  INDUSTRIAL
+  LUXURY_HOME
+  PROJECT_DEVELOPMENT
+}
+
+enum PropertyType {
+  RESIDENTIAL
+  COMMERCIAL
+  INDUSTRIAL
+  AGRICULTURAL
+  INVESTMENT
+  MIXED_USE
+}
+
+enum PropertyStatus {
+  DRAFT
+  PENDING_INSPECTION
+  PENDING_VERIFICATION
+  APPROVED
+  PUBLISHED
+  RESERVED
+  UNDER_NEGOTIATION
+  UNDER_CONTRACT
+  SOLD
+  ARCHIVED
+  REJECTED
+}
+
+enum PropertyPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum OwnershipType {
+  FREEHOLD
+  LEASEHOLD
+  CUSTOMARY
+  GOVERNMENT_ALLOCATION
+  JOINT_OWNERSHIP
+}
+
+enum TitleStatus {
+  VERIFIED
+  PENDING_VERIFICATION
+  DISPUTED
+  NOT_AVAILABLE
+  IN_PROGRESS
+}
+
+enum ConstructionStatus {
+  NOT_STARTED
+  FOUNDATION
+  STRUCTURE
+  ROOFING
+  FINISHING
+  COMPLETED
+}
+
+enum BuildingCondition {
+  EXCELLENT
+  GOOD
+  FAIR
+  NEEDS_RENOVATION
+  UNDER_CONSTRUCTION
+}
+
+// ─── Building ──────────────────────────────────────────────────
+enum BuildingType {
+  RESIDENTIAL
+  COMMERCIAL
+  MIXED
+  INDUSTRIAL
+  INSTITUTIONAL
+}
+
+enum BuildingStatus {
+  PLANNED
+  UNDER_CONSTRUCTION
+  COMPLETED
+  OCCUPIED
+  VACANT
+  DEMOLISHED
+}
+
+// ─── Customer ──────────────────────────────────────────────────
+enum CustomerType {
+  INDIVIDUAL
+  CORPORATE
+  INVESTOR
+  AGENT
+}
+
+enum CustomerStatus {
+  PROSPECT
+  ACTIVE
+  INACTIVE
+  BLACKLISTED
+}
+
+enum KycStatus {
+  NOT_STARTED
+  PENDING
+  VERIFIED
+  REJECTED
+  EXPIRED
+}
+
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+  DIVORCED
+  WIDOWED
+}
+
+// ─── Inspection ────────────────────────────────────────────────
+enum InspectionType {
+  INITIAL
+  FOLLOW_UP
+  PRE_SALE
+  POST_SALE
+  MAINTENANCE
+  COMPLIANCE
+}
+
+enum InspectionStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  FAILED
+}
+
+enum InspectionRecommendation {
+  APPROVE
+  APPROVE_WITH_CONDITIONS
+  REJECT
+  NEEDS_FOLLOW_UP
+}
+
+// ─── Reservation ───────────────────────────────────────────────
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  EXPIRED
+  CANCELLED
+  CONVERTED_TO_SALE
+}
+
+// ─── Sale ──────────────────────────────────────────────────────
+enum SaleStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  DISPUTED
+}
+
+enum SaleType {
+  OUTRIGHT
+  INSTALLMENT
+  LEASE
+  RENT_TO_OWN
+}
+
+// ─── Payment ───────────────────────────────────────────────────
+enum PaymentType {
+  RESERVATION
+  DEPOSIT
+  INSTALLMENT
+  OUTRIGHT
+  SERVICE_CHARGE
+  MAINTENANCE
+  REFUND
+  OTHER
+}
+
+enum PaymentMethod {
+  CASH
+  BANK_TRANSFER
+  CHEQUE
+  POS
+  OTHER
+}
+
+enum PaymentStatus {
+  PENDING_VERIFICATION
+  VERIFIED
+  REJECTED
+  REFUNDED
+}
+
+// ─── Document ──────────────────────────────────────────────────
+enum DocumentCategory {
+  PROPERTY
+  ESTATE
+  CUSTOMER
+  SALES
+  FINANCE
+  EMPLOYEE
+  COMPANY
+  VENDOR
+  INSPECTION
+  LEGAL
+  MARKETING
+  OTHER
+}
+
+enum DocumentType {
+  CERTIFICATE_OF_OCCUPANCY
+  RIGHT_OF_OCCUPANCY
+  GOVERNORS_CONSENT
+  SURVEY_PLAN
+  BEACON_COORDINATES
+  SITE_PLAN
+  LAYOUT_PLAN
+  APPROVED_BUILDING_PLAN
+  DEED_OF_ASSIGNMENT
+  DEED_OF_CONVEYANCE
+  LAND_INFORMATION_CERTIFICATE
+  TITLE_VERIFICATION_REPORT
+  VALUATION_REPORT
+  ENVIRONMENTAL_REPORT
+  TAX_CLEARANCE
+  LAND_REGISTRY_DOCUMENT
+  PHOTOGRAPH
+  DRONE_IMAGE
+  INSPECTION_REPORT
+  MASTER_LAYOUT
+  INFRASTRUCTURE_PLAN
+  NATIONAL_ID
+  INTERNATIONAL_PASSPORT
+  DRIVERS_LICENSE
+  PROOF_OF_ADDRESS
+  TAX_IDENTIFICATION
+  BVN
+  RESERVATION_FORM
+  OFFER_LETTER
+  PURCHASE_AGREEMENT
+  SALES_AGREEMENT
+  PAYMENT_SCHEDULE
+  ALLOCATION_LETTER
+  HANDOVER_CERTIFICATE
+  COMPLETION_CERTIFICATE
+  OWNERSHIP_TRANSFER
+  PAYMENT_RECEIPT
+  BANK_DEPOSIT_SLIP
+  TRANSFER_CONFIRMATION
+  INVOICE
+  EMPLOYMENT_LETTER
+  CAC_REGISTRATION
+  INSURANCE_POLICY
+  BUSINESS_LICENSE
+  CONTRACT
+  OTHER
+}
+
+enum DocumentStatus {
+  UPLOADED
+  SCANNING
+  ASSIGNED
+  VERIFIED
+  APPROVED
+  REJECTED
+  PUBLISHED
+  ARCHIVED
+  EXPIRED
+}
+
+enum SecurityClassification {
+  PUBLIC
+  INTERNAL
+  CONFIDENTIAL
+  RESTRICTED
+  HIGHLY_CONFIDENTIAL
+  EXECUTIVE_ONLY
+  LEGAL_PRIVILEGED
+  FINANCE_ONLY
+  SYSTEM_CONFIDENTIAL
+}
+
+enum DocumentAccessAction {
+  VIEW
+  PREVIEW
+  DOWNLOAD
+  SHARE
+  DENIED
+}
+
+// ─── Vendor ────────────────────────────────────────────────────
+enum VendorCategory {
+  CONSTRUCTION
+  LEGAL
+  SURVEY
+  MARKETING
+  IT
+  SECURITY
+  ENGINEERING
+  ENVIRONMENTAL
+  FINANCE
+  OTHER
+}
+
+enum VendorStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  BLACKLISTED
+}
+
+// ─── Appointment ───────────────────────────────────────────────
+enum AppointmentType {
+  PROPERTY_INSPECTION
+  OFFICE_VISIT
+  DOCUMENT_SIGNING
+  PAYMENT_MEETING
+  GENERAL_CONSULTATION
+  FOLLOW_UP
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+  RESCHEDULED
+}
+
+// ─── Notification ──────────────────────────────────────────────
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  SMS
+  PUSH
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  DELIVERED
+  READ
+  FAILED
+}
+
+// ─── AI ────────────────────────────────────────────────────────
+enum AiMode {
+  CUSTOMER_ASSISTANT
+  SALES_ASSISTANT
+  PROPERTY_ASSISTANT
+  DOCUMENT_ASSISTANT
+  EXECUTIVE_ASSISTANT
+  INTERNAL_ASSISTANT
+}
+
+enum AiMessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+// ─── Audit ─────────────────────────────────────────────────────
+enum AuditAction {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  LOGIN_FAILED
+  PUBLISH
+  APPROVE
+  REJECT
+  ARCHIVE
+  DOWNLOAD
+  PREVIEW
+  SHARE
+  EXPORT
+  IMPORT
+  STATUS_CHANGE
+  PERMISSION_CHANGE
+}
+
+// ─── Entity linking ────────────────────────────────────────────
+enum EntityType {
+  COMPANY
+  ESTATE
+  DEVELOPMENT
+  PROPERTY
+  BUILDING
+  CUSTOMER
+  EMPLOYEE
+  INSPECTION
+  RESERVATION
+  SALE
+  PAYMENT
+  DOCUMENT
+  VENDOR
+  APPOINTMENT
+  USER
+}

@@ -1,0 +1,184 @@
+// ─── Estate ────────────────────────────────────────────────────
+
+model Estate {
+  id                  String       @id @default(uuid()) @db.Uuid
+  companyId           String       @map("company_id") @db.Uuid
+  name                String
+  slug                String       @unique
+  code                String       @unique
+  description         String?
+  shortDescription    String?      @map("short_description")
+  status              EstateStatus @default(PLANNING)
+  country             String       @default("Nigeria")
+  state               String
+  lga                 String?
+  city                String?
+  district            String?
+  community           String?
+  address             String?
+  latitude            Decimal?     @db.Decimal(10, 8)
+  longitude           Decimal?     @db.Decimal(11, 8)
+  totalLandSize       Decimal?     @map("total_land_size") @db.Decimal(15, 2)
+  totalPlots          Int?         @map("total_plots")
+  availablePlots      Int?         @map("available_plots")
+  masterPlanUrl       String?      @map("master_plan_url")
+  brochureUrl         String?      @map("brochure_url")
+  coverImageUrl       String?      @map("cover_image_url")
+  featured            Boolean      @default(false)
+  seoTitle            String?      @map("seo_title")
+  seoDescription      String?      @map("seo_description")
+  createdAt           DateTime     @default(now()) @map("created_at")
+  updatedAt           DateTime     @updatedAt @map("updated_at")
+  deletedAt           DateTime?    @map("deleted_at")
+  createdById         String?      @map("created_by_id") @db.Uuid
+  updatedById         String?      @map("updated_by_id") @db.Uuid
+
+  company             Company      @relation(fields: [companyId], references: [id])
+  phases              EstatePhase[]
+  blocks              EstateBlock[]
+  infrastructure      EstateInfrastructure[]
+  developments        Development[]
+  properties          Property[]
+  buildings           Building[]
+
+  @@index([companyId, status])
+  @@index([state, city])
+  @@map("estates")
+}
+
+model EstatePhase {
+  id            String   @id @default(uuid()) @db.Uuid
+  estateId      String   @map("estate_id") @db.Uuid
+  name          String
+  code          String
+  description   String?
+  totalPlots    Int?     @map("total_plots")
+  status        EstateStatus @default(PLANNING)
+  startDate     DateTime? @map("start_date")
+  completionDate DateTime? @map("completion_date")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  estate        Estate   @relation(fields: [estateId], references: [id], onDelete: Cascade)
+  properties    Property[]
+
+  @@unique([estateId, code])
+  @@map("estate_phases")
+}
+
+model EstateBlock {
+  id          String   @id @default(uuid()) @db.Uuid
+  estateId    String   @map("estate_id") @db.Uuid
+  name        String
+  code        String
+  section     String?
+  totalPlots  Int?     @map("total_plots")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  estate      Estate   @relation(fields: [estateId], references: [id], onDelete: Cascade)
+  properties  Property[]
+
+  @@unique([estateId, code])
+  @@map("estate_blocks")
+}
+
+model EstateInfrastructure {
+  id          String               @id @default(uuid()) @db.Uuid
+  estateId    String               @map("estate_id") @db.Uuid
+  name        String
+  type        String
+  description String?
+  status      InfrastructureStatus @default(NOT_STARTED)
+  completedAt DateTime?            @map("completed_at")
+  notes       String?
+  createdAt   DateTime             @default(now()) @map("created_at")
+  updatedAt   DateTime             @updatedAt @map("updated_at")
+
+  estate      Estate               @relation(fields: [estateId], references: [id], onDelete: Cascade)
+
+  @@map("estate_infrastructure")
+}
+
+// ─── Development ───────────────────────────────────────────────
+
+model Development {
+  id                  String            @id @default(uuid()) @db.Uuid
+  companyId           String            @map("company_id") @db.Uuid
+  estateId            String?           @map("estate_id") @db.Uuid
+  name                String
+  slug                String            @unique
+  code                String            @unique
+  description         String?
+  status              DevelopmentStatus @default(PROPOSED)
+  developmentType     String?           @map("development_type")
+  totalUnits          Int?              @map("total_units")
+  completedUnits      Int?              @map("completed_units")
+  startDate           DateTime?         @map("start_date")
+  expectedCompletion  DateTime?         @map("expected_completion")
+  actualCompletion    DateTime?         @map("actual_completion")
+  budget              Decimal?          @db.Decimal(18, 2)
+  spentAmount         Decimal?          @map("spent_amount") @db.Decimal(18, 2)
+  projectManagerId    String?           @map("project_manager_id") @db.Uuid
+  coverImageUrl       String?           @map("cover_image_url")
+  createdAt           DateTime          @default(now()) @map("created_at")
+  updatedAt           DateTime          @updatedAt @map("updated_at")
+  deletedAt           DateTime?         @map("deleted_at")
+
+  company             Company           @relation(fields: [companyId], references: [id])
+  estate              Estate?           @relation(fields: [estateId], references: [id])
+  milestones          DevelopmentMilestone[]
+  properties          Property[]
+  buildings           Building[]
+
+  @@index([companyId, status])
+  @@map("developments")
+}
+
+model DevelopmentMilestone {
+  id              String   @id @default(uuid()) @db.Uuid
+  developmentId   String   @map("development_id") @db.Uuid
+  name            String
+  description     String?
+  targetDate      DateTime? @map("target_date")
+  completedDate   DateTime? @map("completed_date")
+  isCompleted     Boolean  @default(false) @map("is_completed")
+  sortOrder       Int      @default(0) @map("sort_order")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  development     Development @relation(fields: [developmentId], references: [id], onDelete: Cascade)
+
+  @@map("development_milestones")
+}
+
+// ─── Building ──────────────────────────────────────────────────
+
+model Building {
+  id              String         @id @default(uuid()) @db.Uuid
+  estateId        String?        @map("estate_id") @db.Uuid
+  developmentId   String?        @map("development_id") @db.Uuid
+  name            String
+  code            String
+  buildingType    BuildingType   @map("building_type")
+  status          BuildingStatus @default(PLANNED)
+  floors          Int?
+  totalUnits      Int?           @map("total_units")
+  buildingArea    Decimal?       @map("building_area") @db.Decimal(12, 2)
+  yearBuilt       Int?           @map("year_built")
+  address         String?
+  latitude        Decimal?       @db.Decimal(10, 8)
+  longitude       Decimal?       @db.Decimal(11, 8)
+  description     String?
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  deletedAt       DateTime?      @map("deleted_at")
+
+  estate          Estate?        @relation(fields: [estateId], references: [id])
+  development     Development?   @relation(fields: [developmentId], references: [id])
+  properties      Property[]
+
+  @@index([estateId])
+  @@index([developmentId])
+  @@map("buildings")
+}

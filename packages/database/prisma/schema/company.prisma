@@ -1,0 +1,138 @@
+// ─── Company ───────────────────────────────────────────────────
+
+model Company {
+  id                  String        @id @default(uuid()) @db.Uuid
+  name                String
+  legalName           String        @map("legal_name")
+  registrationNumber  String?       @unique @map("registration_number")
+  taxId               String?       @map("tax_id")
+  email               String
+  phone               String?
+  website             String?
+  logoUrl             String?       @map("logo_url")
+  address             String?
+  city                String?
+  state               String?
+  country             String        @default("Nigeria")
+  postalCode          String?       @map("postal_code")
+  status              CompanyStatus @default(ACTIVE)
+  foundedDate         DateTime?     @map("founded_date")
+  description         String?
+  missionStatement    String?       @map("mission_statement")
+  visionStatement     String?       @map("vision_statement")
+  createdAt           DateTime      @default(now()) @map("created_at")
+  updatedAt           DateTime      @updatedAt @map("updated_at")
+  deletedAt           DateTime?     @map("deleted_at")
+
+  branches            CompanyBranch[]
+  estates             Estate[]
+  developments        Development[]
+  employees           Employee[]
+  vendors             Vendor[]
+
+  @@map("companies")
+}
+
+model CompanyBranch {
+  id          String   @id @default(uuid()) @db.Uuid
+  companyId   String   @map("company_id") @db.Uuid
+  name        String
+  code        String
+  address     String?
+  city        String?
+  state       String?
+  phone       String?
+  email       String?
+  isHeadOffice Boolean @default(false) @map("is_head_office")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  company     Company  @relation(fields: [companyId], references: [id])
+  employees   Employee[]
+
+  @@unique([companyId, code])
+  @@map("company_branches")
+}
+
+// ─── Employee & HR ─────────────────────────────────────────────
+
+model Department {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  code        String   @unique
+  description String?
+  headId      String?  @map("head_id") @db.Uuid
+  parentId    String?  @map("parent_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  head        Employee? @relation("DepartmentHead", fields: [headId], references: [id])
+  parent      Department? @relation("DepartmentHierarchy", fields: [parentId], references: [id])
+  children    Department[] @relation("DepartmentHierarchy")
+  employees   Employee[]
+
+  @@map("departments")
+}
+
+model Employee {
+  id                String           @id @default(uuid()) @db.Uuid
+  companyId         String           @map("company_id") @db.Uuid
+  branchId          String?          @map("branch_id") @db.Uuid
+  departmentId      String?          @map("department_id") @db.Uuid
+  managerId         String?          @map("manager_id") @db.Uuid
+  employeeNumber    String           @unique @map("employee_number")
+  staffCode         String?          @unique @map("staff_code")
+  firstName         String           @map("first_name")
+  lastName          String           @map("last_name")
+  middleName        String?          @map("middle_name")
+  email             String           @unique
+  phone             String?
+  whatsapp          String?
+  dateOfBirth       DateTime?        @map("date_of_birth")
+  gender            Gender?
+  nationality       String           @default("Nigerian")
+  address           String?
+  city              String?
+  state             String?
+  emergencyContact  String?          @map("emergency_contact")
+  emergencyPhone    String?          @map("emergency_phone")
+  jobTitle          String           @map("job_title")
+  jobLevel          String?          @map("job_level")
+  employmentType    EmploymentType   @default(FULL_TIME) @map("employment_type")
+  status            EmployeeStatus   @default(ACTIVE)
+  isVerified        Boolean          @default(false) @map("is_verified")
+  hireDate          DateTime         @map("hire_date")
+  confirmationDate  DateTime?        @map("confirmation_date")
+  terminationDate   DateTime?        @map("termination_date")
+  nationalId        String?          @map("national_id")
+  passportNumber    String?          @map("passport_number")
+  bankName          String?          @map("bank_name")
+  bankAccountEnc    String?          @map("bank_account_enc")
+  profilePhotoUrl   String?          @map("profile_photo_url")
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+  deletedAt         DateTime?        @map("deleted_at")
+  createdById       String?          @map("created_by_id") @db.Uuid
+  updatedById       String?          @map("updated_by_id") @db.Uuid
+
+  company           Company          @relation(fields: [companyId], references: [id])
+  branch            CompanyBranch?   @relation(fields: [branchId], references: [id])
+  department        Department?      @relation(fields: [departmentId], references: [id])
+  manager           Employee?        @relation("EmployeeManager", fields: [managerId], references: [id])
+  directReports     Employee[]       @relation("EmployeeManager")
+  headOfDepartments Department[]     @relation("DepartmentHead")
+  user              User?
+  roles             EmployeeRole[]
+  managedProperties Property[]       @relation("PropertyManager")
+  inspections       Inspection[]     @relation("Inspector")
+  appointments      Appointment[]    @relation("AssignedEmployee")
+  salesAsAgent      Sale[]           @relation("SalesAgent")
+  verifiedPayments  Payment[]        @relation("PaymentVerifier")
+  recordedPayments  Payment[]        @relation("PaymentRecorder")
+
+  @@index([companyId, status])
+  @@index([departmentId])
+  @@map("employees")
+}

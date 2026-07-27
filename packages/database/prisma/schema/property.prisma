@@ -1,0 +1,219 @@
+// ─── Property ──────────────────────────────────────────────────
+
+model Property {
+  id                      String             @id @default(uuid()) @db.Uuid
+  internalNumber          String             @unique @map("internal_number")
+  referenceCode           String?            @unique @map("reference_code")
+  barcode                 String?            @unique
+  qrCode                  String?            @map("qr_code")
+  slug                    String             @unique
+
+  // Naming
+  title                   String
+  displayName             String?            @map("display_name")
+  marketingName           String?            @map("marketing_name")
+  internalName            String?            @map("internal_name")
+  description             String?
+  shortDescription        String?            @map("short_description")
+  longDescription         String?            @map("long_description")
+  marketingDescription    String?            @map("marketing_description")
+  keyHighlights           String[]           @map("key_highlights")
+  investmentSummary       String?            @map("investment_summary")
+
+  // Classification
+  category                PropertyCategory
+  type                    PropertyType
+  usage                   String?
+  status                  PropertyStatus     @default(DRAFT)
+  priority                PropertyPriority   @default(NORMAL)
+  featured                Boolean            @default(false)
+  isLuxury                Boolean            @default(false) @map("is_luxury")
+  isInvestment            Boolean            @default(false) @map("is_investment")
+  featuredOrder           Int?               @map("featured_order")
+
+  // Relationships
+  estateId                String?            @map("estate_id") @db.Uuid
+  developmentId           String?            @map("development_id") @db.Uuid
+  buildingId              String?            @map("building_id") @db.Uuid
+  phaseId                 String?            @map("phase_id") @db.Uuid
+  blockId                 String?            @map("block_id") @db.Uuid
+  managerId               String?            @map("manager_id") @db.Uuid
+
+  // Location
+  country                 String             @default("Nigeria")
+  state                   String
+  lga                     String?
+  city                    String?
+  district                String?
+  community               String?
+  street                  String?
+  houseNumber             String?            @map("house_number")
+  postalCode              String?            @map("postal_code")
+  latitude                Decimal?           @db.Decimal(10, 8)
+  longitude               Decimal?           @db.Decimal(11, 8)
+  mapPolygon              Json?              @map("map_polygon")
+  phaseLabel              String?            @map("phase_label")
+  section                 String?
+  blockLabel              String?            @map("block_label")
+  plotNumber              String?            @map("plot_number")
+
+  // Physical
+  landSize                Decimal?           @map("land_size") @db.Decimal(12, 2)
+  landSizeUnit            String             @default("sqm") @map("land_size_unit")
+  buildingArea            Decimal?           @map("building_area") @db.Decimal(12, 2)
+  bedrooms                Int?
+  bathrooms               Int?
+  toilets                 Int?
+  floors                  Int?
+  parkingSpaces           Int?               @map("parking_spaces")
+  hasSwimmingPool         Boolean            @default(false) @map("has_swimming_pool")
+  hasGarden               Boolean            @default(false) @map("has_garden")
+  hasBalcony              Boolean            @default(false) @map("has_balcony")
+  hasGarage               Boolean            @default(false) @map("has_garage")
+  hasGym                  Boolean            @default(false) @map("has_gym")
+  hasSecurityHouse        Boolean            @default(false) @map("has_security_house")
+  hasElectricity          Boolean            @default(true) @map("has_electricity")
+  hasWaterSupply          Boolean            @default(false) @map("has_water_supply")
+  hasDrainage             Boolean            @default(false) @map("has_drainage")
+  hasRoadAccess           Boolean            @default(true) @map("has_road_access")
+  hasInternet             Boolean            @default(false) @map("has_internet")
+  hasFencing              Boolean            @default(false) @map("has_fencing")
+  hasGate                 Boolean            @default(false) @map("has_gate")
+  hasCctv                 Boolean            @default(false) @map("has_cctv")
+  hasSolar                Boolean            @default(false) @map("has_solar")
+  isSmartHomeReady        Boolean            @default(false) @map("is_smart_home_ready")
+  yearBuilt               Int?               @map("year_built")
+  constructionStatus      ConstructionStatus? @map("construction_status")
+  buildingCondition       BuildingCondition? @map("building_condition")
+
+  // Financial
+  listingPrice            Decimal?           @map("listing_price") @db.Decimal(18, 2)
+  marketValue             Decimal?           @map("market_value") @db.Decimal(18, 2)
+  valuationDate           DateTime?          @map("valuation_date")
+  purchaseCost            Decimal?           @map("purchase_cost") @db.Decimal(18, 2)
+  developmentCost         Decimal?           @map("development_cost") @db.Decimal(18, 2)
+  currentValue            Decimal?           @map("current_value") @db.Decimal(18, 2)
+  expectedRoi             Decimal?           @map("expected_roi") @db.Decimal(8, 4)
+  rentalYield             Decimal?           @map("rental_yield") @db.Decimal(8, 4)
+  installmentAllowed      Boolean            @default(false) @map("installment_allowed")
+  reservationAmount       Decimal?           @map("reservation_amount") @db.Decimal(18, 2)
+  maintenanceFee          Decimal?           @map("maintenance_fee") @db.Decimal(18, 2)
+  serviceCharge           Decimal?           @map("service_charge") @db.Decimal(18, 2)
+  agencyFee               Decimal?           @map("agency_fee") @db.Decimal(18, 2)
+  commissionRate          Decimal?           @map("commission_rate") @db.Decimal(5, 4)
+  currency                String             @default("NGN")
+
+  // Legal
+  ownershipType           OwnershipType?     @map("ownership_type")
+  titleStatus             TitleStatus?       @map("title_status")
+  hasCofO                 Boolean            @default(false) @map("has_cof_o")
+  hasGovernorConsent      Boolean            @default(false) @map("has_governor_consent")
+  hasSurveyPlan           Boolean            @default(false) @map("has_survey_plan")
+  hasDeedOfAssignment     Boolean            @default(false) @map("has_deed_of_assignment")
+  hasBuildingApproval     Boolean            @default(false) @map("has_building_approval")
+  hasPlanningApproval     Boolean            @default(false) @map("has_planning_approval")
+  hasEnvironmentalApproval Boolean           @default(false) @map("has_environmental_approval")
+  legalRestrictions       String?            @map("legal_restrictions")
+  encumbrances            String?
+
+  // Media
+  coverImageUrl           String?            @map("cover_image_url")
+  virtualTourUrl          String?            @map("virtual_tour_url")
+  brochureUrl             String?            @map("brochure_url")
+
+  // Marketing
+  seoTitle                String?            @map("seo_title")
+  seoDescription          String?            @map("seo_description")
+  keywords                String[]
+  metaTags                Json?              @map("meta_tags")
+  campaignId              String?            @map("campaign_id")
+  advertisementStatus     String?            @map("advertisement_status")
+
+  // Analytics
+  viewCount               Int                @default(0) @map("view_count")
+  favoriteCount           Int                @default(0) @map("favorite_count")
+  bookingCount            Int                @default(0) @map("booking_count")
+  inspectionRequestCount  Int                @default(0) @map("inspection_request_count")
+  leadScore               Decimal?           @map("lead_score") @db.Decimal(8, 2)
+  popularityScore         Decimal?           @map("popularity_score") @db.Decimal(8, 2)
+
+  // Audit
+  createdById             String?            @map("created_by_id") @db.Uuid
+  updatedById             String?            @map("updated_by_id") @db.Uuid
+  approvedById            String?            @map("approved_by_id") @db.Uuid
+  publishedById           String?            @map("published_by_id") @db.Uuid
+  createdAt               DateTime           @default(now()) @map("created_at")
+  updatedAt               DateTime           @updatedAt @map("updated_at")
+  publishedAt             DateTime?          @map("published_at")
+  archivedAt              DateTime?          @map("archived_at")
+  deletedAt               DateTime?          @map("deleted_at")
+
+  // Relations
+  estate                  Estate?            @relation(fields: [estateId], references: [id])
+  development             Development?       @relation(fields: [developmentId], references: [id])
+  building                Building?          @relation(fields: [buildingId], references: [id])
+  estatePhase             EstatePhase?       @relation(fields: [phaseId], references: [id])
+  estateBlock             EstateBlock?       @relation(fields: [blockId], references: [id])
+  manager                 Employee?          @relation("PropertyManager", fields: [managerId], references: [id])
+  media                   PropertyMedia[]
+  statusHistory           PropertyStatusHistory[]
+  inspections             Inspection[]
+  reservations            Reservation[]
+  sales                   Sale[]
+  appointments            Appointment[]
+  favorites               PropertyFavorite[]
+
+  @@index([status])
+  @@index([category, type])
+  @@index([estateId])
+  @@index([developmentId])
+  @@index([state, city])
+  @@index([featured, status])
+  @@index([listingPrice])
+  @@map("properties")
+}
+
+model PropertyMedia {
+  id          String   @id @default(uuid()) @db.Uuid
+  propertyId  String   @map("property_id") @db.Uuid
+  type        String
+  url         String
+  title       String?
+  altText     String?  @map("alt_text")
+  sortOrder   Int      @default(0) @map("sort_order")
+  isCover     Boolean  @default(false) @map("is_cover")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+  @@map("property_media")
+}
+
+model PropertyStatusHistory {
+  id          String         @id @default(uuid()) @db.Uuid
+  propertyId  String         @map("property_id") @db.Uuid
+  fromStatus  PropertyStatus? @map("from_status")
+  toStatus    PropertyStatus @map("to_status")
+  reason      String?
+  changedById String?        @map("changed_by_id") @db.Uuid
+  createdAt   DateTime       @default(now()) @map("created_at")
+
+  property    Property       @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+  @@map("property_status_history")
+}
+
+model PropertyFavorite {
+  id          String   @id @default(uuid()) @db.Uuid
+  propertyId  String   @map("property_id") @db.Uuid
+  customerId  String   @map("customer_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@unique([propertyId, customerId])
+  @@map("property_favorites")
+}
