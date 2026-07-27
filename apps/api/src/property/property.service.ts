@@ -4,11 +4,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { extname, join } from 'path';
+import { mkdir, writeFile, unlink } from 'fs/promises';
+import { v4 as uuidv4 } from 'uuid';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { generateReference, slugify, isValidPropertyStatusTransition, calculatePagination } from '@nhgp/lib';
 import { PropertyStatus, Prisma } from '@nhgp/database';
 import { AuthenticatedUser } from '@nhgp/types';
+
+const UPLOADS_ROOT = join(process.cwd(), 'storage', 'uploads');
 
 @Injectable()
 export class PropertyService {
@@ -278,6 +283,88 @@ export class PropertyService {
       entityId: id,
       entityLabel: property.title,
     });
+
+    return { success: true };
+  }
+
+  async addMedia(
+    propertyId: string,
+    file: Express.Multer.File,
+    body: { type?: string; title?: string; isCover?: boolean },
+    user: AuthenticatedUser,
+  ) {
+    await this.findOne(propertyId);
+
+    const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowed.includes(file.mimetype)) {
+      throw new BadRequestException('Only JPEG, PNG, WebP, and GIF images are allowed');
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      throw new BadRequestException('Image must be smaller than 10 MB');
+    }
+
+    const ext = extname(file.originalname) || `.${file.mimetype.split('/')[1]}`;
+    const filename = `${uuidv4()}${ext}`;
+    const dir = join(UPLOADS_ROOT, 'properties', propertyId);
+    await mkdir(dir, { recursive: true });
+    await writeFile(join(dir, filename), file.buffer);
+
+    const isCover = body.isCover ?? false;
+
+    if (isCover) {
+      await this.prisma.propertyMedia.updateMany({
+        where: { propertyId },
+        data: { isCover: false },
+      });
+    }
+
+    const existing = await this.prisma.propertyMedia.count({ where: { propertyId } });
+
+    const media = await this.prisma.propertyMedia.create({
+      data: {
+        propertyId,
+        type: body.type || 'IMAGE',
+        url: `/uploads/properties/${propertyId}/${filename}`,
+        title: body.title,
+        isCover: isCover || existing === 0,
+        sortOrder: existing,
+      },
+    });
+
+    return media;
+  }
+
+  async deleteMedia(propertyId: string, mediaId: string) {
+    const media = await this.prisma.propertyMedia.findFirst({
+      where: { id: mediaId, propertyId },
+    });
+    if (!media) throw new NotFoundException('Media not found');
+
+    const filePath = join(UPLOADS_ROOT, media.url.replace('/uploads/', ''));
+    await unlink(filePath).catch(() => undefined);
+    await this.prisma.propertyMedia.delete({ where: { id: mediaId } });
+
+    if (media.isCover) {
+      const next = await this.prisma.propertyMedia.findFirst({
+        where: { propertyId },
+        orderBy: { sortOrder: 'asc' },
+      });
+      if (next) {
+        await this.prisma.propertyMedia.update({ where: { id: next.id }, data: { isCover: true } });
+      }
+    }
+
+    return { success: true };
+  }
+
+  async setCoverMedia(propertyId: string, mediaId: string) {
+    const media = await this.prisma.propertyMedia.findFirst({
+      where: { id: mediaId, propertyId },
+    });
+    if (!media) throw new NotFoundException('Media not found');
+
+    await this.prisma.propertyMedia.updateMany({ where: { propertyId }, data: { isCover: false } });
+    await this.prisma.propertyMedia.update({ where: { id: mediaId }, data: { isCover: true } });
 
     return { success: true };
   }

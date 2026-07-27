@@ -8,6 +8,16 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 import { PropertyStatusBadge } from "../property-status-badge";
 import { PropertyActions } from "./property-actions";
 import { PropertyEditForm } from "./property-edit-form";
+import { PropertyMedia } from "./property-media";
+
+interface MediaItem {
+  id: string;
+  url: string;
+  title: string | null;
+  isCover: boolean;
+  sortOrder: number;
+  type: string;
+}
 
 interface Property {
   id: string;
@@ -28,6 +38,7 @@ interface Property {
   installmentAllowed: boolean;
   reservationAmount: string | null;
   estate: { id: string; name: string; code: string } | null;
+  media: MediaItem[];
   createdAt: string;
   updatedAt: string;
 }
@@ -54,7 +65,7 @@ export default async function PropertyDetailPage({
       </Header>
 
       <div className="flex-1 p-6">
-        <div className="max-w-4xl space-y-8">
+        <div className="max-w-4xl space-y-6">
 
           {/* Status + transition */}
           <div className="rounded-md border bg-card p-5 space-y-3">
@@ -72,6 +83,11 @@ export default async function PropertyDetailPage({
               <p className="text-xs text-muted-foreground mb-2">Move to</p>
               <PropertyActions propertyId={property.id} currentStatus={property.status} />
             </div>
+          </div>
+
+          {/* Photos */}
+          <div className="rounded-md border bg-card p-5">
+            <PropertyMedia propertyId={property.id} media={property.media} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

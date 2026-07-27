@@ -7,8 +7,12 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
 import { PropertyService } from './property.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
@@ -98,5 +102,37 @@ export class PropertyController {
   @RequirePermissions('property.delete')
   remove(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
     return this.propertyService.softDelete(id, user);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Post(':id/media')
+  @RequirePermissions('property.update')
+  @UseInterceptors(FileInterceptor('file', { storage: memoryStorage() }))
+  addMedia(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: { type?: string; title?: string; isCover?: string },
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.propertyService.addMedia(
+      id,
+      file,
+      { ...body, isCover: body.isCover === 'true' },
+      user,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Delete(':id/media/:mediaId')
+  @RequirePermissions('property.update')
+  deleteMedia(@Param('id') id: string, @Param('mediaId') mediaId: string) {
+    return this.propertyService.deleteMedia(id, mediaId);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Patch(':id/media/:mediaId/cover')
+  @RequirePermissions('property.update')
+  setCoverMedia(@Param('id') id: string, @Param('mediaId') mediaId: string) {
+    return this.propertyService.setCoverMedia(id, mediaId);
   }
 }
