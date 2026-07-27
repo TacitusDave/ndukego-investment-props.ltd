@@ -4,45 +4,40 @@ import { useRouter, usePathname } from "next/navigation";
 import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTransition, useState, useCallback } from "react";
 
 const STATUSES = [
   { value: "DRAFT", label: "Draft" },
-  { value: "PENDING_REVIEW", label: "Pending review" },
+  { value: "PENDING_INSPECTION", label: "Pending inspection" },
+  { value: "PENDING_VERIFICATION", label: "Pending verification" },
   { value: "APPROVED", label: "Approved" },
   { value: "PUBLISHED", label: "Published" },
   { value: "RESERVED", label: "Reserved" },
+  { value: "UNDER_NEGOTIATION", label: "Under negotiation" },
+  { value: "UNDER_CONTRACT", label: "Under contract" },
   { value: "SOLD", label: "Sold" },
   { value: "ARCHIVED", label: "Archived" },
   { value: "REJECTED", label: "Rejected" },
-  { value: "UNDER_OFFER", label: "Under offer" },
-  { value: "OFF_MARKET", label: "Off market" },
 ];
 
 const CATEGORIES = [
-  { value: "RESIDENTIAL_LAND", label: "Residential Land" },
-  { value: "COMMERCIAL_LAND", label: "Commercial Land" },
-  { value: "MIXED_USE_LAND", label: "Mixed Use Land" },
-  { value: "AGRICULTURAL_LAND", label: "Agricultural Land" },
-  { value: "INDUSTRIAL_LAND", label: "Industrial Land" },
-  { value: "DETACHED_HOUSE", label: "Detached House" },
-  { value: "SEMI_DETACHED_HOUSE", label: "Semi-Detached House" },
-  { value: "TERRACE_HOUSE", label: "Terrace House" },
-  { value: "BUNGALOW", label: "Bungalow" },
+  { value: "LAND", label: "Land" },
+  { value: "HOUSE", label: "House" },
   { value: "DUPLEX", label: "Duplex" },
-  { value: "FLAT_APARTMENT", label: "Flat / Apartment" },
-  { value: "MAISONETTE", label: "Maisonette" },
-  { value: "PENTHOUSE", label: "Penthouse" },
-  { value: "VILLA", label: "Villa" },
-  { value: "COMMERCIAL_PROPERTY", label: "Commercial Property" },
+  { value: "BUNGALOW", label: "Bungalow" },
+  { value: "APARTMENT", label: "Apartment" },
+  { value: "COMMERCIAL", label: "Commercial" },
   { value: "WAREHOUSE", label: "Warehouse" },
+  { value: "OFFICE", label: "Office" },
+  { value: "SHOP", label: "Shop" },
+  { value: "HOTEL", label: "Hotel" },
+  { value: "ESTATE_PLOT", label: "Estate Plot" },
+  { value: "FARM_LAND", label: "Farm Land" },
+  { value: "MIXED_USE", label: "Mixed Use" },
+  { value: "INDUSTRIAL", label: "Industrial" },
+  { value: "LUXURY_HOME", label: "Luxury Home" },
+  { value: "PROJECT_DEVELOPMENT", label: "Project Development" },
 ];
 
 interface PropertyFiltersProps {
@@ -60,15 +55,13 @@ export function PropertyFilters({ currentStatus, currentCategory, currentSearch 
   const applyFilters = useCallback(
     (updates: { status?: string; category?: string; search?: string }) => {
       const params = new URLSearchParams();
-      const status = updates.status !== undefined ? updates.status : currentStatus;
-      const category = updates.category !== undefined ? updates.category : currentCategory;
+      const s = updates.status !== undefined ? updates.status : currentStatus;
+      const c = updates.category !== undefined ? updates.category : currentCategory;
       const q = updates.search !== undefined ? updates.search : currentSearch;
-      if (status) params.set("status", status);
-      if (category) params.set("category", category);
+      if (s) params.set("status", s);
+      if (c) params.set("category", c);
       if (q) params.set("search", q);
-      startTransition(() => {
-        router.push(`${pathname}?${params.toString()}`);
-      });
+      startTransition(() => router.push(`${pathname}?${params.toString()}`));
     },
     [currentStatus, currentCategory, currentSearch, pathname, router],
   );
@@ -80,64 +73,38 @@ export function PropertyFilters({ currentStatus, currentCategory, currentSearch 
       <div className="relative flex-1 min-w-[200px] max-w-xs">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search title, reference…"
+          placeholder="Search title, ref…"
           className="pl-9"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") applyFilters({ search });
-          }}
-          onBlur={() => {
-            if (search !== currentSearch) applyFilters({ search });
-          }}
+          onKeyDown={(e) => { if (e.key === "Enter") applyFilters({ search }); }}
+          onBlur={() => { if (search !== currentSearch) applyFilters({ search }); }}
         />
       </div>
 
-      <Select
-        value={currentStatus || "ALL"}
-        onValueChange={(v) => applyFilters({ status: v === "ALL" ? "" : v })}
-      >
-        <SelectTrigger className="w-[180px]">
+      <Select value={currentStatus || "ALL"} onValueChange={(v) => applyFilters({ status: v === "ALL" ? "" : v })}>
+        <SelectTrigger className="w-[190px]">
           <SelectValue placeholder="All statuses" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="ALL">All statuses</SelectItem>
-          {STATUSES.map((s) => (
-            <SelectItem key={s.value} value={s.value}>
-              {s.label}
-            </SelectItem>
-          ))}
+          {STATUSES.map((s) => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
         </SelectContent>
       </Select>
 
-      <Select
-        value={currentCategory || "ALL"}
-        onValueChange={(v) => applyFilters({ category: v === "ALL" ? "" : v })}
-      >
-        <SelectTrigger className="w-[200px]">
+      <Select value={currentCategory || "ALL"} onValueChange={(v) => applyFilters({ category: v === "ALL" ? "" : v })}>
+        <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="All categories" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="ALL">All categories</SelectItem>
-          {CATEGORIES.map((c) => (
-            <SelectItem key={c.value} value={c.value}>
-              {c.label}
-            </SelectItem>
-          ))}
+          {CATEGORIES.map((c) => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}
         </SelectContent>
       </Select>
 
       {hasFilters && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => {
-            setSearch("");
-            applyFilters({ status: "", category: "", search: "" });
-          }}
-        >
-          <X className="mr-1 h-4 w-4" />
-          Clear
+        <Button variant="ghost" size="sm" onClick={() => { setSearch(""); applyFilters({ status: "", category: "", search: "" }); }}>
+          <X className="mr-1 h-4 w-4" />Clear
         </Button>
       )}
     </div>
