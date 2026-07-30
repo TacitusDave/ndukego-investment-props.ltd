@@ -3,6 +3,7 @@ import { ArrowRight, Building2, DollarSign, TrendingUp, Users, Phone, CheckCircl
 import { publicFetch } from "@/lib/api";
 import { PropertyCard, type PropertyCardData } from "@/components/property-card";
 import { HomeHero } from "@/components/home-hero";
+import { HomeProcess } from "@/components/home-process";
 
 interface PropertiesResponse {
   items: PropertyCardData[];
@@ -16,8 +17,8 @@ const SERVICES = [
     subtitle: "Buy, sell, and develop property across Nigeria",
     href: "/services/real-estate",
     desc: "Verified residential, commercial, and land listings with full title checks and in-house inspection teams.",
-    gradient: "from-[#C1121F]/20 via-[#C1121F]/5 to-transparent",
-    border: "border-[#C1121F]/20",
+    gradient: "from-emerald-500/20 via-emerald-500/5 to-transparent",
+    border: "border-emerald-500/20",
   },
   {
     icon: DollarSign,
@@ -34,8 +35,8 @@ const SERVICES = [
     subtitle: "Grow your capital with structured returns",
     href: "/services/investment-financing",
     desc: "Structured investment plans with transparent ROI timelines for both short and long-term wealth creation goals.",
-    gradient: "from-emerald-500/15 via-emerald-500/5 to-transparent",
-    border: "border-emerald-500/15",
+    gradient: "from-violet-500/15 via-violet-500/5 to-transparent",
+    border: "border-violet-500/15",
   },
   {
     icon: Users,
@@ -48,28 +49,6 @@ const SERVICES = [
   },
 ];
 
-const PROCESS = [
-  {
-    step: "01",
-    title: "Book a Consultation",
-    desc: "Reach out via phone, email, or our online form. Our team will schedule a free discovery call.",
-  },
-  {
-    step: "02",
-    title: "Define Your Goals",
-    desc: "We assess your financial situation, property needs, and investment horizon to craft a tailored plan.",
-  },
-  {
-    step: "03",
-    title: "Select & Verify",
-    desc: "We present verified opportunities. Every property listing passes our title and inspection checklist.",
-  },
-  {
-    step: "04",
-    title: "Close with Confidence",
-    desc: "We walk you through the entire transaction — documentation, legal sign-off, and handover.",
-  },
-];
 
 export default async function HomePage() {
   const [featuredRes, allRes] = await Promise.all([
@@ -173,38 +152,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── Process ──────────────────────────────── */}
-      <section className="py-24 bg-[#080808]">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-14 max-w-xl">
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#C1121F] mb-3">
-              How It Works
-            </p>
-            <h2
-              className="text-3xl sm:text-4xl font-bold text-white leading-tight"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              From first call to final handover
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {PROCESS.map((step, i) => (
-              <div key={step.step} className="relative">
-                {i < PROCESS.length - 1 && (
-                  <div className="hidden lg:block absolute top-6 left-[calc(100%)] w-full h-px bg-gradient-to-r from-white/8 to-transparent z-10" />
-                )}
-                <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-6 h-full">
-                  <p className="text-4xl font-bold text-[#C1121F]/20 mb-4 tabular-nums">
-                    {step.step}
-                  </p>
-                  <h3 className="font-bold text-white mb-2">{step.title}</h3>
-                  <p className="text-sm text-white/35 leading-relaxed">{step.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HomeProcess />
 
       {/* ── Why Trust Us ─────────────────────────── */}
       <section className="py-24 bg-[#050505]">

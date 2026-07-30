@@ -130,18 +130,18 @@ export function HomeHero({ totalProperties }: { totalProperties: number }) {
             variants={fadeUp}
             initial="hidden"
             animate="show"
-            className="flex flex-wrap items-center gap-4"
+            className="flex flex-wrap items-center gap-4 mt-4"
           >
             <Link
               href="/properties"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/8 px-6 py-3 text-sm font-semibold text-white hover:bg-white/12 hover:border-white/25 transition-all backdrop-blur-sm"
+              className="inline-flex items-center gap-2.5 rounded-xl border border-white/20 bg-white/8 px-8 py-3.5 text-sm font-semibold text-white hover:bg-white/12 hover:border-white/30 transition-all backdrop-blur-sm"
             >
               Browse Properties
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-xl bg-[#C1121F] px-6 py-3 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors"
+              className="inline-flex items-center gap-2.5 rounded-xl bg-[#C1121F] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors"
             >
               Book Consultation
             </Link>
