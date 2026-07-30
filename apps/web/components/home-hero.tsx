@@ -6,6 +6,12 @@ import { ArrowRight, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+const GRID_STYLE = {
+  backgroundImage:
+    "linear-gradient(to right, rgba(255,255,255,0.07) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.07) 1px, transparent 1px)",
+  backgroundSize: "60px 60px",
+} as const;
+
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
   show: (i: number) => ({
@@ -27,28 +33,109 @@ export function HomeHero({ totalProperties }: { totalProperties: number }) {
 
   return (
     <section className="-mt-16 relative min-h-screen flex items-center overflow-hidden bg-[#050505]">
-      {/* Background gradient blobs */}
+
+      {/* ── Layer 1: Video background ── */}
+      {/* Drop your video at apps/web/public/hero-bg.mp4 */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        aria-hidden
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        style={{ opacity: 0.18 }}
+      >
+        <source src="/hero-bg.mp4" type="video/mp4" />
+        <source src="/hero-bg.webm" type="video/webm" />
+      </video>
+
+      {/* ── Layer 2: Dark gradient overlay (readability) ── */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0"
+        className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 80% 60% at 50% -10%, rgba(193,18,31,0.18) 0%, transparent 70%), radial-gradient(ellipse 60% 40% at 80% 60%, rgba(193,18,31,0.06) 0%, transparent 70%)",
+            "linear-gradient(to bottom, rgba(5,5,5,0.75) 0%, rgba(5,5,5,0.55) 50%, rgba(5,5,5,0.80) 100%)",
         }}
       />
 
-      {/* Grid overlay */}
+      {/* ── Layer 3: Moving gradient blob 1 (large crimson, upper area) ── */}
+      <motion.div
+        aria-hidden
+        className="absolute pointer-events-none rounded-full"
+        style={{
+          width: "75vw",
+          height: "75vw",
+          maxWidth: "900px",
+          maxHeight: "900px",
+          top: "-25%",
+          left: "-15%",
+          background:
+            "radial-gradient(circle, rgba(193,18,31,0.32) 0%, rgba(193,18,31,0.10) 45%, transparent 70%)",
+          filter: "blur(90px)",
+        }}
+        animate={{
+          x: [0, "18%", "5%", "-8%", 0],
+          y: [0, "22%", "-12%", "8%", 0],
+          scale: [1, 1.08, 0.94, 1.04, 1],
+        }}
+        transition={{ duration: 28, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* ── Layer 4: Moving gradient blob 2 (medium, lower-right) ── */}
+      <motion.div
+        aria-hidden
+        className="absolute pointer-events-none rounded-full"
+        style={{
+          width: "50vw",
+          height: "50vw",
+          maxWidth: "600px",
+          maxHeight: "600px",
+          bottom: "-10%",
+          right: "-10%",
+          background:
+            "radial-gradient(circle, rgba(140,10,20,0.22) 0%, rgba(80,5,12,0.08) 50%, transparent 70%)",
+          filter: "blur(80px)",
+        }}
+        animate={{
+          x: [0, "-15%", "8%", "-5%", 0],
+          y: [0, "-18%", "12%", "-8%", 0],
+          scale: [1, 0.92, 1.1, 0.98, 1],
+        }}
+        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+      />
+
+      {/* ── Layer 5: Accent blob 3 (tiny, centre, white/crimson glow) ── */}
+      <motion.div
+        aria-hidden
+        className="absolute pointer-events-none rounded-full"
+        style={{
+          width: "30vw",
+          height: "30vw",
+          maxWidth: "400px",
+          maxHeight: "400px",
+          top: "40%",
+          left: "55%",
+          background:
+            "radial-gradient(circle, rgba(255,80,80,0.08) 0%, transparent 70%)",
+          filter: "blur(60px)",
+        }}
+        animate={{
+          x: [0, "10%", "-8%", "5%", 0],
+          y: [0, "-10%", "15%", "-5%", 0],
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 8 }}
+      />
+
+      {/* ── Layer 6: Full-coverage grid (above blobs for uniform visibility) ── */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.8) 1px, transparent 1px)",
-          backgroundSize: "80px 80px",
-        }}
+        className="absolute inset-0 pointer-events-none"
+        style={GRID_STYLE}
       />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-32 pb-24 w-full">
+      {/* ── Content ── */}
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-32 pb-28 w-full">
         <div className="max-w-4xl">
 
           {/* Eyebrow badge */}
@@ -97,7 +184,7 @@ export function HomeHero({ totalProperties }: { totalProperties: number }) {
             LPO financing, investment capital, and expert consultancy — all under one roof.
           </motion.p>
 
-          {/* Search bar */}
+          {/* Search */}
           <motion.form
             custom={3}
             variants={fadeUp}
@@ -130,7 +217,7 @@ export function HomeHero({ totalProperties }: { totalProperties: number }) {
             variants={fadeUp}
             initial="hidden"
             animate="show"
-            className="flex flex-wrap items-center gap-4 mt-4"
+            className="flex flex-wrap items-center gap-5 mt-4"
           >
             <Link
               href="/properties"
@@ -148,13 +235,13 @@ export function HomeHero({ totalProperties }: { totalProperties: number }) {
           </motion.div>
         </div>
 
-        {/* Bottom stat strip */}
+        {/* Stat strip */}
         <motion.div
           custom={5}
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="absolute bottom-12 left-4 right-4 sm:left-6 sm:right-6 lg:left-8 lg:right-8 max-w-7xl"
+          className="absolute bottom-12 left-4 right-4 sm:left-6 sm:right-6 lg:left-8 lg:right-8"
         >
           <div className="flex flex-wrap gap-8 pt-8 border-t border-white/8">
             {[
