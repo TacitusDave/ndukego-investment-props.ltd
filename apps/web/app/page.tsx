@@ -1,102 +1,293 @@
-import Image, { type ImageProps } from "next/image";
-import { Button } from "@repo/ui/button";
-import styles from "./page.module.css";
+import Link from "next/link";
+import { ArrowRight, Building2, DollarSign, TrendingUp, Users, Phone, CheckCircle } from "lucide-react";
+import { publicFetch } from "@/lib/api";
+import { PropertyCard, type PropertyCardData } from "@/components/property-card";
+import { HomeHero } from "@/components/home-hero";
 
-type Props = Omit<ImageProps, "src"> & {
-  srcLight: string;
-  srcDark: string;
-};
+interface PropertiesResponse {
+  items: PropertyCardData[];
+  meta: { total: number };
+}
 
-const ThemeImage = (props: Props) => {
-  const { srcLight, srcDark, ...rest } = props;
+const SERVICES = [
+  {
+    icon: Building2,
+    title: "Real Estate",
+    subtitle: "Buy, sell, and develop property across Nigeria",
+    href: "/services/real-estate",
+    desc: "Verified residential, commercial, and land listings with full title checks and in-house inspection teams.",
+    gradient: "from-[#C1121F]/20 via-[#C1121F]/5 to-transparent",
+    border: "border-[#C1121F]/20",
+  },
+  {
+    icon: DollarSign,
+    title: "LPO Financing",
+    subtitle: "Fast capital for government contracts",
+    href: "/services/lpo-financing",
+    desc: "Access working capital against your Local Purchase Orders and government contracts — quick approval, competitive terms.",
+    gradient: "from-blue-500/15 via-blue-500/5 to-transparent",
+    border: "border-blue-500/15",
+  },
+  {
+    icon: TrendingUp,
+    title: "Investment Financing",
+    subtitle: "Grow your capital with structured returns",
+    href: "/services/investment-financing",
+    desc: "Structured investment plans with transparent ROI timelines for both short and long-term wealth creation goals.",
+    gradient: "from-emerald-500/15 via-emerald-500/5 to-transparent",
+    border: "border-emerald-500/15",
+  },
+  {
+    icon: Users,
+    title: "Investment Consultancy",
+    subtitle: "Expert guidance on financial decisions",
+    href: "/services/investment-consultancy",
+    desc: "One-on-one financial advisory, portfolio analysis, and market intelligence to help you make smarter investment decisions.",
+    gradient: "from-amber-500/15 via-amber-500/5 to-transparent",
+    border: "border-amber-500/15",
+  },
+];
+
+const PROCESS = [
+  {
+    step: "01",
+    title: "Book a Consultation",
+    desc: "Reach out via phone, email, or our online form. Our team will schedule a free discovery call.",
+  },
+  {
+    step: "02",
+    title: "Define Your Goals",
+    desc: "We assess your financial situation, property needs, and investment horizon to craft a tailored plan.",
+  },
+  {
+    step: "03",
+    title: "Select & Verify",
+    desc: "We present verified opportunities. Every property listing passes our title and inspection checklist.",
+  },
+  {
+    step: "04",
+    title: "Close with Confidence",
+    desc: "We walk you through the entire transaction — documentation, legal sign-off, and handover.",
+  },
+];
+
+export default async function HomePage() {
+  const [featuredRes, allRes] = await Promise.all([
+    publicFetch<PropertiesResponse>("/properties/public?featured=true&limit=6"),
+    publicFetch<PropertiesResponse>("/properties/public?limit=1"),
+  ]);
+
+  const featured = featuredRes.data?.items ?? [];
+  const totalProperties = allRes.data?.meta.total ?? 0;
 
   return (
     <>
-      <Image {...rest} src={srcLight} className="imgLight" />
-      <Image {...rest} src={srcDark} className="imgDark" />
-    </>
-  );
-};
+      {/* ── Hero ─────────────────────────────────── */}
+      <HomeHero totalProperties={totalProperties} />
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <ThemeImage
-          className={styles.logo}
-          srcLight="turborepo-dark.svg"
-          srcDark="turborepo-light.svg"
-          alt="Turborepo logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>apps/web/app/page.tsx</code>
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+      {/* ── Services ─────────────────────────────── */}
+      <section className="py-24 bg-[#080808]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-14">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#C1121F] mb-3">
+              What We Do
+            </p>
+            <h2
+              className="text-3xl sm:text-4xl font-bold text-white max-w-xl leading-tight"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              Four ways we help you build lasting wealth
+            </h2>
+          </div>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://turborepo.dev/docs?utm_source"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {SERVICES.map((svc) => {
+              const Icon = svc.icon;
+              return (
+                <Link
+                  key={svc.href}
+                  href={svc.href}
+                  className={`group relative rounded-2xl border ${svc.border} bg-white/[0.03] p-8 overflow-hidden hover:bg-white/[0.05] transition-all duration-300`}
+                >
+                  {/* gradient bg */}
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${svc.gradient} opacity-60 group-hover:opacity-100 transition-opacity duration-300`}
+                  />
+                  <div className="relative">
+                    <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/5 border border-white/8">
+                      <Icon className="h-5 w-5 text-white/60" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-1">{svc.title}</h3>
+                    <p className="text-sm text-white/40 mb-4">{svc.subtitle}</p>
+                    <p className="text-sm text-white/30 leading-relaxed mb-6">{svc.desc}</p>
+                    <span className="inline-flex items-center gap-1.5 text-sm font-medium text-white/50 group-hover:text-white/80 transition-colors">
+                      Learn more <ArrowRight className="h-3.5 w-3.5" />
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
-        <Button appName="web" className={styles.secondary}>
-          Open alert
-        </Button>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com/templates?search=turborepo&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://turborepo.dev?utm_source=create-turbo"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to turborepo.dev →
-        </a>
-      </footer>
-    </div>
+      </section>
+
+      {/* ── Featured Properties ───────────────────── */}
+      <section className="py-24 bg-[#050505]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-end justify-between mb-14">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-[#C1121F] mb-3">
+                Real Estate
+              </p>
+              <h2
+                className="text-3xl sm:text-4xl font-bold text-white leading-tight"
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                {featured.length > 0 ? "Featured listings" : "Available properties"}
+              </h2>
+            </div>
+            <Link
+              href="/properties"
+              className="flex items-center gap-1.5 text-sm font-medium text-white/40 hover:text-white/80 transition-colors"
+            >
+              View all <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          {featured.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featured.map((p) => (
+                <PropertyCard key={p.id} property={p} />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-16 text-center">
+              <Building2 className="h-10 w-10 mx-auto text-white/15 mb-4" />
+              <p className="font-semibold text-white/50">Listings coming soon</p>
+              <p className="text-sm text-white/25 mt-2">
+                We&apos;re adding new verified properties. Check back shortly.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── Process ──────────────────────────────── */}
+      <section className="py-24 bg-[#080808]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-14 max-w-xl">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#C1121F] mb-3">
+              How It Works
+            </p>
+            <h2
+              className="text-3xl sm:text-4xl font-bold text-white leading-tight"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              From first call to final handover
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {PROCESS.map((step, i) => (
+              <div key={step.step} className="relative">
+                {i < PROCESS.length - 1 && (
+                  <div className="hidden lg:block absolute top-6 left-[calc(100%)] w-full h-px bg-gradient-to-r from-white/8 to-transparent z-10" />
+                )}
+                <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-6 h-full">
+                  <p className="text-4xl font-bold text-[#C1121F]/20 mb-4 tabular-nums">
+                    {step.step}
+                  </p>
+                  <h3 className="font-bold text-white mb-2">{step.title}</h3>
+                  <p className="text-sm text-white/35 leading-relaxed">{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Why Trust Us ─────────────────────────── */}
+      <section className="py-24 bg-[#050505]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-[#C1121F] mb-3">
+                Why Choose Us
+              </p>
+              <h2
+                className="text-3xl sm:text-4xl font-bold text-white leading-tight mb-6"
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                Trust built on transparency and results
+              </h2>
+              <p className="text-white/40 leading-relaxed mb-8">
+                We don&apos;t just list properties — we verify every title, inspect every site,
+                and stay with you through every step of the transaction. That&apos;s the Ndukego standard.
+              </p>
+              <div className="space-y-4">
+                {[
+                  "Title-verified properties only — no surprises after payment",
+                  "In-house inspection team for every listing",
+                  "Transparent pricing with no hidden charges",
+                  "Licensed professionals with 10+ years in the Nigerian market",
+                  "End-to-end support from listing to handover",
+                ].map((point) => (
+                  <div key={point} className="flex items-start gap-3">
+                    <CheckCircle className="h-4 w-4 text-[#C1121F] mt-0.5 shrink-0" />
+                    <p className="text-sm text-white/50">{point}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Contact card */}
+            <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-8">
+              <h3 className="text-xl font-bold text-white mb-2">Ready to get started?</h3>
+              <p className="text-sm text-white/35 mb-8">
+                Call us directly or book a free consultation and we&apos;ll connect you with the right opportunity.
+              </p>
+
+              <div className="space-y-4 mb-8">
+                <a
+                  href="tel:+2348036096700"
+                  className="flex items-center gap-4 rounded-xl border border-white/8 bg-white/[0.03] px-5 py-4 hover:border-white/15 hover:bg-white/[0.05] transition-all group"
+                >
+                  <div className="h-10 w-10 rounded-lg bg-[#C1121F]/10 border border-[#C1121F]/20 flex items-center justify-center shrink-0">
+                    <Phone className="h-4 w-4 text-[#C1121F]" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-white/30 uppercase tracking-widest">Call us</p>
+                    <p className="text-sm font-semibold text-white/80 group-hover:text-white transition-colors">
+                      +234 803 609 6700
+                    </p>
+                  </div>
+                </a>
+                <a
+                  href="tel:+2347052955555"
+                  className="flex items-center gap-4 rounded-xl border border-white/8 bg-white/[0.03] px-5 py-4 hover:border-white/15 hover:bg-white/[0.05] transition-all group"
+                >
+                  <div className="h-10 w-10 rounded-lg bg-[#C1121F]/10 border border-[#C1121F]/20 flex items-center justify-center shrink-0">
+                    <Phone className="h-4 w-4 text-[#C1121F]" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-white/30 uppercase tracking-widest">Alternate</p>
+                    <p className="text-sm font-semibold text-white/80 group-hover:text-white transition-colors">
+                      +234 705 295 5555
+                    </p>
+                  </div>
+                </a>
+              </div>
+
+              <Link
+                href="/contact"
+                className="block w-full rounded-xl bg-[#C1121F] px-6 py-3.5 text-center text-sm font-semibold text-white hover:bg-[#D62839] transition-colors"
+              >
+                Book a Free Consultation
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
