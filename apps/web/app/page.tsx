@@ -10,6 +10,12 @@ interface PropertiesResponse {
   meta: { total: number };
 }
 
+const GRID = {
+  backgroundImage:
+    "linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)",
+  backgroundSize: "60px 60px",
+} as const;
+
 const SERVICES = [
   {
     icon: Building2,
@@ -49,7 +55,6 @@ const SERVICES = [
   },
 ];
 
-
 export default async function HomePage() {
   const [featuredRes, allRes] = await Promise.all([
     publicFetch<PropertiesResponse>("/properties/public?featured=true&limit=6"),
@@ -61,12 +66,39 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* ── Hero ─────────────────────────────────── */}
+      {/* ── Hero ─────────────────────────────────────────────── */}
       <HomeHero totalProperties={totalProperties} />
 
-      {/* ── Services ─────────────────────────────── */}
-      <section className="py-24 bg-[#080808]">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* ── Services ─────────────────────────────────────────── */}
+      <section className="relative py-24 bg-[#080808] overflow-hidden">
+        {/* Grid */}
+        <div aria-hidden className="absolute inset-0 pointer-events-none" style={GRID} />
+        {/* Moving blob — top-left crimson */}
+        <div
+          aria-hidden
+          className="absolute pointer-events-none rounded-full"
+          style={{
+            width: "55vw", height: "55vw", maxWidth: "700px", maxHeight: "700px",
+            top: "-30%", left: "-15%",
+            background: "radial-gradient(circle, rgba(193,18,31,0.18) 0%, transparent 65%)",
+            filter: "blur(80px)",
+            animation: "blob-drift-1 32s ease-in-out infinite",
+          }}
+        />
+        {/* Moving blob — bottom-right */}
+        <div
+          aria-hidden
+          className="absolute pointer-events-none rounded-full"
+          style={{
+            width: "40vw", height: "40vw", maxWidth: "500px", maxHeight: "500px",
+            bottom: "-15%", right: "-10%",
+            background: "radial-gradient(circle, rgba(100,5,15,0.15) 0%, transparent 65%)",
+            filter: "blur(70px)",
+            animation: "blob-drift-2 26s ease-in-out infinite 5s",
+          }}
+        />
+
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-14">
             <p className="text-xs font-semibold uppercase tracking-widest text-[#C1121F] mb-3">
               What We Do
@@ -88,7 +120,6 @@ export default async function HomePage() {
                   href={svc.href}
                   className={`group relative rounded-2xl border ${svc.border} bg-white/[0.03] p-8 overflow-hidden hover:bg-white/[0.05] transition-all duration-300`}
                 >
-                  {/* gradient bg */}
                   <div
                     className={`absolute inset-0 bg-gradient-to-br ${svc.gradient} opacity-60 group-hover:opacity-100 transition-opacity duration-300`}
                   />
@@ -110,9 +141,25 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Featured Properties ───────────────────── */}
-      <section className="py-24 bg-[#050505]">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* ── Featured Properties ───────────────────────────────── */}
+      <section className="relative py-24 bg-[#050505] overflow-hidden">
+        {/* Grid */}
+        <div aria-hidden className="absolute inset-0 pointer-events-none" style={GRID} />
+        {/* Subtle centre glow */}
+        <div
+          aria-hidden
+          className="absolute pointer-events-none rounded-full"
+          style={{
+            width: "60vw", height: "60vw", maxWidth: "700px", maxHeight: "700px",
+            top: "50%", left: "50%",
+            transform: "translate(-50%, -50%)",
+            background: "radial-gradient(circle, rgba(193,18,31,0.08) 0%, transparent 65%)",
+            filter: "blur(90px)",
+            animation: "blob-drift-3 35s ease-in-out infinite",
+          }}
+        />
+
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-14">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-[#C1121F] mb-3">
@@ -151,12 +198,27 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Process ──────────────────────────────── */}
+      {/* ── Process ──────────────────────────────────────────── */}
       <HomeProcess />
 
-      {/* ── Why Trust Us ─────────────────────────── */}
-      <section className="py-24 bg-[#050505]">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* ── Why Trust Us ─────────────────────────────────────── */}
+      <section className="relative py-24 bg-[#080808] overflow-hidden">
+        {/* Grid */}
+        <div aria-hidden className="absolute inset-0 pointer-events-none" style={GRID} />
+        {/* Moving blob — left side */}
+        <div
+          aria-hidden
+          className="absolute pointer-events-none rounded-full"
+          style={{
+            width: "50vw", height: "50vw", maxWidth: "600px", maxHeight: "600px",
+            top: "10%", left: "-20%",
+            background: "radial-gradient(circle, rgba(193,18,31,0.12) 0%, transparent 65%)",
+            filter: "blur(80px)",
+            animation: "blob-drift-2 30s ease-in-out infinite 3s",
+          }}
+        />
+
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-[#C1121F] mb-3">
