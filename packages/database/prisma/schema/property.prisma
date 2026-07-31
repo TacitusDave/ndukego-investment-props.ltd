@@ -82,6 +82,7 @@ model Property {
   hasCctv                 Boolean            @default(false) @map("has_cctv")
   hasSolar                Boolean            @default(false) @map("has_solar")
   isSmartHomeReady        Boolean            @default(false) @map("is_smart_home_ready")
+  amenities               String[]           @default([])
   yearBuilt               Int?               @map("year_built")
   constructionStatus      ConstructionStatus? @map("construction_status")
   buildingCondition       BuildingCondition? @map("building_condition")
@@ -120,6 +121,7 @@ model Property {
   coverImageUrl           String?            @map("cover_image_url")
   virtualTourUrl          String?            @map("virtual_tour_url")
   brochureUrl             String?            @map("brochure_url")
+  mapUrl                  String?            @map("map_url")
 
   // Marketing
   seoTitle                String?            @map("seo_title")

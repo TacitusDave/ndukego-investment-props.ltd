@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { updateProperty } from "@/lib/actions";
@@ -17,6 +18,62 @@ const NIGERIAN_STATES = [
   "Yobe","Zamfara",
 ];
 
+export const AMENITY_GROUPS = [
+  {
+    label: "Utilities",
+    items: [
+      "Road Access",
+      "Electricity",
+      "Solar Power",
+      "Generator Backup",
+      "Water Supply / Borehole",
+      "Drainage System",
+      "Internet / Fibre",
+    ],
+  },
+  {
+    label: "Security",
+    items: [
+      "Perimeter Fencing",
+      "Security Gate",
+      "CCTV Surveillance",
+      "Security Post",
+      "24/7 Security",
+    ],
+  },
+  {
+    label: "Property Features",
+    items: [
+      "Swimming Pool",
+      "Garden / Landscaping",
+      "Balcony / Terrace",
+      "Garage / Car Park",
+      "Gym / Fitness Centre",
+      "Air Conditioning",
+      "Elevator / Lift",
+      "Smart Home System",
+      "BQ / Servant Quarters",
+    ],
+  },
+  {
+    label: "Community Facilities",
+    items: [
+      "Golf Course",
+      "Club House",
+      "Children's Playground",
+      "Sports Court",
+      "Shopping Complex",
+      "School",
+      "Place of Worship",
+      "Hospital / Clinic",
+    ],
+  },
+  {
+    label: "Services",
+    items: ["Waste Management", "Estate Management"],
+  },
+];
+
 interface Property {
   id: string;
   title: string;
@@ -31,6 +88,8 @@ interface Property {
   bathrooms: number | null;
   installmentAllowed: boolean;
   reservationAmount: string | null;
+  amenities: string[];
+  mapUrl: string | null;
 }
 
 function SubmitButton() {
@@ -43,8 +102,21 @@ function SubmitButton() {
 }
 
 export function PropertyEditForm({ property }: { property: Property }) {
+  const [amenities, setAmenities] = useState<Set<string>>(
+    new Set(property.amenities ?? [])
+  );
+
   const boundAction = updateProperty.bind(null, property.id);
   const [state, action] = useActionState(boundAction, { error: null });
+
+  function toggleAmenity(key: string) {
+    setAmenities((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
 
   return (
     <form action={action} className="space-y-6">
@@ -53,6 +125,14 @@ export function PropertyEditForm({ property }: { property: Property }) {
           {state.error}
         </div>
       )}
+
+      {/* Hidden amenities JSON */}
+      <input
+        type="hidden"
+        name="amenitiesJson"
+        value={JSON.stringify([...amenities])}
+      />
+
       <div className="grid gap-2">
         <Label htmlFor="title">Title</Label>
         <Input id="title" name="title" defaultValue={property.title} required />
@@ -124,6 +204,58 @@ export function PropertyEditForm({ property }: { property: Property }) {
           <Label htmlFor="bathrooms">Bathrooms</Label>
           <Input id="bathrooms" name="bathrooms" type="number" min="0" defaultValue={property.bathrooms ?? ""} />
         </div>
+      </div>
+
+      {/* Google Maps URL */}
+      <div className="space-y-2 rounded-md border bg-muted/30 p-4">
+        <Label htmlFor="mapUrl" className="text-sm font-medium">
+          Google Maps URL
+        </Label>
+        <Input
+          id="mapUrl"
+          name="mapUrl"
+          placeholder="Paste the Google Maps URL for this property's location…"
+          defaultValue={property.mapUrl ?? ""}
+          className="bg-background"
+        />
+        <p className="text-xs text-muted-foreground">
+          Copy the URL from your browser when viewing this property's location on Google Maps.
+          Coordinates are auto-extracted and the detail page will show an interactive map.
+        </p>
+      </div>
+
+      {/* Amenities */}
+      <div className="space-y-4 rounded-md border bg-muted/30 p-4">
+        <div>
+          <p className="text-sm font-medium">Amenities &amp; Features</p>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Toggle everything available at this property. Checked items appear on the listing.
+          </p>
+        </div>
+        {AMENITY_GROUPS.map((group) => (
+          <div key={group.label}>
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+              {group.label}
+            </p>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-2">
+              {group.items.map((item) => (
+                <div key={item} className="flex items-center gap-2">
+                  <Checkbox
+                    id={`amenity-${item}`}
+                    checked={amenities.has(item)}
+                    onCheckedChange={() => toggleAmenity(item)}
+                  />
+                  <Label
+                    htmlFor={`amenity-${item}`}
+                    className="text-sm font-normal cursor-pointer"
+                  >
+                    {item}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
 
       <SubmitButton />

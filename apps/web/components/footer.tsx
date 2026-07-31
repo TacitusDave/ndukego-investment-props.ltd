@@ -1,23 +1,87 @@
 import Link from "next/link";
-import { MapPin, Phone, Mail } from "lucide-react";
+import { Phone, Mail, MapPin, ArrowRight } from "lucide-react";
 import { LogoIcon } from "@nhgp/assets";
+import { FooterCtaBand } from "./footer-cta-band";
 
-const services = [
+/* ── Social media icons ────────────────────────────────── */
+
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+function FacebookIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+    </svg>
+  );
+}
+
+function TwitterXIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
+function TikTokIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.17 8.17 0 0 0 4.84 1.56V6.78a4.85 4.85 0 0 1-1.07-.09z" />
+    </svg>
+  );
+}
+
+function LinkedInIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z" />
+      <circle cx="4" cy="4" r="2" />
+    </svg>
+  );
+}
+
+function YouTubeIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
+      <polygon fill="white" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" />
+    </svg>
+  );
+}
+
+const SOCIALS = [
+  { label: "Instagram", href: "#", Icon: InstagramIcon },
+  { label: "TikTok", href: "#", Icon: TikTokIcon },
+  { label: "Facebook", href: "#", Icon: FacebookIcon },
+  { label: "Twitter / X", href: "#", Icon: TwitterXIcon },
+  { label: "LinkedIn", href: "#", Icon: LinkedInIcon },
+  { label: "YouTube", href: "#", Icon: YouTubeIcon },
+];
+
+const SERVICES = [
   { label: "Real Estate", href: "/services/real-estate" },
   { label: "LPO Financing", href: "/services/lpo-financing" },
   { label: "Investment Financing", href: "/services/investment-financing" },
   { label: "Investment Consultancy", href: "/services/investment-consultancy" },
 ];
 
-const properties = [
+const PROPERTIES = [
   { label: "All Properties", href: "/properties" },
   { label: "Residential", href: "/properties?type=RESIDENTIAL" },
   { label: "Commercial", href: "/properties?type=COMMERCIAL" },
-  { label: "Land", href: "/properties?category=LAND" },
+  { label: "Land & Plots", href: "/properties?category=LAND" },
   { label: "Our Estates", href: "/estates" },
 ];
 
-const company = [
+const COMPANY = [
   { label: "About Us", href: "/about" },
   { label: "Projects", href: "/projects" },
   { label: "Insights", href: "/insights" },
@@ -27,128 +91,164 @@ const company = [
 
 export function Footer() {
   return (
-    <footer className="bg-[#0a0a0a] border-t border-white/8">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 pb-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+    <footer>
+      <FooterCtaBand />
 
-          {/* Brand */}
-          <div className="sm:col-span-2 lg:col-span-1 space-y-5">
-            <div className="flex items-center gap-3">
-              <LogoIcon width={36} height={36} className="shrink-0" />
-              <div>
-                <p
-                  className="text-sm font-semibold text-white"
-                  style={{ fontFamily: "var(--font-display)" }}
+      {/* ── Main section ── */}
+      <div className="bg-white/80 backdrop-blur-sm border-t border-gray-100">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+
+            {/* Brand column — 5 of 12 */}
+            <div className="lg:col-span-5 space-y-6">
+              {/* Logo: large icon on its own (no red background), beside company name */}
+              <div className="flex items-start gap-4">
+                <div className="shrink-0">
+                  <LogoIcon width={64} height={64} />
+                </div>
+                <div className="pt-1">
+                  <p
+                    className="text-xl sm:text-2xl font-bold text-gray-900 leading-snug"
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
+                    Ndukego Investments<br />
+                    &amp; Properties Ltd
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-500 leading-relaxed max-w-sm">
+                Nigeria&apos;s trusted partner for real estate, financing, and investment
+                opportunities — built on transparency, professionalism, and lasting results.
+              </p>
+
+              {/* Contact details */}
+              <div className="space-y-2.5">
+                <a
+                  href="tel:+2348036096700"
+                  className="flex items-center gap-2.5 text-sm text-gray-500 hover:text-[#C1121F] transition-colors"
                 >
-                  Ndukego Homes
+                  <Phone className="h-3.5 w-3.5 text-[#C1121F] shrink-0" />
+                  +234 803 609 6700
+                </a>
+                <a
+                  href="tel:+2347052955555"
+                  className="flex items-center gap-2.5 text-sm text-gray-500 hover:text-[#C1121F] transition-colors"
+                >
+                  <Phone className="h-3.5 w-3.5 text-[#C1121F] shrink-0" />
+                  +234 705 295 5555
+                </a>
+                <a
+                  href="mailto:ndukegoinvest.propertiesltd@gmail.com"
+                  className="flex items-center gap-2.5 text-sm text-gray-500 hover:text-[#C1121F] transition-colors"
+                >
+                  <Mail className="h-3.5 w-3.5 text-[#C1121F] shrink-0" />
+                  ndukegoinvest.propertiesltd@gmail.com
+                </a>
+                <span className="flex items-center gap-2.5 text-sm text-gray-400">
+                  <MapPin className="h-3.5 w-3.5 text-[#C1121F] shrink-0" />
+                  Nigeria
+                </span>
+              </div>
+
+              {/* Social icons */}
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">
+                  Follow Us
                 </p>
-                <p className="text-[9px] text-white/30 leading-tight">
-                  Powered By: Ndukego Investments &amp; Properties Ltd
-                </p>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {SOCIALS.map(({ label, href, Icon }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      title={label}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center h-8 w-8 rounded-lg border border-gray-200 bg-gray-50 text-gray-500 hover:border-[#C1121F]/30 hover:bg-[#C1121F]/5 hover:text-[#C1121F] transition-all duration-200"
+                    >
+                      <Icon className="h-3.5 w-3.5" />
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
-            <p className="text-sm text-white/40 leading-relaxed max-w-xs">
-              Connecting you to trusted, verified real estate and financial
-              opportunities across Nigeria — with transparency at every step.
-            </p>
-            <div className="space-y-2.5 text-sm">
-              <a
-                href="tel:+2348036096700"
-                className="flex items-center gap-2.5 text-white/40 hover:text-white/80 transition-colors"
-              >
-                <Phone className="h-3.5 w-3.5 shrink-0 text-[#C1121F]" />
-                +234 803 609 6700
-              </a>
-              <a
-                href="tel:+2347052955555"
-                className="flex items-center gap-2.5 text-white/40 hover:text-white/80 transition-colors"
-              >
-                <Phone className="h-3.5 w-3.5 shrink-0 text-[#C1121F]" />
-                +234 705 295 5555
-              </a>
-              <a
-                href="mailto:ndukegohomes@gmail.com"
-                className="flex items-center gap-2.5 text-white/40 hover:text-white/80 transition-colors"
-              >
-                <Mail className="h-3.5 w-3.5 shrink-0 text-[#C1121F]" />
-                ndukegohomes@gmail.com
-              </a>
-              <span className="flex items-center gap-2.5 text-white/40">
-                <MapPin className="h-3.5 w-3.5 shrink-0 text-[#C1121F]" />
-                Nigeria
-              </span>
+
+            {/* Links — 7 of 12 */}
+            <div className="lg:col-span-7">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
+                {/* Services */}
+                <div className="space-y-4">
+                  <h4 className="text-[11px] font-bold uppercase tracking-widest text-gray-400">
+                    Services
+                  </h4>
+                  <ul className="space-y-2.5">
+                    {SERVICES.map((s) => (
+                      <li key={s.href}>
+                        <Link href={s.href} className="text-sm text-gray-600 hover:text-[#C1121F] transition-colors">
+                          {s.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Properties */}
+                <div className="space-y-4">
+                  <h4 className="text-[11px] font-bold uppercase tracking-widest text-gray-400">
+                    Properties
+                  </h4>
+                  <ul className="space-y-2.5">
+                    {PROPERTIES.map((p) => (
+                      <li key={p.href}>
+                        <Link href={p.href} className="text-sm text-gray-600 hover:text-[#C1121F] transition-colors">
+                          {p.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Company */}
+                <div className="space-y-4">
+                  <h4 className="text-[11px] font-bold uppercase tracking-widest text-gray-400">
+                    Company
+                  </h4>
+                  <ul className="space-y-2.5">
+                    {COMPANY.map((c) => (
+                      <li key={c.href}>
+                        <Link href={c.href} className="text-sm text-gray-600 hover:text-[#C1121F] transition-colors">
+                          {c.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* Contact Us CTA — sits at the bottom of the links area */}
+              <div className="mt-10 pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <p className="text-sm text-gray-400">Available Mon–Fri, 8 am – 6 pm WAT</p>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#C1121F] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors shadow-sm shadow-[#C1121F]/15"
+                >
+                  Contact Us <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
             </div>
           </div>
-
-          {/* Services */}
-          <div className="space-y-4">
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-white/25">
-              Services
-            </h3>
-            <ul className="space-y-2.5">
-              {services.map((s) => (
-                <li key={s.href}>
-                  <Link
-                    href={s.href}
-                    className="text-sm text-white/40 hover:text-white/80 transition-colors"
-                  >
-                    {s.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Properties */}
-          <div className="space-y-4">
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-white/25">
-              Properties
-            </h3>
-            <ul className="space-y-2.5">
-              {properties.map((p) => (
-                <li key={p.href}>
-                  <Link
-                    href={p.href}
-                    className="text-sm text-white/40 hover:text-white/80 transition-colors"
-                  >
-                    {p.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company */}
-          <div className="space-y-4">
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-white/25">
-              Company
-            </h3>
-            <ul className="space-y-2.5">
-              {company.map((c) => (
-                <li key={c.href}>
-                  <Link
-                    href={c.href}
-                    className="text-sm text-white/40 hover:text-white/80 transition-colors"
-                  >
-                    {c.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
+      </div>
 
-        <div className="mt-12 border-t border-white/8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/25">
-          <p>
+      {/* ── Bottom bar ── */}
+      <div className="bg-gray-900 py-4">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-xs text-gray-500">
             © {new Date().getFullYear()} Ndukego Investments &amp; Properties Limited. All rights reserved.
           </p>
-          <div className="flex items-center gap-4">
-            <Link href="/terms" className="hover:text-white/50 transition-colors">
-              Terms of Service
-            </Link>
-            <Link href="/privacy" className="hover:text-white/50 transition-colors">
-              Privacy Policy
-            </Link>
+          <div className="flex items-center gap-4 text-xs text-gray-500">
+            <Link href="/terms" className="hover:text-gray-300 transition-colors">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-gray-300 transition-colors">Privacy Policy</Link>
           </div>
         </div>
       </div>

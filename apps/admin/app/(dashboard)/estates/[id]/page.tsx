@@ -7,6 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { apiFetch } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
 import { PropertyStatusBadge } from "../../properties/property-status-badge";
+import { EstateFeaturedToggle } from "./estate-featured-toggle";
+import { EstateDeleteButton } from "./estate-delete-button";
+import { EstateSitePlanManager, type BuildingType } from "./estate-site-plan-manager";
+import { EstateDetailsEditor } from "./estate-details-editor";
 
 interface Estate {
   id: string;
@@ -14,6 +18,7 @@ interface Estate {
   code: string;
   slug: string;
   status: string;
+  featured: boolean;
   state: string;
   lga: string | null;
   city: string | null;
@@ -22,6 +27,10 @@ interface Estate {
   totalPlots: number | null;
   availablePlots: number | null;
   totalLandSize: number | null;
+  masterPlanUrl: string | null;
+  buildingTypesConfig: BuildingType[] | null;
+  amenities: string[];
+  mapUrl: string | null;
   phases: { id: string; name: string; code: string; totalPlots: number | null }[];
   blocks: { id: string; name: string; code: string; section: string | null; totalPlots: number | null }[];
   infrastructure: { id: string; name: string; type: string; description: string | null }[];
@@ -59,6 +68,32 @@ export default async function EstateDetailPage({
       </Header>
 
       <div className="flex-1 p-6 space-y-6 max-w-5xl">
+
+        {/* Site Plan Manager */}
+        <EstateSitePlanManager
+          estateId={estate.id}
+          masterPlanUrl={estate.masterPlanUrl}
+          buildingTypes={estate.buildingTypesConfig ?? []}
+        />
+
+        {/* Location Map & Amenities */}
+        <EstateDetailsEditor
+          estateId={estate.id}
+          initialAmenities={estate.amenities ?? []}
+          initialMapUrl={estate.mapUrl}
+        />
+
+        {/* Danger zone */}
+        <div className="flex items-center justify-between rounded-md border border-red-100 bg-red-50/40 px-4 py-3">
+          <div>
+            <p className="text-sm font-medium text-red-700">Danger zone</p>
+            <p className="text-xs text-red-500">Permanently delete this estate (all properties must be deleted first)</p>
+          </div>
+          <EstateDeleteButton estateId={estate.id} estateName={estate.name} />
+        </div>
+
+        {/* Featured toggle */}
+        <EstateFeaturedToggle estateId={estate.id} featured={estate.featured} />
 
         {/* Overview */}
         <div className="rounded-md border bg-card p-5 space-y-4">

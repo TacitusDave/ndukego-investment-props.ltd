@@ -3,7 +3,7 @@
 This file tracks everything the user needs to configure, obtain, or set up outside of the code.
 Claude updates this whenever a new external dependency is needed.
 
-_Last updated: 2026-07-27_
+_Last updated: 2026-07-30_
 
 ---
 
@@ -14,6 +14,21 @@ _Last updated: 2026-07-27_
   - Initial migration applied: `20260727103235_initial_schema`
   - Seed applied: 46 permissions, 10 roles, 8 departments, super-admin user created
   - Credentials stored in `apps/api/.env` and `packages/database/.env`
+
+---
+
+## Action required after Session 13 ⚠️
+
+### Restart the API server
+
+New columns were added to both `properties` and `estates` tables (`amenities`, `map_url`) and
+pushed to Neon. The Prisma client was regenerated automatically during `pnpm install`.
+**Restart the API server** so the new fields are active:
+
+```bash
+# In the api terminal, Ctrl+C to stop, then:
+pnpm --filter @nhgp/api dev
+```
 
 ---
 
@@ -41,20 +56,28 @@ A super admin account was created during seed:
 
 ## Coming up — will need these soon
 
-### Email provider (needed for Phase 1 notifications)
+### Email provider — SMTP (Phase 1 — now built, add these to `apps/api/.env`)
 
-Required for: registration confirmation, inquiry received, reservation status updates.
+Email notifications are wired and working. The system will log emails to the console in
+development if SMTP is not configured — the app won't crash without it.
 
-Recommended: **Resend** (resend.com) — simple API, good free tier for Nigerian use.
-- Sign up at resend.com
-- Get an API key
-- Verify your sending domain (e.g. `notifications@ndukego.com`)
-- Claude will add these to `.env` when the notification module is built:
-  ```
-  EMAIL_PROVIDER=resend
-  EMAIL_API_KEY=re_xxxxxxxxxxxx
-  EMAIL_FROM=notifications@ndukego.com
-  ```
+Add these to `apps/api/.env` when you're ready to send real emails:
+
+```env
+SMTP_HOST=smtp.gmail.com          # or smtp.resend.com, smtp.sendgrid.net, etc.
+SMTP_PORT=587
+SMTP_USER=your@email.com
+SMTP_PASS=your-app-password
+SMTP_FROM=Ndukego Homes <no-reply@ndukegohomes.com>
+WEB_URL=http://localhost:3000     # change to your public URL in production
+```
+
+**Recommended providers:**
+- **Resend** (resend.com) — easiest, has a free tier. Use SMTP relay at `smtp.resend.com:587`
+- **Gmail** with an App Password — works for low volume; enable 2FA then create an App Password
+- **SendGrid** — enterprise-grade, generous free tier
+
+When SMTP is not set, all email sends are logged to the API console with `[EMAIL STUB]` prefix.
 
 ### Hosting (needed before going live)
 
