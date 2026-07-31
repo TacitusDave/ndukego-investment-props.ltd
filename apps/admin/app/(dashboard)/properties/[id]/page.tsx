@@ -9,6 +9,8 @@ import { PropertyStatusBadge } from "../property-status-badge";
 import { PropertyActions } from "./property-actions";
 import { PropertyEditForm } from "./property-edit-form";
 import { PropertyMedia } from "./property-media";
+import { PropertyFeaturedToggle } from "./property-featured-toggle";
+import { PropertyDeleteButton } from "./property-delete-button";
 
 interface MediaItem {
   id: string;
@@ -37,6 +39,9 @@ interface Property {
   bathrooms: number | null;
   installmentAllowed: boolean;
   reservationAmount: string | null;
+  featured: boolean;
+  amenities: string[];
+  mapUrl: string | null;
   estate: { id: string; name: string; code: string } | null;
   media: MediaItem[];
   createdAt: string;
@@ -66,6 +71,18 @@ export default async function PropertyDetailPage({
 
       <div className="flex-1 p-6">
         <div className="max-w-4xl space-y-6">
+
+          {/* Danger zone */}
+          <div className="flex items-center justify-between rounded-md border border-red-100 bg-red-50/40 px-4 py-3">
+            <div>
+              <p className="text-sm font-medium text-red-700">Danger zone</p>
+              <p className="text-xs text-red-500">Permanently delete this property and all its data</p>
+            </div>
+            <PropertyDeleteButton propertyId={property.id} propertyTitle={property.title} />
+          </div>
+
+          {/* Featured toggle */}
+          <PropertyFeaturedToggle propertyId={property.id} featured={property.featured} />
 
           {/* Status + transition */}
           <div className="rounded-md border bg-card p-5 space-y-3">

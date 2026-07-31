@@ -1,9 +1,22 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { extname, join } from 'path';
+import { mkdir, writeFile, unlink } from 'fs/promises';
+import { v4 as uuidv4 } from 'uuid';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { calculatePagination, slugify, generateReference } from '@nhgp/lib';
 import { AuthenticatedUser } from '@nhgp/types';
 import { Prisma } from '@nhgp/database';
+
+const UPLOADS_ROOT = join(process.cwd(), 'storage', 'uploads');
+
+function extractCoordsFromUrl(url: string): { lat: number; lng: number } | null {
+  const atMatch = url.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+  if (atMatch) return { lat: parseFloat(atMatch[1]), lng: parseFloat(atMatch[2]) };
+  const qMatch = url.match(/[?&]q=(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+  if (qMatch) return { lat: parseFloat(qMatch[1]), lng: parseFloat(qMatch[2]) };
+  return null;
+}
 
 @Injectable()
 export class EstateService {
@@ -37,7 +50,7 @@ export class EstateService {
     return estate;
   }
 
-  async findAll(query: { page?: number; limit?: number; search?: string; status?: string; companyId?: string }) {
+  async findAll(query: { page?: number; limit?: number; search?: string; status?: string; companyId?: string; featured?: boolean }) {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
     const { skip } = calculatePagination(page, limit, 0);
@@ -45,6 +58,7 @@ export class EstateService {
       deletedAt: null,
       ...(query.status && { status: query.status as never }),
       ...(query.companyId && { companyId: query.companyId }),
+      ...(query.featured !== undefined && { featured: query.featured }),
       ...(query.search && { OR: [{ name: { contains: query.search, mode: 'insensitive' } }, { city: { contains: query.search, mode: 'insensitive' } }] }),
     };
     const [items, total] = await Promise.all([
@@ -65,6 +79,13 @@ export class EstateService {
 
   async update(id: string, data: Prisma.EstateUpdateInput, user: AuthenticatedUser) {
     await this.findOne(id);
+    if (data.mapUrl && typeof data.mapUrl === 'string') {
+      const coords = extractCoordsFromUrl(data.mapUrl);
+      if (coords) {
+        (data as Record<string, unknown>).latitude = coords.lat;
+        (data as Record<string, unknown>).longitude = coords.lng;
+      }
+    }
     const estate = await this.prisma.estate.update({ where: { id }, data: { ...data, updatedById: user.employeeId ?? user.id } });
     await this.auditService.log({ actorId: user.id, actorEmail: user.email, action: 'UPDATE', entityType: 'ESTATE', entityId: id, entityLabel: estate.name });
     return estate;
@@ -83,5 +104,116 @@ export class EstateService {
   async addInfrastructure(estateId: string, data: { name: string; type: string; description?: string }, user: AuthenticatedUser) {
     await this.findOne(estateId);
     return this.prisma.estateInfrastructure.create({ data: { estateId, ...data } });
+  }
+
+  async uploadSitePlan(id: string, file: Express.Multer.File, user: AuthenticatedUser) {
+    const estate = await this.findOne(id);
+
+    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowed.includes(file.mimetype)) {
+      throw new BadRequestException('Only JPEG, PNG, or WebP images are allowed');
+    }
+    if (file.size > 20 * 1024 * 1024) {
+      throw new BadRequestException('Site plan image must be smaller than 20 MB');
+    }
+
+    const ext = extname(file.originalname) || `.${file.mimetype.split('/')[1]}`;
+    const filename = `site-plan-${uuidv4()}${ext}`;
+    const dir = join(UPLOADS_ROOT, 'estates', id, 'site-plan');
+    await mkdir(dir, { recursive: true });
+    await writeFile(join(dir, filename), file.buffer);
+
+    const url = `/uploads/estates/${id}/site-plan/${filename}`;
+
+    // Remove old site plan file if it exists
+    if (estate.masterPlanUrl) {
+      const oldPath = join(UPLOADS_ROOT, estate.masterPlanUrl.replace('/uploads/', ''));
+      await unlink(oldPath).catch(() => undefined);
+    }
+
+    await this.prisma.estate.update({ where: { id }, data: { masterPlanUrl: url } });
+
+    return { url };
+  }
+
+  async updateBuildingTypes(id: string, buildingTypes: unknown[], user: AuthenticatedUser) {
+    await this.findOne(id);
+    await this.prisma.estate.update({
+      where: { id },
+      data: { buildingTypesConfig: buildingTypes as Prisma.JsonArray },
+    });
+    return { success: true };
+  }
+
+  async uploadBuildingTypeImage(
+    id: string,
+    typeId: string,
+    file: Express.Multer.File,
+    user: AuthenticatedUser,
+  ) {
+    await this.findOne(id);
+
+    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowed.includes(file.mimetype)) {
+      throw new BadRequestException('Only JPEG, PNG, or WebP images are allowed');
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      throw new BadRequestException('Image must be smaller than 10 MB');
+    }
+
+    const ext = extname(file.originalname) || `.${file.mimetype.split('/')[1]}`;
+    const filename = `${uuidv4()}${ext}`;
+    const dir = join(UPLOADS_ROOT, 'estates', id, 'building-types', typeId);
+    await mkdir(dir, { recursive: true });
+    await writeFile(join(dir, filename), file.buffer);
+
+    const url = `/uploads/estates/${id}/building-types/${typeId}/${filename}`;
+    return { url };
+  }
+
+  async deleteBuildingTypeImage(id: string, typeId: string, filename: string) {
+    const filePath = join(UPLOADS_ROOT, 'estates', id, 'building-types', typeId, filename);
+    await unlink(filePath).catch(() => undefined);
+    return { success: true };
+  }
+
+  async hardDelete(id: string, user: AuthenticatedUser) {
+    const estate = await this.findOne(id);
+
+    const propertyCount = await this.prisma.property.count({ where: { estateId: id, deletedAt: null } });
+    if (propertyCount > 0) {
+      throw new BadRequestException(
+        `Cannot delete estate: it still has ${propertyCount} linked propert${propertyCount === 1 ? 'y' : 'ies'}. Delete all properties from this estate first.`,
+      );
+    }
+
+    // Delete media files for any soft-deleted properties still linked to this estate
+    const mediaRecords = await this.prisma.propertyMedia.findMany({
+      where: { property: { estateId: id } },
+    });
+    await Promise.allSettled(
+      mediaRecords.map((m) => {
+        const filePath = join(UPLOADS_ROOT, m.url.replace('/uploads/', ''));
+        return unlink(filePath).catch(() => undefined);
+      }),
+    );
+
+    // Delete soft-deleted properties first, then the estate (phases/blocks/infra cascade)
+    await this.prisma.$transaction([
+      this.prisma.property.deleteMany({ where: { estateId: id } }),
+      this.prisma.estate.delete({ where: { id } }),
+    ]);
+
+    await this.auditService.log({
+      actorId: user.id,
+      actorEmail: user.email,
+      action: 'DELETE',
+      entityType: 'ESTATE',
+      entityId: id,
+      entityLabel: estate.name,
+      newValues: { permanent: true },
+    });
+
+    return { success: true };
   }
 }

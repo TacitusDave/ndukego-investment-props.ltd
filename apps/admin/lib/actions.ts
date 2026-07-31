@@ -31,6 +31,34 @@ async function authPost(path: string, body: Record<string, unknown>) {
 
   const json = await res.json().catch(() => ({}));
   if (!res.ok) {
+    let message = Array.isArray(json.message)
+      ? json.message.join(", ")
+      : (json.message ?? `HTTP ${res.status}`);
+    if (Array.isArray(json.requirements) && json.requirements.length > 0) {
+      message += ": " + json.requirements.join("; ");
+    }
+    return { error: message };
+  }
+  return { data: json, error: null };
+}
+
+async function authDelete(path: string) {
+  const token = await getAuthToken();
+  if (!token) return { error: "Not authenticated" };
+
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
+  } catch {
+    return { error: "Cannot reach API server. Is it running?" };
+  }
+
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) {
     const message = Array.isArray(json.message)
       ? json.message.join(", ")
       : (json.message ?? `HTTP ${res.status}`);
@@ -137,11 +165,24 @@ export async function transitionPropertyStatus(
   return { error: null };
 }
 
+export async function togglePropertyFeatured(id: string, featured: boolean) {
+  const { error } = await authPatch(`/properties/${id}`, { featured });
+  if (error) return { error };
+  return { error: null };
+}
+
+export async function toggleEstateFeatured(id: string, featured: boolean) {
+  const { error } = await authPatch(`/estates/${id}`, { featured });
+  if (error) return { error };
+  return { error: null };
+}
+
 export async function updateProperty(
   id: string,
   prevState: { error: string | null },
   formData: FormData,
 ) {
+  const amenitiesJson = formData.get("amenitiesJson") as string | null;
   const body: Record<string, unknown> = {
     title: str(formData.get("title")),
     state: str(formData.get("state")),
@@ -155,9 +196,38 @@ export async function updateProperty(
     bathrooms: num(formData.get("bathrooms")),
     installmentAllowed: formData.get("installmentAllowed") === "on",
     reservationAmount: num(formData.get("reservationAmount")),
+    mapUrl: str(formData.get("mapUrl")),
+    amenities: amenitiesJson ? JSON.parse(amenitiesJson) : undefined,
   };
 
   const { error } = await authPatch(`/properties/${id}`, body);
+  if (error) return { error };
+  return { error: null };
+}
+
+export async function updateEstateDetails(id: string, fields: {
+  amenities?: string[];
+  mapUrl?: string;
+}) {
+  const { error } = await authPatch(`/estates/${id}`, fields);
+  if (error) return { error };
+  return { error: null };
+}
+
+export async function updateEstateBuildingTypes(id: string, buildingTypes: unknown[]) {
+  const { error } = await authPatch(`/estates/${id}/building-types`, { buildingTypes });
+  if (error) return { error };
+  return { error: null };
+}
+
+export async function hardDeleteProperty(id: string) {
+  const { error } = await authDelete(`/properties/${id}/permanent`);
+  if (error) return { error };
+  return { error: null };
+}
+
+export async function hardDeleteEstate(id: string) {
+  const { error } = await authDelete(`/estates/${id}/permanent`);
   if (error) return { error };
   return { error: null };
 }

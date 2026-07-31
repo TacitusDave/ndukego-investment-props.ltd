@@ -1,6 +1,6 @@
 # NHGP — Build Progress & Master Todo List
 
-_Updated: 2026-07-30 | Session 10_
+_Updated: 2026-07-31 | Session 13_
 
 > This file is the single source of truth for what's done, what's in progress, and what
 > remains until 100% production-ready. Read it at the start of every session.
@@ -76,14 +76,23 @@ Target: Live and usable by company staff and customers.
 - [x] **Staff password change** — `/settings/password` page with strength meter, uses POST /auth/change-password
 - [x] **Company settings page** — company info, branch addresses, contact details (`/settings`)
 - [x] **Inquiry management** — `/inquiries` page (shows Website leadSource customers with message preview)
+- [x] **Admin portal redesign (Session 11):**
+  - [x] `globals.css` — light-only, dark sidebar tokens in `:root`, 3px crimson scrollbar, Fraunces/DM Sans font vars
+  - [x] `ThemeProvider` — `forcedTheme="light"`, dark mode removed entirely
+  - [x] Sidebar — premium always-dark `#111111`, grouped nav (MAIN/OPERATIONS/ORGANISATION), crimson active dot + bg tint, correct branding "Ndukego Investments & Properties Ltd"
+  - [x] Header — ThemeToggle removed, clean minimal white header with notification bell
+  - [x] Login — split-screen: dark left brand panel (crimson glow, trust signals) + white right form panel (crimson CTA button, forgot password link)
+  - [x] Layout metadata title — "Ndukego Investments & Properties Ltd — Admin"
 
 ### 1D. Public Website — Next.js 16, :3000 ✅ MOSTLY COMPLETE
 
 - [x] Setup — Tailwind CSS v4, PostCSS, path aliases, fonts, framer-motion, @react-three/fiber + drei
-- [x] Theme — **DARK THEME** #050505 background + Deep Crimson Red #C1121F accent (per design spec)
-- [x] Navbar — **REBUILT** — fixed glassmorphism on scroll, corporate links (Home/About/Services/Properties/Projects/Insights/Contact), Services dropdown, "Book Consultation" CTA, correct brand treatment (Ndukego Homes + Powered by Ndukego Investments & Properties Ltd), correct phone +234 803 609 6700
-- [x] Footer — **REBUILT** — 4-column corporate footer, Services/Properties/Company columns, correct contact info (ndukegohomes@gmail.com, +234 803 609 6700, +234 705 295 5555), dark-first #0a0a0a
-- [x] Homepage — **REBUILT** — premium dark hero (Framer Motion staggered fade-in, crimson gradient text, search, stat strip), Services section (4 corporate service cards), Featured Properties, Process steps, Why Trust Us + direct contact card
+- [x] Theme — **LIGHT-ONLY** — dark mode removed entirely (`forcedTheme="light"` in ThemeProvider); crimson #C1121F accent on clean white base
+- [x] **Global background system** — `nhgp-gradient-bg` (fixed, z-index -2, morphing crimson gradient, 24s `gradient-morph` keyframe, organic all-directional motion) + `nhgp-grid-bg` (fixed, z-index -1, 60px subtle grid, rgba black/4.5%) — shows through all sections
+- [x] **Custom scrollbar** — 3px thin, barely-visible crimson, expands to 50% opacity on hover, applied globally
+- [x] Navbar — **REBUILT** — 3-column grid: left=User+CalendarCheck icon buttons; center=logo (LogoIcon in crimson square) + brand name stacked; right=hamburger; dropdown panel shows all nav links in grid (Services expands on hover); body scroll-locked when open; `Book Consultation` CTA at bottom of dropdown
+- [x] Footer — **REBUILT** — crimson CTA band (with inner grid overlay) + 4-column white/80 section (brand col with contacts, Services, Properties, Company) + dark gray-900 bottom bar
+- [x] Homepage — **REBUILT (light theme)** — transparent/semi-transparent sections let global gradient breathe through; hero (-mt-16, video bg at 12% opacity, white text+crimson gradient heading, white search bar, stat strip); 4 service cards (emerald/blue/violet/amber on white); Featured Properties (white/70 card on empty state); Process section (auto-playing Framer Motion, crimson radial pulse + scan beam + ring, 4 step cards white/80 with hover glow); Trust section (checklist + contact card with phone links + CTA)
 - [x] Properties listing `/properties` — sticky filters (search + category + state), grid, pagination
 - [x] Property detail `/properties/:id` — gallery, specs, description, reserve button + inquiry sidebar
 - [x] Inquiry form — success state, creates customer lead
@@ -362,3 +371,7 @@ These exist in the Prisma schema and will be built in their respective phases:
 | 8 | 2026-07-27 | Theme toggle (light/dark/system) on web + admin, CSS variable token system, ThemeProvider + ThemeToggle components, Company settings page built |
 | 9 | 2026-07-27 | Admin sidebar CSS variable tokens (light/dark), Staff password change page, Reports page (stats + pipeline + geographic breakdown), Documents placeholder, About page built, dark-mode badge fixes across all pages, property/estates/properties page theme fixes |
 | 10 | 2026-07-30 | API crash fix (employee.service.ts calculatePagination), web login/register logo fix, company identity realignment (Ndukego Investments & Properties Ltd), premium navbar rebuild (glassmorphism + corporate links + Services dropdown), corporate footer rebuild (4-col, correct contacts), homepage rebuild (premium dark hero + Framer Motion + 4 service cards + process steps + trust section), framer-motion + @react-three/fiber + drei + three installed |
+| 10b | 2026-07-30 | Full light-theme overhaul of public web: removed dark mode entirely (forcedTheme="light"), global morphing crimson gradient (position:fixed, gradient-morph 24s keyframe), global 60px grid overlay, 3px thin crimson scrollbar, navbar centered-logo+hamburger redesign, footer crimson CTA band + 4-col section, homepage all sections converted to transparent/semi-transparent backgrounds |
+| 11 | 2026-07-30 | Admin portal redesign: globals.css (light-only, always-dark sidebar tokens, crimson scrollbar), ThemeProvider (forcedTheme="light"), sidebar (premium dark, grouped nav, correct branding, crimson active states), header (ThemeToggle removed, clean minimal), login (split-screen dark brand panel + white form), metadata title updated; all 7 web service/project/insight pages created with AnimateIn, full content, crimson design system |
+| 12 | 2026-07-30 | Stage 1: Hard delete for properties + estates (API + admin confirmation modal with name-typing), Stage 2: Estate badge on property cards (indigo chip), Stage 3: Per-estate site plan management in admin (site plan upload, building type editor with color picker + image upload), API proxy route (/api/proxy/[...path]/route.ts), EstateSitePlan component now accepts sitePlanUrl+buildingTypes props, Contact page rebuild (Google Maps embed + updated contact details + no CTA), FooterCtaBand extracted as client component (hidden on /contact), Prisma schema + db push for buildingTypesConfig JSON field on Estate |
+| 13 | 2026-07-31 | Amenities toggle system (Property + Estate): comprehensive list (5 categories, 30+ items) stored as String[] in DB — admin toggles, web display as emoji grid; Default sales agent card on property detail pages (profile photo /default-prop-profile.jpg, contact details); Per-property/estate Google Maps URL field in admin (coordinates auto-extracted from URL, stored to latitude/longitude, map embed shown on detail pages); Properties listing Map View (Leaflet + OpenStreetMap, red marker pins, click popup with property info, navigate to detail page); Schema updated (amenities + mapUrl on Property + Estate), db push completed, ArrowRight import fix in footer.tsx |
