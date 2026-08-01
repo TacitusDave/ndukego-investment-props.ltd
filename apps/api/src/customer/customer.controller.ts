@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
@@ -20,8 +20,9 @@ export class CustomerController {
     @Query('status') status?: string,
     @Query('type') type?: string,
     @Query('kycStatus') kycStatus?: string,
+    @Query('leadSource') leadSource?: string,
   ) {
-    return this.customerService.findAll({ page, limit, search, status, type, kycStatus });
+    return this.customerService.findAll({ page, limit, search, status, type, kycStatus, leadSource });
   }
 
   @Get(':id')
@@ -44,5 +45,23 @@ export class CustomerController {
     @CurrentUser() user: AuthenticatedUser,
   ) {
     return this.customerService.update(id, body, user);
+  }
+
+  @Post(':id/deactivate')
+  @RequirePermissions('customer.update')
+  deactivate(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.customerService.deactivate(id, user);
+  }
+
+  @Post(':id/activate')
+  @RequirePermissions('customer.update')
+  activate(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.customerService.activate(id, user);
+  }
+
+  @Delete(':id')
+  @RequirePermissions('customer.update')
+  remove(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.customerService.softDelete(id, user);
   }
 }

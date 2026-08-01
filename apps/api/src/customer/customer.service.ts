@@ -58,6 +58,7 @@ export class CustomerService {
     status?: string;
     type?: string;
     kycStatus?: string;
+    leadSource?: string;
   }) {
     const page = query.page ?? 1;
     const limit = query.limit ?? 25;
@@ -68,6 +69,7 @@ export class CustomerService {
       ...(query.status && { status: query.status as never }),
       ...(query.type && { type: query.type as never }),
       ...(query.kycStatus && { kycStatus: query.kycStatus as never }),
+      ...(query.leadSource && { leadSource: query.leadSource }),
       ...(query.search && {
         OR: [
           { firstName: { contains: query.search, mode: 'insensitive' } },
@@ -139,6 +141,47 @@ export class CustomerService {
     });
 
     return customer;
+  }
+
+  async deactivate(id: string, user: AuthenticatedUser) {
+    const customer = await this.findOne(id);
+    await this.prisma.customer.update({ where: { id }, data: { status: 'INACTIVE' as never } });
+    await this.prisma.user.updateMany({ where: { customerId: id }, data: { status: 'INACTIVE' as never } });
+    await this.auditService.log({
+      actorId: user.id, actorEmail: user.email, action: 'UPDATE',
+      entityType: 'CUSTOMER', entityId: id, entityLabel: this.customerLabel(customer),
+      newValues: { status: 'INACTIVE' },
+    });
+    return { success: true };
+  }
+
+  async activate(id: string, user: AuthenticatedUser) {
+    const customer = await this.findOne(id);
+    await this.prisma.customer.update({ where: { id }, data: { status: 'ACTIVE' as never } });
+    await this.prisma.user.updateMany({ where: { customerId: id }, data: { status: 'ACTIVE' as never } });
+    await this.auditService.log({
+      actorId: user.id, actorEmail: user.email, action: 'UPDATE',
+      entityType: 'CUSTOMER', entityId: id, entityLabel: this.customerLabel(customer),
+      newValues: { status: 'ACTIVE' },
+    });
+    return { success: true };
+  }
+
+  async softDelete(id: string, user: AuthenticatedUser) {
+    const customer = await this.findOne(id);
+    await this.prisma.customer.update({
+      where: { id },
+      data: { deletedAt: new Date(), status: 'INACTIVE' as never },
+    });
+    await this.prisma.user.updateMany({
+      where: { customerId: id },
+      data: { status: 'INACTIVE' as never, deletedAt: new Date() },
+    });
+    await this.auditService.log({
+      actorId: user.id, actorEmail: user.email, action: 'DELETE',
+      entityType: 'CUSTOMER', entityId: id, entityLabel: this.customerLabel(customer),
+    });
+    return { success: true };
   }
 
   private customerLabel(c: { firstName?: string | null; lastName?: string | null; companyName?: string | null; email: string }) {

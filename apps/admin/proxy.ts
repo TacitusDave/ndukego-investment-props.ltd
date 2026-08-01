@@ -16,7 +16,7 @@ export function proxy(request: NextRequest) {
   }
 
   if (isPublic && token) {
-    return NextResponse.redirect(new URL("/properties", request.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   return NextResponse.next();

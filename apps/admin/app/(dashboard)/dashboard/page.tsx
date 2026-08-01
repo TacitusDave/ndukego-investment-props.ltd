@@ -1,9 +1,10 @@
+import React from "react";
 import Link from "next/link";
 import { Building2, Home, Users, TrendingUp } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import { apiFetch } from "@/lib/api";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { PropertyStatusBadge } from "./properties/property-status-badge";
+import { PropertyStatusBadge } from "../properties/property-status-badge";
 
 interface Stats {
   properties: { total: number; byStatus: Record<string, number> };
@@ -22,9 +23,9 @@ interface Stats {
   }[];
   recentActivity: {
     id: string;
-    actorEmail: string;
+    actorEmail: string | null;
     action: string;
-    entityType: string;
+    entityType: string | null;
     entityLabel: string | null;
     createdAt: string;
   }[];
@@ -81,7 +82,6 @@ export default async function DashboardPage() {
   const pendingCount =
     (stats?.properties.byStatus["PENDING_INSPECTION"] ?? 0) +
     (stats?.properties.byStatus["PENDING_VERIFICATION"] ?? 0);
-  const sold = stats?.properties.byStatus["SOLD"] ?? 0;
 
   return (
     <div className="flex flex-col h-full">
@@ -140,7 +140,10 @@ export default async function DashboardPage() {
               ) : stats.recentProperties.map((p) => (
                 <li key={p.id} className="flex items-center justify-between px-5 py-3 gap-4">
                   <div className="min-w-0">
-                    <Link href={`/properties/${p.id}`} className="text-sm font-medium hover:underline truncate block">
+                    <Link
+                      href={`/properties/${p.id}`}
+                      className="text-sm font-medium hover:underline truncate block"
+                    >
                       {p.title}
                     </Link>
                     <p className="text-xs text-muted-foreground">
@@ -197,7 +200,7 @@ export default async function DashboardPage() {
                         {a.entityLabel ? ` · ${a.entityLabel}` : ""}
                       </p>
                       <p className="text-muted-foreground mt-0.5">
-                        {a.actorEmail} · {formatDate(a.createdAt)}
+                        {a.actorEmail ?? "System"} · {formatDate(a.createdAt)}
                       </p>
                     </li>
                   ))}

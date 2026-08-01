@@ -7,27 +7,29 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
-        secondary: "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        destructive: "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-        outline: "text-foreground",
-        // PropertyStatus variants (match the actual Prisma enum)
-        DRAFT: "border-transparent bg-slate-100 text-slate-700",
-        PENDING_INSPECTION: "border-transparent bg-amber-100 text-amber-700",
-        PENDING_VERIFICATION: "border-transparent bg-yellow-100 text-yellow-700",
-        APPROVED: "border-transparent bg-blue-100 text-blue-700",
-        PUBLISHED: "border-transparent bg-green-100 text-green-700",
-        RESERVED: "border-transparent bg-purple-100 text-purple-700",
-        UNDER_NEGOTIATION: "border-transparent bg-orange-100 text-orange-700",
-        UNDER_CONTRACT: "border-transparent bg-indigo-100 text-indigo-700",
-        SOLD: "border-transparent bg-gray-100 text-gray-700",
-        ARCHIVED: "border-transparent bg-zinc-100 text-zinc-500",
-        REJECTED: "border-transparent bg-red-100 text-red-700",
-        // EstateStatus variants
-        PLANNING: "border-transparent bg-slate-100 text-slate-700",
-        UNDER_DEVELOPMENT: "border-transparent bg-amber-100 text-amber-700",
-        ACTIVE: "border-transparent bg-green-100 text-green-700",
-        COMPLETED: "border-transparent bg-blue-100 text-blue-700",
+        default:     "border-transparent bg-white/10 text-white",
+        secondary:   "border-transparent bg-[#C1121F] text-white",
+        destructive: "border-transparent bg-red-900/40 text-red-400",
+        outline:     "border-white/20 text-white/70",
+
+        /* ── Property Status ── */
+        DRAFT:                "border-transparent bg-zinc-800 text-zinc-400",
+        PENDING_INSPECTION:   "border-transparent bg-amber-900/40 text-amber-400",
+        PENDING_VERIFICATION: "border-transparent bg-yellow-900/40 text-yellow-400",
+        APPROVED:             "border-transparent bg-blue-900/40 text-blue-400",
+        PUBLISHED:            "border-transparent bg-green-900/40 text-green-400",
+        RESERVED:             "border-transparent bg-purple-900/40 text-purple-400",
+        UNDER_NEGOTIATION:    "border-transparent bg-orange-900/40 text-orange-400",
+        UNDER_CONTRACT:       "border-transparent bg-indigo-900/40 text-indigo-400",
+        SOLD:                 "border-transparent bg-zinc-800 text-zinc-500",
+        ARCHIVED:             "border-transparent bg-zinc-900 text-zinc-600",
+        REJECTED:             "border-transparent bg-red-900/40 text-red-400",
+
+        /* ── Estate Status ── */
+        PLANNING:         "border-transparent bg-zinc-800 text-zinc-400",
+        UNDER_DEVELOPMENT:"border-transparent bg-amber-900/40 text-amber-400",
+        ACTIVE:           "border-transparent bg-green-900/40 text-green-400",
+        COMPLETED:        "border-transparent bg-blue-900/40 text-blue-400",
       },
     },
     defaultVariants: {

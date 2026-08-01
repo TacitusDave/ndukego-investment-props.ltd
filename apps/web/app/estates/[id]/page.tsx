@@ -45,8 +45,13 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const { data } = await publicFetch<Estate>(`/estates/public`);
-  return { title: `Estate` };
+  const { data } = await publicFetch<{ items: Estate[] }>(`/estates/public?limit=500`);
+  const estate = data?.items?.find((e) => e.id === id);
+  if (!estate) return { title: "Estate Not Found" };
+  return {
+    title: estate.name,
+    description: estate.shortDescription ?? `${estate.name} — ${estate.city ?? ""} ${estate.state}`.trim(),
+  };
 }
 
 export default async function EstateDetailPage({
@@ -57,7 +62,7 @@ export default async function EstateDetailPage({
   const { id } = await params;
 
   // Fetch all public estates and find the one matching id
-  const { data } = await publicFetch<{ items: Estate[] }>(`/estates/public?limit=100`);
+  const { data } = await publicFetch<{ items: Estate[] }>(`/estates/public?limit=500`);
   const estate = data?.items?.find((e) => e.id === id);
 
   if (!estate) notFound();
@@ -264,7 +269,7 @@ export default async function EstateDetailPage({
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link
-                href="/contact"
+                href={`/contact?message=${encodeURIComponent(`Hi, I'm interested in ${estate.name} and would like to book a consultation.`)}`}
                 className="inline-flex items-center gap-2 rounded-xl bg-[#C1121F] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors shadow-sm shadow-[#C1121F]/15"
               >
                 Book a Consultation <ArrowRight className="h-4 w-4" />

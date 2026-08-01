@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/permissions.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -61,5 +61,57 @@ export class AuthController {
   @Post('me')
   me(@CurrentUser() user: AuthenticatedUser) {
     return { success: true, data: user };
+  }
+
+  // ─── Customer Auth ─────────────────────────────────────────────
+
+  @Public()
+  @Post('customer/register')
+  registerCustomer(
+    @Body() body: {
+      email: string;
+      password: string;
+      firstName: string;
+      lastName: string;
+      phone: string;
+    },
+    @Req() req: Request,
+  ) {
+    return this.authService.registerCustomer(body, (req as any).ip);
+  }
+
+  @Public()
+  @Post('customer/login')
+  loginCustomer(
+    @Body() body: { email: string; password: string },
+    @Req() req: Request,
+  ) {
+    return this.authService.login(
+      body.email.toLowerCase(),
+      body.password,
+      (req as any).ip,
+      (req as any).headers?.['user-agent'],
+    );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('customer/me')
+  getCustomerProfile(@CurrentUser() user: AuthenticatedUser) {
+    if (!user.customerId) {
+      return { success: false, message: 'Not a customer account' };
+    }
+    return this.authService.getCustomerProfile(user.customerId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('customer/profile')
+  updateCustomerProfile(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() body: { firstName?: string; lastName?: string; phone?: string; city?: string; state?: string },
+  ) {
+    if (!user.customerId) {
+      return { success: false, message: 'Not a customer account' };
+    }
+    return this.authService.updateCustomerProfile(user.customerId, body);
   }
 }

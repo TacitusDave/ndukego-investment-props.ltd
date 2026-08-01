@@ -2,11 +2,11 @@
 
 import { useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Building2, Loader2 } from "lucide-react";
+import { Loader2, ArrowRight, ShieldCheck } from "lucide-react";
+import { LogoIcon } from "@nhgp/assets";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { login } from "@/lib/auth";
 
 export default function LoginPage() {
@@ -29,70 +29,173 @@ export default function LoginPage() {
         setError(result.error);
         return;
       }
-      const from = searchParams.get("from") ?? "/properties";
+      const from = searchParams.get("from") ?? "/dashboard";
       router.push(from);
       router.refresh();
     });
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30">
-      <div className="w-full max-w-sm space-y-6">
-        <div className="flex flex-col items-center gap-2 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary">
-            <Building2 className="h-6 w-6 text-primary-foreground" />
+    <div className="min-h-screen flex">
+      {/* Left — dark brand panel */}
+      <div className="hidden lg:flex lg:w-1/2 flex-col bg-[#0D0D0D] p-12 relative overflow-hidden">
+        {/* Subtle crimson glow */}
+        <div
+          className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-[0.08] pointer-events-none"
+          style={{ background: "radial-gradient(circle, #C1121F 0%, transparent 70%)" }}
+        />
+        <div
+          className="absolute bottom-0 right-0 w-64 h-64 rounded-full opacity-[0.05] pointer-events-none"
+          style={{ background: "radial-gradient(circle, #C1121F 0%, transparent 70%)" }}
+        />
+
+        {/* Logo */}
+        <div className="flex items-center gap-3 mb-auto">
+          <LogoIcon width={32} height={32} className="shrink-0" />
+          <div>
+            <p className="text-[13px] font-semibold text-white leading-tight" style={{ fontFamily: "var(--font-display)" }}>
+              Ndukego Investments
+            </p>
+            <p className="text-[10px] text-white/35 leading-tight">& Properties Ltd</p>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight">Ndukego Homes</h1>
-          <p className="text-sm text-muted-foreground">Admin Portal</p>
         </div>
 
-        <Card>
-          <CardHeader className="pb-4">
-            <CardTitle className="text-lg">Sign in</CardTitle>
-            <CardDescription>Enter your staff credentials to continue</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="admin@ndukego.com"
-                  required
-                  autoComplete="email"
-                />
+        {/* Headline */}
+        <div className="py-16">
+          <h1
+            className="text-4xl font-bold text-white leading-tight mb-5"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            Built for the people who run the business.
+          </h1>
+          <p className="text-white/45 text-base leading-relaxed max-w-sm">
+            Manage properties, customers, reservations, and team operations
+            from a single, secure workspace.
+          </p>
+
+          {/* Trust signals */}
+          <div className="mt-12 space-y-3">
+            {[
+              "Role-based access control",
+              "Full audit trail on all actions",
+              "Real-time dashboard & reporting",
+            ].map((item) => (
+              <div key={item} className="flex items-center gap-3">
+                <ShieldCheck className="h-4 w-4 text-[#C1121F] shrink-0" />
+                <span className="text-sm text-white/40">{item}</span>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="••••••••"
-                  required
-                  autoComplete="current-password"
-                />
-              </div>
+            ))}
+          </div>
+        </div>
 
-              {error && (
-                <p className="text-sm text-destructive rounded-md bg-destructive/10 px-3 py-2">
-                  {error}
-                </p>
-              )}
-
-              <Button type="submit" className="w-full" disabled={isPending}>
-                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Sign in
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-
-        <p className="text-center text-xs text-muted-foreground">
-          Ndukego Homes Gallery — Staff access only
+        {/* Footer */}
+        <p className="text-[11px] text-white/20 mt-auto">
+          © {new Date().getFullYear()} Ndukego Investments & Properties Ltd. Staff access only.
         </p>
+      </div>
+
+      {/* Right — login form */}
+      <div className="flex-1 flex items-center justify-center bg-[#F7F7F7] px-6">
+        <div className="w-full max-w-sm">
+          {/* Mobile logo */}
+          <div className="flex items-center gap-3 mb-10 lg:hidden">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0D0D0D]">
+              <LogoIcon width={20} height={20} />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
+                Ndukego Investments
+              </p>
+              <p className="text-[10px] text-gray-400">& Properties Ltd</p>
+            </div>
+          </div>
+
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-1" style={{ fontFamily: "var(--font-display)" }}>
+              Welcome back
+            </h2>
+            <p className="text-sm text-gray-400">Sign in to your staff account to continue.</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                Email address
+              </Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="you@ndukego.com"
+                required
+                autoComplete="email"
+                className="h-11 bg-white border-gray-200 text-gray-900 placeholder:text-gray-400 focus-visible:ring-[#C1121F]/30 focus-visible:border-[#C1121F]/50"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                  Password
+                </Label>
+                <button type="button" className="text-xs text-[#C1121F] hover:text-[#D62839] font-medium transition-colors">
+                  Forgot password?
+                </button>
+              </div>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                required
+                autoComplete="current-password"
+                className="h-11 bg-white border-gray-200 text-gray-900 placeholder:text-gray-400 focus-visible:ring-[#C1121F]/30 focus-visible:border-[#C1121F]/50"
+              />
+            </div>
+
+            {error && (
+              <div className="rounded-lg border border-red-100 bg-red-50 px-4 py-3">
+                {error === "Account deactivated" ? (
+                  <p className="text-sm text-red-600">
+                    Your account has been deactivated until further notice.{" "}
+                    <a
+                      href="mailto:ndukegoinvest.propertiesltd@gmail.com"
+                      className="font-semibold underline hover:text-red-700"
+                    >
+                      Contact the Administrator
+                    </a>
+                  </p>
+                ) : (
+                  <p className="text-sm text-red-600">{error}</p>
+                )}
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="w-full h-11 bg-[#C1121F] hover:bg-[#D62839] text-white font-semibold rounded-xl flex items-center justify-center gap-2 shadow-sm shadow-[#C1121F]/15 transition-colors"
+            >
+              {isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <>
+                  Sign in <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </Button>
+          </form>
+
+          <p className="mt-10 text-center text-xs text-gray-400">
+            Need access?{" "}
+            <a
+              href="mailto:ndukegoinvest.propertiesltd@gmail.com"
+              className="text-[#C1121F] hover:text-[#D62839] font-medium transition-colors"
+            >
+              Contact your administrator
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
