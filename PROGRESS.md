@@ -1,6 +1,6 @@
 # NHGP — Build Progress & Master Todo List
 
-_Updated: 2026-08-01 | Session 14_
+_Updated: 2026-08-01 | Session 15_
 
 > This file is the single source of truth for what's done, what's in progress, and what
 > remains until 100% production-ready. Read it at the start of every session.
@@ -72,6 +72,7 @@ Target: Live and usable by company staff and customers.
 - [x] Estates — list, create, detail (phases, blocks, infrastructure)
 - [x] Customers — list, create, detail
 - [x] Reservations — list with search + status filter; detail/manage with status update + notes
+- [x] **Sales** — `/sales` list page (search, status filter, pagination; Sale#, property, customer, type, final price, balance, status); `/sales/:id` detail page (customer card, financials breakdown, sale details, payment history, status transitions with notes)
 - [x] `@nhgp/assets` logo — uses real logo-icon.png in sidebar
 - [x] **Employee management** — `/employees` list, `/employees/new` create, `/employees/:id` detail + role assignment
 - [x] **Staff password change** — `/settings/password` page with strength meter, uses POST /auth/change-password
@@ -351,7 +352,7 @@ These exist in the Prisma schema and will be built in their respective phases:
 | Inspection | ✅ | ❌ | ❌ | Request only |
 | Appointment | ✅ | ❌ | ❌ | ❌ |
 | Document | ✅ | ❌ | ❌ | View only |
-| Sale | ✅ | ❌ | ❌ | n/a |
+| Sale | ✅ | ✅ | ✅ | n/a |
 | Payment | ✅ | ❌ | ❌ | View only |
 | PropertyFavorite | ✅ | ❌ | n/a | View only |
 | Notification | ✅ | ❌ | ❌ | ❌ |
@@ -388,3 +389,5 @@ These exist in the Prisma schema and will be built in their respective phases:
 | 11 | 2026-07-30 | Admin portal redesign: globals.css (light-only, always-dark sidebar tokens, crimson scrollbar), ThemeProvider (forcedTheme="light"), sidebar (premium dark, grouped nav, correct branding, crimson active states), header (ThemeToggle removed, clean minimal), login (split-screen dark brand panel + white form), metadata title updated; all 7 web service/project/insight pages created with AnimateIn, full content, crimson design system |
 | 12 | 2026-07-30 | Stage 1: Hard delete for properties + estates (API + admin confirmation modal with name-typing), Stage 2: Estate badge on property cards (indigo chip), Stage 3: Per-estate site plan management in admin (site plan upload, building type editor with color picker + image upload), API proxy route (/api/proxy/[...path]/route.ts), EstateSitePlan component now accepts sitePlanUrl+buildingTypes props, Contact page rebuild (Google Maps embed + updated contact details + no CTA), FooterCtaBand extracted as client component (hidden on /contact), Prisma schema + db push for buildingTypesConfig JSON field on Estate |
 | 13 | 2026-07-31 | Amenities toggle system (Property + Estate): comprehensive list (5 categories, 30+ items) stored as String[] in DB — admin toggles, web display as emoji grid; Default sales agent card on property detail pages (profile photo /default-prop-profile.jpg, contact details); Per-property/estate Google Maps URL field in admin (coordinates auto-extracted from URL, stored to latitude/longitude, map embed shown on detail pages); Properties listing Map View (Leaflet + OpenStreetMap, red marker pins, click popup with property info, navigate to detail page); Schema updated (amenities + mapUrl on Property + Estate), db push completed, ArrowRight import fix in footer.tsx |
+| 14 | 2026-08-01 | Inquiries fix (dedicated Inquiry model + raw SQL, all form submissions captured); Employee/Customer deactivate + delete (soft-delete with User sync); Login deactivated-account message; Estate section redesign (horizontal split cards + site plan panel) |
+| 15 | 2026-08-01 | Admin Sales pages: `/sales` list (search, status filter, pagination, financials) + `/sales/:id` detail (customer, financials, sale details, payment history, full status transitions DRAFT→PENDING_APPROVAL→APPROVED→ACTIVE→COMPLETED/DISPUTED/CANCELLED) |
