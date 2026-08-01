@@ -336,8 +336,7 @@ export default async function PropertyDetailPage({
           </div>
 
           {/* Right: Inquiry card + Agent */}
-          <div className="lg:col-span-1">
-            <div className="space-y-4">
+          <div className="lg:col-span-1 space-y-4">
             <div className="sticky top-24 rounded-xl border bg-card p-6 shadow-sm space-y-5">
               {/* Reserve CTA */}
               {(property.status === "PUBLISHED") && (
@@ -376,11 +375,8 @@ export default async function PropertyDetailPage({
               </div>
             </div>
 
-            {/* Agent card */}
-            <div className="sticky top-[calc(24rem+1rem)]">
-              <PropertyAgent />
-            </div>
-            </div>
+            {/* Agent card — flows below the inquiry card, not sticky */}
+            <PropertyAgent />
           </div>
 
         </div>

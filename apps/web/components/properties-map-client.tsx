@@ -34,7 +34,13 @@ export function PropertiesMapClient({ properties }: Props) {
   const mapRef = useRef<import("leaflet").Map | null>(null);
 
   useEffect(() => {
-    if (!containerRef.current || mapRef.current) return;
+    if (!containerRef.current) return;
+
+    // Destroy existing map before re-initialising (e.g. when properties list changes)
+    if (mapRef.current) {
+      mapRef.current.remove();
+      mapRef.current = null;
+    }
 
     let cancelled = false;
 
@@ -110,7 +116,7 @@ export function PropertiesMapClient({ properties }: Props) {
         mapRef.current = null;
       }
     };
-  }, []);
+  }, [properties]);
 
   return <div ref={containerRef} className="w-full h-full" />;
 }

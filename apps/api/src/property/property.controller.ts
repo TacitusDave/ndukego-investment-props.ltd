@@ -47,6 +47,12 @@ export class PropertyController {
     return this.propertyService.findOne(id, true);
   }
 
+  @Public()
+  @Post('public/inquiry')
+  submitInquiry(@Body() body: Record<string, unknown>) {
+    return this.propertyService.submitInquiry(body as never);
+  }
+
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Get()
   @RequirePermissions('property.read')
@@ -59,6 +65,18 @@ export class PropertyController {
     @Query('estateId') estateId?: string,
   ) {
     return this.propertyService.findAll({ page, limit, search, status, category, estateId });
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Get('admin/inquiries')
+  @RequirePermissions('property.read')
+  getInquiries(
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+    @Query('search') search?: string,
+    @Query('status') status?: string,
+  ) {
+    return this.propertyService.getInquiries({ page, limit, search, status });
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -105,6 +123,13 @@ export class PropertyController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Delete(':id/permanent')
+  @RequirePermissions('property.delete')
+  hardDelete(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.propertyService.hardDelete(id, user);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Post(':id/media')
   @RequirePermissions('property.update')
   @UseInterceptors(FileInterceptor('file', { storage: memoryStorage() }))
@@ -134,5 +159,21 @@ export class PropertyController {
   @RequirePermissions('property.update')
   setCoverMedia(@Param('id') id: string, @Param('mediaId') mediaId: string) {
     return this.propertyService.setCoverMedia(id, mediaId);
+  }
+
+  // ─── Customer Favorites ──────────────────────────────────────
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/favorite')
+  toggleFavorite(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    if (!user.customerId) return { isFavorited: false };
+    return this.propertyService.toggleFavorite(id, user.customerId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':id/favorite-status')
+  getFavoriteStatus(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    if (!user.customerId) return { isFavorited: false };
+    return this.propertyService.getFavoriteStatus(id, user.customerId);
   }
 }

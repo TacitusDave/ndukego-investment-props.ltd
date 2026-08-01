@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { apiFetch } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
 import { PropertyStatusBadge } from "../../properties/property-status-badge";
@@ -102,7 +102,7 @@ export default async function EstateDetailPage({
               <h2 className="text-lg font-semibold">{estate.name}</h2>
               <p className="text-sm text-muted-foreground font-mono">{estate.code}</p>
             </div>
-            <Badge variant={estate.status as never}>{STATUS_LABELS[estate.status] ?? estate.status}</Badge>
+            <Badge variant={estate.status as BadgeProps["variant"]}>{STATUS_LABELS[estate.status] ?? estate.status}</Badge>
           </div>
           {estate.description && (
             <p className="text-sm text-muted-foreground">{estate.description}</p>

@@ -463,6 +463,19 @@ export class PropertyService {
       customerId = existing.id;
     }
 
+    // Always record a dedicated Inquiry entry
+    await this.prisma.$executeRawUnsafe(
+      `INSERT INTO inquiries (id, first_name, last_name, email, phone, message, property_id, property_title, status, created_at, updated_at)
+       VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6::uuid, $7, 'NEW', now(), now())`,
+      data.firstName ?? null,
+      data.lastName ?? null,
+      data.email,
+      data.phone,
+      data.message ?? null,
+      data.propertyId ?? null,
+      data.propertyTitle ?? null,
+    );
+
     await this.auditService.log({
       action: 'CREATE',
       entityType: 'CUSTOMER',
@@ -498,5 +511,45 @@ export class PropertyService {
       where: { propertyId, customerId },
     });
     return { isFavorited: !!existing };
+  }
+
+  async getInquiries(query: { page?: number; limit?: number; search?: string; status?: string }) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 20;
+    const { skip } = calculatePagination(page, limit, 0);
+
+    const searchPattern = query.search ? `%${query.search}%` : null;
+    const status = query.status ?? null;
+
+    const items = await this.prisma.$queryRawUnsafe<Record<string, unknown>[]>(
+      `SELECT id, first_name as "firstName", last_name as "lastName", email, phone, message,
+              property_id as "propertyId", property_title as "propertyTitle", status, created_at as "createdAt"
+       FROM inquiries
+       WHERE ($1::text IS NULL OR status = $1)
+         AND ($2::text IS NULL OR (
+           email ILIKE $2 OR first_name ILIKE $2 OR last_name ILIKE $2
+           OR phone ILIKE $2 OR property_title ILIKE $2
+         ))
+       ORDER BY created_at DESC
+       LIMIT $3 OFFSET $4`,
+      status,
+      searchPattern,
+      limit,
+      skip,
+    );
+
+    const [countRow] = await this.prisma.$queryRawUnsafe<{ count: string }[]>(
+      `SELECT COUNT(*)::text as count FROM inquiries
+       WHERE ($1::text IS NULL OR status = $1)
+         AND ($2::text IS NULL OR (
+           email ILIKE $2 OR first_name ILIKE $2 OR last_name ILIKE $2
+           OR phone ILIKE $2 OR property_title ILIKE $2
+         ))`,
+      status,
+      searchPattern,
+    );
+
+    const total = parseInt(countRow?.count ?? '0', 10);
+    return { items, meta: calculatePagination(page, limit, total) };
   }
 }

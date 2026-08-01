@@ -1,35 +1,41 @@
 @import "tailwindcss";
 
+/* ── Light-only admin portal ─────────────────────────────── */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --background: 0 0% 97%;            /* #F7F7F7 — page canvas */
+    --foreground: 0 0% 6%;             /* #0F0F0F */
+    --card: 0 0% 100%;                 /* white cards */
+    --card-foreground: 0 0% 6%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
-    --radius: 0.5rem;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 0 0% 98%;
-    --sidebar-primary-foreground: 240 5.9% 10%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-muted-foreground: 240 5% 64.9%;
+    --popover-foreground: 0 0% 6%;
+    --primary: 0 0% 9%;                /* #181818 — buttons */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 354 83% 41%;          /* #C1121F crimson */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 93%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 354 63% 52%;             /* #D62839 */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 89%;                /* #E3E3E3 */
+    --input: 0 0% 95%;
+    --ring: 354 83% 41%;
+    --radius: 0.75rem;
+
+    /* ── Sidebar — always dark, independent of page theme ── */
+    --sidebar-background: 0 0% 7%;     /* #111111 */
+    --sidebar-foreground: 0 0% 92%;    /* #EBEBEB */
+    --sidebar-primary: 354 83% 41%;    /* #C1121F */
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 354 83% 41%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 13%;        /* #212121 */
+    --sidebar-muted-foreground: 0 0% 48%; /* #7A7A7A */
+
+    --header-bg: #FFFFFF;
+    --header-border: #E3E3E3;
   }
 }
 
@@ -53,10 +59,10 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.5rem;
   --color-sidebar-background: hsl(var(--sidebar-background));
   --color-sidebar-foreground: hsl(var(--sidebar-foreground));
   --color-sidebar-primary: hsl(var(--sidebar-primary));
@@ -65,16 +71,32 @@
   --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
   --color-sidebar-border: hsl(var(--sidebar-border));
   --color-sidebar-muted-foreground: hsl(var(--sidebar-muted-foreground));
-  --font-sans: var(--font-geist-sans, ui-sans-serif, system-ui, sans-serif);
-  --font-mono: var(--font-geist-mono, ui-monospace, monospace);
+  --font-display: var(--font-fraunces, Georgia, serif);
+  --font-sans: var(--font-dm-sans, ui-sans-serif, system-ui, sans-serif);
+  --font-mono: var(--font-jetbrains-mono, ui-monospace, monospace);
 }
 
+/* ── Thin scrollbar (same as web) ── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(193,18,31,0.18) transparent;
+}
+::-webkit-scrollbar        { width: 3px; height: 3px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: rgba(193,18,31,0.18); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(193,18,31,0.45); }
+
 @layer base {
-  * {
-    @apply border-border;
-  }
+  * { @apply border-border; }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-sans);
     font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
   }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+  code, pre, kbd { font-family: var(--font-mono); }
 }

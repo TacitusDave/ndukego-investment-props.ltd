@@ -21,6 +21,7 @@ import { AppointmentModule } from './appointment/appointment.module';
 import { NotificationModule } from './notification/notification.module';
 import { AiModule } from './ai/ai.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { EmailModule } from './email/email.module';
 import { HealthController } from './health/health.controller';
 
 @Module({
@@ -30,6 +31,7 @@ import { HealthController } from './health/health.controller';
     PrismaModule,
     AuditModule,
     StorageModule,
+    EmailModule,
     AuthModule,
     CompanyModule,
     EstateModule,

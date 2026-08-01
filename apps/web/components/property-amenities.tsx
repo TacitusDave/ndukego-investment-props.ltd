@@ -1,36 +1,44 @@
-const AMENITY_ICONS: Record<string, string> = {
-  "Road Access": "🛣️",
-  "Electricity": "⚡",
-  "Solar Power": "☀️",
-  "Generator Backup": "🔋",
-  "Water Supply / Borehole": "💧",
-  "Drainage System": "🌊",
-  "Internet / Fibre": "📡",
-  "Perimeter Fencing": "🧱",
-  "Security Gate": "🚧",
-  "CCTV Surveillance": "📷",
-  "Security Post": "💂",
-  "24/7 Security": "🛡️",
-  "Swimming Pool": "🏊",
-  "Garden / Landscaping": "🌿",
-  "Balcony / Terrace": "🏠",
-  "Garage / Car Park": "🚗",
-  "Gym / Fitness Centre": "💪",
-  "Air Conditioning": "❄️",
-  "Elevator / Lift": "🛗",
-  "Smart Home System": "🏡",
-  "BQ / Servant Quarters": "🏘️",
-  "Golf Course": "⛳",
-  "Club House": "🏛️",
-  "Children's Playground": "🎠",
-  "Sports Court": "🏀",
-  "Shopping Complex": "🛍️",
-  "School": "🏫",
-  "Place of Worship": "⛪",
-  "Hospital / Clinic": "🏥",
-  "Waste Management": "♻️",
-  "Estate Management": "🏢",
-  "Laundry Services": "👕",
+import {
+  Zap, Sun, Battery, Droplets, Waves, Wifi, Shield, ShieldCheck,
+  Lock, Camera, Car, Dumbbell, Wind, ArrowUpDown, Cpu, Building,
+  Building2, Flag, ShoppingBag, BookOpen, Recycle, Leaf, Home,
+  Star, Activity, CheckCircle, MapPin, Heart, Shirt,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+const AMENITY_ICONS: Record<string, LucideIcon> = {
+  "Road Access":              MapPin,
+  "Electricity":              Zap,
+  "Solar Power":              Sun,
+  "Generator Backup":         Battery,
+  "Water Supply / Borehole":  Droplets,
+  "Drainage System":          Waves,
+  "Internet / Fibre":         Wifi,
+  "Perimeter Fencing":        Shield,
+  "Security Gate":            Lock,
+  "CCTV Surveillance":        Camera,
+  "Security Post":            Shield,
+  "24/7 Security":            ShieldCheck,
+  "Swimming Pool":            Waves,
+  "Garden / Landscaping":     Leaf,
+  "Balcony / Terrace":        Home,
+  "Garage / Car Park":        Car,
+  "Gym / Fitness Centre":     Dumbbell,
+  "Air Conditioning":         Wind,
+  "Elevator / Lift":          ArrowUpDown,
+  "Smart Home System":        Cpu,
+  "BQ / Servant Quarters":    Building,
+  "Golf Course":              Flag,
+  "Club House":               Building2,
+  "Children's Playground":    Star,
+  "Sports Court":             Activity,
+  "Shopping Complex":         ShoppingBag,
+  "School":                   BookOpen,
+  "Place of Worship":         Building2,
+  "Hospital / Clinic":        Heart,
+  "Waste Management":         Recycle,
+  "Estate Management":        Building2,
+  "Laundry Services":         Shirt,
 };
 
 interface Props {
@@ -47,14 +55,15 @@ export function PropertyAmenities({ amenities, label = "Amenities & Features" }:
         {label}
       </h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-3">
-        {amenities.map((amenity) => (
-          <div key={amenity} className="flex items-center gap-2">
-            <span className="text-base leading-none" aria-hidden>
-              {AMENITY_ICONS[amenity] ?? "✓"}
-            </span>
-            <span className="text-sm text-foreground">{amenity}</span>
-          </div>
-        ))}
+        {amenities.map((amenity) => {
+          const Icon = AMENITY_ICONS[amenity] ?? CheckCircle;
+          return (
+            <div key={amenity} className="flex items-center gap-2">
+              <Icon className="h-4 w-4 text-[#C1121F] shrink-0" aria-hidden />
+              <span className="text-sm text-foreground">{amenity}</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

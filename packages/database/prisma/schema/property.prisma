@@ -219,3 +219,24 @@ model PropertyFavorite {
   @@unique([propertyId, customerId])
   @@map("property_favorites")
 }
+
+// ─── Inquiry ────────────────────────────────────────────────────
+
+model Inquiry {
+  id            String   @id @default(uuid()) @db.Uuid
+  firstName     String?
+  lastName      String?
+  email         String
+  phone         String
+  message       String?
+  propertyId    String?  @map("property_id") @db.Uuid
+  propertyTitle String?  @map("property_title")
+  status        String   @default("NEW")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+  @@map("inquiries")
+}

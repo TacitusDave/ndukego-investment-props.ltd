@@ -1,67 +1,32 @@
 @import "tailwindcss";
 
-/* Enable .dark class-based dark mode for Tailwind v4 */
-@custom-variant dark (&:where(.dark, .dark *));
-
-/* ── Light mode (default) ──────────────────────────────────── */
+/* ── Light mode only — dark class never applied (forcedTheme="light") ── */
 @layer base {
   :root {
-    --background: 0 0% 99%;          /* #FAFAFA */
-    --foreground: 0 0% 5%;           /* #0D0D0D */
-    --card: 0 0% 100%;               /* #FFFFFF */
-    --card-foreground: 0 0% 5%;
+    --background: 0 0% 100%;           /* #FFFFFF */
+    --foreground: 0 0% 8%;             /* #141414 */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 8%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 5%;
-    --primary: 0 0% 9%;              /* #181818  dark buttons */
+    --popover-foreground: 0 0% 8%;
+    --primary: 0 0% 9%;                /* #181818 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 354 83% 41%;        /* #C1121F  crimson — always */
+    --secondary: 354 83% 41%;          /* #C1121F crimson */
     --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 96%;               /* #F5F5F5 */
-    --muted-foreground: 0 0% 45%;    /* #737373 */
-    --accent: 354 63% 52%;           /* #D62839 */
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 354 63% 52%;             /* #D62839 */
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 91%;              /* #E8E8E8 */
-    --input: 0 0% 96%;               /* #F5F5F5 */
-    --ring: 354 83% 41%;             /* #C1121F */
+    --border: 0 0% 90%;                /* #E5E5E5 */
+    --input: 0 0% 96%;
+    --ring: 354 83% 41%;
     --radius: 0.75rem;
 
-    /* ── Surface tokens for theme-aware hardcoded bg/border ── */
-    --nav-bg: #FFFFFF;
-    --nav-border: #E8E8E8;
-    --section-alt: #F5F5F5;
-    --hero-text: #0D0D0D;
-    --hero-text-muted: #737373;
-  }
-
-  /* ── Dark mode ─────────────────────────────────────────────── */
-  .dark {
-    --background: 0 0% 2%;           /* #050505 */
-    --foreground: 0 0% 100%;         /* #FFFFFF */
-    --card: 0 0% 7%;                 /* #111111 */
-    --card-foreground: 0 0% 100%;
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 0 0% 9%;              /* #181818 */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 354 83% 41%;        /* #C1121F — stays crimson */
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 5%;                /* #0C0C0C */
-    --muted-foreground: 0 0% 55%;    /* #8B8B8B */
-    --accent: 354 63% 52%;           /* #D62839 */
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 18%;              /* #2E2E2E */
-    --input: 0 0% 7%;                /* #111111 */
-    --ring: 354 83% 41%;             /* #C1121F */
-
-    --nav-bg: #0C0C0C;
-    --nav-border: #2E2E2E;
-    --section-alt: #0C0C0C;
-    --hero-text: #FFFFFF;
-    --hero-text-muted: #8B8B8B;
+    --nav-bg: rgba(255,255,255,0.88);
+    --nav-border: rgba(0,0,0,0.07);
+    --section-alt: rgba(249,249,249,0.7);
   }
 }
 
@@ -94,30 +59,73 @@
   --font-mono: var(--font-jetbrains-mono, ui-monospace, monospace);
 }
 
-/* ── Floating gradient blob keyframes (used across page sections) ── */
-@keyframes blob-drift-1 {
-  0%, 100% { transform: translate(0%, 0%) scale(1); }
-  20%       { transform: translate(10%, -18%) scale(1.06); }
-  45%       { transform: translate(18%, 8%) scale(0.96); }
-  70%       { transform: translate(-6%, 20%) scale(1.04); }
-  90%       { transform: translate(-14%, -5%) scale(0.98); }
+/* ── Thin custom scrollbar (all pages) ── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(193,18,31,0.2) transparent;
 }
-@keyframes blob-drift-2 {
-  0%, 100% { transform: translate(0%, 0%) scale(1); }
-  25%       { transform: translate(-14%, 12%) scale(1.08); }
-  55%       { transform: translate(8%, -16%) scale(0.93); }
-  80%       { transform: translate(16%, 6%) scale(1.03); }
+::-webkit-scrollbar        { width: 3px; height: 3px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: rgba(193,18,31,0.2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(193,18,31,0.5); }
+
+/* ── Global background layers (applied in layout.tsx via class names) ── */
+
+/* Morphing crimson gradient — single continuous flow, all directions */
+@keyframes gradient-morph {
+  0%   { background-position: 0%   50%; }
+  12%  { background-position: 80%  10%; }
+  25%  { background-position: 100% 70%; }
+  37%  { background-position: 40%  100%; }
+  50%  { background-position: 0%   40%; }
+  62%  { background-position: 60%  0%; }
+  75%  { background-position: 100% 60%; }
+  87%  { background-position: 20%  90%; }
+  100% { background-position: 0%   50%; }
 }
-@keyframes blob-drift-3 {
-  0%, 100% { transform: translate(0%, 0%); }
-  35%       { transform: translate(12%, -10%); }
-  65%       { transform: translate(-8%, 14%); }
+
+.nhgp-gradient-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: linear-gradient(
+    -45deg,
+    #ffffff              0%,
+    rgba(255,220,220,.55) 18%,
+    #ffffff              35%,
+    rgba(255,235,235,.40) 50%,
+    #ffffff              65%,
+    rgba(255,210,210,.50) 80%,
+    #ffffff              100%
+  );
+  background-size: 400% 400%;
+  animation: gradient-morph 24s ease infinite;
+}
+
+/* Grid — always on, sits above gradient */
+.nhgp-grid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(0,0,0,0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.045) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ── Process-section style pulse (reusable) ── */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.9; }
 }
 
 @layer base {
   * { @apply border-border; }
   body {
-    @apply bg-background text-foreground;
+    background: transparent;  /* let .nhgp-gradient-bg show through */
+    @apply text-foreground;
     font-family: var(--font-sans);
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
