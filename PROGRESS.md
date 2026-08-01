@@ -1,6 +1,6 @@
 # NHGP — Build Progress & Master Todo List
 
-_Updated: 2026-07-31 | Session 13_
+_Updated: 2026-08-01 | Session 14_
 
 > This file is the single source of truth for what's done, what's in progress, and what
 > remains until 100% production-ready. Read it at the start of every session.
@@ -47,7 +47,8 @@ Target: Live and usable by company staff and customers.
 - [x] EstateModule — full CRUD + `GET /estates/public`
 - [x] CompanyModule — company info + branch management
 - [x] DashboardModule — `GET /dashboard/stats`
-- [x] CustomerModule — paginated list with search/filter, create, get, update (staff-only)
+- [x] CustomerModule — paginated list with search/filter, create, get, update, deactivate, activate, soft-delete (staff-only)
+- [x] Inquiry model — `inquiries` table added to Prisma schema + pushed to database; all form submissions captured as dedicated records
 - [x] EmailModule — global Nodemailer service, graceful SMTP degradation
   - [x] sendWelcome, sendReservationConfirmation, sendReservationStatusUpdate
   - [x] **sendInquiryConfirmation** — wired in email service, now called from property service
@@ -75,7 +76,19 @@ Target: Live and usable by company staff and customers.
 - [x] **Employee management** — `/employees` list, `/employees/new` create, `/employees/:id` detail + role assignment
 - [x] **Staff password change** — `/settings/password` page with strength meter, uses POST /auth/change-password
 - [x] **Company settings page** — company info, branch addresses, contact details (`/settings`)
-- [x] **Inquiry management** — `/inquiries` page (shows Website leadSource customers with message preview)
+- [x] **Inquiry management** — `/inquiries` page rebuilt to query dedicated `Inquiry` records (new model);
+      shows contact, property enquired, message, and status; all website form submissions captured regardless
+      of whether the email already exists as a customer
+- [x] **Account deactivation/deletion:**
+  - Employee detail: Deactivate (INACTIVE/ACTIVE/TERMINATED status buttons) + Delete button with dialog;
+    status change syncs linked User.status; deletion soft-deletes employee + deactivates user login
+  - Customer detail: Deactivate/Activate toggle button + Delete button with dialog; deactivation syncs
+    linked User.status so the customer cannot log in to the website
+  - Auth: deactivated accounts see "Your account has been deactivated until further notice. Contact the
+    Administrator" with mailto link on login
+- [x] **Admin login error for deactivated accounts** — specific UI shown instead of generic error
+- [x] **Landing page estate section redesigned** — 2-column wider cards with split layout: estate info left,
+      site plan/cover image right with "View site plan →" CTA
 - [x] **Admin portal redesign (Session 11):**
   - [x] `globals.css` — light-only, dark sidebar tokens in `:root`, 3px crimson scrollbar, Fraunces/DM Sans font vars
   - [x] `ThemeProvider` — `forcedTheme="light"`, dark mode removed entirely
