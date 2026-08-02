@@ -217,9 +217,8 @@ export default async function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {featuredEstates.map((e, i) => (
                 <AnimateIn key={e.id} delay={i * 0.1}>
-                  <div className="group rounded-2xl border border-gray-100 bg-white/80 shadow-sm hover:shadow-lg hover:border-[#C1121F]/20 transition-all duration-300 overflow-hidden flex flex-col sm:flex-row">
-                    {/* Estate details */}
-                    <div className="flex-1 p-6 flex flex-col">
+                  <div className="group rounded-2xl border border-gray-100 bg-white/80 shadow-sm hover:shadow-lg hover:border-[#C1121F]/20 transition-all duration-300 overflow-hidden">
+                    <div className="p-6 flex flex-col">
                       <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-3">
                         <MapPin className="h-3 w-3 text-[#C1121F] shrink-0" />
                         {e.city ? `${e.city}, ` : ""}{e.state}
@@ -231,7 +230,7 @@ export default async function HomePage() {
                         {e.name}
                       </h3>
                       {e.shortDescription && (
-                        <p className="text-sm text-gray-500 leading-relaxed line-clamp-3 mb-4 flex-1">
+                        <p className="text-sm text-gray-500 leading-relaxed line-clamp-3 mb-4">
                           {e.shortDescription}
                         </p>
                       )}
@@ -253,36 +252,6 @@ export default async function HomePage() {
                         className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#C1121F] hover:text-[#D62839] transition-colors mt-auto"
                       >
                         Explore estate <ArrowRight className="h-3.5 w-3.5" />
-                      </Link>
-                    </div>
-
-                    {/* Site plan / cover image panel */}
-                    <div className="sm:w-48 lg:w-52 shrink-0 bg-gray-50 border-t sm:border-t-0 sm:border-l border-gray-100 flex flex-col items-center justify-center p-5 gap-3 relative overflow-hidden">
-                      {/* subtle pattern */}
-                      <div className="absolute inset-0 opacity-[0.035]" style={{
-                        backgroundImage: "radial-gradient(circle, #C1121F 1px, transparent 1px)",
-                        backgroundSize: "20px 20px",
-                      }} />
-                      {e.coverImageUrl || e.masterPlanUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={e.masterPlanUrl ?? e.coverImageUrl ?? ""}
-                          alt={`${e.name} site plan`}
-                          className="relative w-full h-32 sm:h-full object-cover rounded-xl"
-                        />
-                      ) : (
-                        <div className="relative flex flex-col items-center gap-3 text-center">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm border border-gray-100">
-                            <Building2 className="h-6 w-6 text-[#C1121F]" />
-                          </div>
-                          <p className="text-xs font-semibold text-gray-500 leading-snug">Site Plan<br />Available</p>
-                        </div>
-                      )}
-                      <Link
-                        href={`/estates/${e.id}`}
-                        className="relative z-10 text-[11px] font-semibold text-[#C1121F] hover:text-[#D62839] transition-colors"
-                      >
-                        View site plan →
                       </Link>
                     </div>
                   </div>
