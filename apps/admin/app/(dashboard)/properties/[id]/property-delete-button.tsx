@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Trash2, AlertTriangle } from "lucide-react";
+import { Trash2, AlertTriangle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { hardDeleteProperty } from "@/lib/actions";
 
@@ -34,7 +34,6 @@ export function PropertyDeleteButton({ propertyId, propertyTitle }: Props) {
         setError(result.error);
       } else {
         router.push("/properties");
-        router.refresh();
       }
     });
   }
@@ -53,7 +52,19 @@ export function PropertyDeleteButton({ propertyId, propertyTitle }: Props) {
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-xl bg-white shadow-2xl border border-gray-200 p-6 space-y-5 mx-4">
+          <div className="relative w-full max-w-md rounded-xl bg-white shadow-2xl border border-gray-200 p-6 space-y-5 mx-4 overflow-hidden">
+
+            {/* Loading overlay — sits on top of the form while pending */}
+            {isPending && (
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-xl bg-white/95">
+                <Loader2 className="h-8 w-8 animate-spin text-red-500" />
+                <p className="text-sm font-medium text-gray-700">Deleting property…</p>
+                <p className="text-xs text-gray-400 text-center px-6">
+                  This may take a few seconds while media files are removed. Please wait.
+                </p>
+              </div>
+            )}
+
             <div className="flex items-start gap-3">
               <div className="shrink-0 flex h-10 w-10 items-center justify-center rounded-full bg-red-100">
                 <AlertTriangle className="h-5 w-5 text-red-600" />
@@ -61,24 +72,30 @@ export function PropertyDeleteButton({ propertyId, propertyTitle }: Props) {
               <div>
                 <h2 className="text-base font-semibold text-gray-900">Delete property permanently?</h2>
                 <p className="text-sm text-gray-500 mt-1">
-                  This will permanently remove <span className="font-medium text-gray-700">"{propertyTitle}"</span> from
-                  the database, website, and all uploaded images. This cannot be undone.
+                  This will permanently remove{" "}
+                  <span className="font-medium text-gray-700">&ldquo;{propertyTitle}&rdquo;</span>{" "}
+                  from the database, website, and all uploaded images. This cannot be undone.
                 </p>
               </div>
             </div>
 
             <div className="space-y-2">
               <label className="text-xs font-medium text-gray-600">
-                Type <span className="font-mono bg-gray-100 px-1.5 py-0.5 rounded text-gray-800">{propertyTitle}</span> to confirm
+                Type{" "}
+                <span className="font-mono bg-gray-100 px-1.5 py-0.5 rounded text-gray-800">
+                  {propertyTitle}
+                </span>{" "}
+                to confirm
               </label>
               <input
                 type="text"
                 value={typed}
                 onChange={(e) => { setTyped(e.target.value); setError(null); }}
                 placeholder="Type the property name exactly"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 disabled:opacity-50"
                 autoFocus
-                onKeyDown={(e) => e.key === "Enter" && confirmed && handleDelete()}
+                disabled={isPending}
+                onKeyDown={(e) => e.key === "Enter" && confirmed && !isPending && handleDelete()}
               />
             </div>
 
@@ -103,7 +120,7 @@ export function PropertyDeleteButton({ propertyId, propertyTitle }: Props) {
                 onClick={handleDelete}
                 disabled={!confirmed || isPending}
               >
-                {isPending ? "Deleting…" : "Delete permanently"}
+                Delete permanently
               </Button>
             </div>
           </div>
