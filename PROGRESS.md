@@ -1,6 +1,6 @@
 # NHGP — Build Progress & Master Todo List
 
-_Updated: 2026-08-01 | Session 15_
+_Updated: 2026-08-02 | Session 16_
 
 > This file is the single source of truth for what's done, what's in progress, and what
 > remains until 100% production-ready. Read it at the start of every session.
@@ -80,6 +80,16 @@ Target: Live and usable by company staff and customers.
 - [x] **Inquiry management** — `/inquiries` page rebuilt to query dedicated `Inquiry` records (new model);
       shows contact, property enquired, message, and status; all website form submissions captured regardless
       of whether the email already exists as a customer
+- [x] **Inquiry status updates** — inline status update dropdown on inquiries page (NEW→CONTACTED→CONVERTED→CLOSED);
+      PATCH endpoint `PATCH /properties/admin/inquiries/:id/status`; status filter added to inquiries list
+- [x] **Dashboard enhancements** — 8 stat tiles across two rows: Properties, Estates, Customers, Reservations,
+      Sales, New Inquiries, Published, Pending Approval; dashboard API updated with reservations/sales/inquiries counts
+- [x] **Reservation → Sale conversion** — confirmed reservation detail shows "Convert to Sale" section with price/
+      type/discount form; creates Sale record then marks reservation CONVERTED_TO_SALE; redirects to new sale page
+- [x] **Customer detail: Activity history** — reservation history redesigned as a proper table (property name,
+      fee, status, date); new Sales history table added (sale#, property, final price, balance, status, date)
+- [x] **Web: State filter fixed** — properties public endpoint now accepts `state` as a dedicated query param
+      (case-insensitive exact match); web page passes state and search independently (both can be active together)
 - [x] **Account deactivation/deletion:**
   - Employee detail: Deactivate (INACTIVE/ACTIVE/TERMINATED status buttons) + Delete button with dialog;
     status change syncs linked User.status; deletion soft-deletes employee + deactivates user login
@@ -391,3 +401,4 @@ These exist in the Prisma schema and will be built in their respective phases:
 | 13 | 2026-07-31 | Amenities toggle system (Property + Estate): comprehensive list (5 categories, 30+ items) stored as String[] in DB — admin toggles, web display as emoji grid; Default sales agent card on property detail pages (profile photo /default-prop-profile.jpg, contact details); Per-property/estate Google Maps URL field in admin (coordinates auto-extracted from URL, stored to latitude/longitude, map embed shown on detail pages); Properties listing Map View (Leaflet + OpenStreetMap, red marker pins, click popup with property info, navigate to detail page); Schema updated (amenities + mapUrl on Property + Estate), db push completed, ArrowRight import fix in footer.tsx |
 | 14 | 2026-08-01 | Inquiries fix (dedicated Inquiry model + raw SQL, all form submissions captured); Employee/Customer deactivate + delete (soft-delete with User sync); Login deactivated-account message; Estate section redesign (horizontal split cards + site plan panel) |
 | 15 | 2026-08-01 | Admin Sales pages: `/sales` list (search, status filter, pagination, financials) + `/sales/:id` detail (customer, financials, sale details, payment history, full status transitions DRAFT→PENDING_APPROVAL→APPROVED→ACTIVE→COMPLETED/DISPUTED/CANCELLED) |
+| 16 | 2026-08-02 | Inquiry status updates (PATCH endpoint + inline dropdown UI + status filter); Dashboard 8 stat tiles (reservations, sales, new inquiries added); Reservation→Sale conversion form on confirmed reservations; Customer detail activity tables (reservations + sales with property info); Web state filter fixed (dedicated ?state= param, search and state can coexist) |

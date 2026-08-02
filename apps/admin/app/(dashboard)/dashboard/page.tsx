@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Building2, Home, Users, TrendingUp } from "lucide-react";
+import { Building2, Home, Users, TrendingUp, CalendarCheck, Receipt, MessageSquare } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import { apiFetch } from "@/lib/api";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -10,6 +10,9 @@ interface Stats {
   properties: { total: number; byStatus: Record<string, number> };
   estates: { total: number; byStatus: Record<string, number> };
   customers: { total: number; byStatus: Record<string, number> };
+  reservations: { total: number; byStatus: Record<string, number> };
+  sales: { total: number; byStatus: Record<string, number> };
+  inquiries: { total: number; newCount: number };
   recentProperties: {
     id: string;
     internalNumber: string;
@@ -99,13 +102,6 @@ export default async function DashboardPage() {
             href="/properties"
           />
           <StatCard
-            label="Published"
-            value={published}
-            sub={`${pendingCount} pending review`}
-            icon={TrendingUp}
-            href="/properties?status=PUBLISHED"
-          />
-          <StatCard
             label="Estates"
             value={stats?.estates.total ?? 0}
             sub={`${stats?.estates.byStatus["ACTIVE"] ?? 0} active`}
@@ -118,6 +114,43 @@ export default async function DashboardPage() {
             sub={`${stats?.customers.byStatus["ACTIVE"] ?? 0} active`}
             icon={Users}
             href="/customers"
+          />
+          <StatCard
+            label="Reservations"
+            value={stats?.reservations.total ?? 0}
+            sub={`${stats?.reservations.byStatus["PENDING"] ?? 0} pending`}
+            icon={CalendarCheck}
+            href="/reservations"
+          />
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <StatCard
+            label="Sales"
+            value={stats?.sales.total ?? 0}
+            sub={`${stats?.sales.byStatus["ACTIVE"] ?? 0} active · ${stats?.sales.byStatus["COMPLETED"] ?? 0} completed`}
+            icon={Receipt}
+            href="/sales"
+          />
+          <StatCard
+            label="New inquiries"
+            value={stats?.inquiries.newCount ?? 0}
+            sub={`${stats?.inquiries.total ?? 0} total received`}
+            icon={MessageSquare}
+            href="/inquiries"
+          />
+          <StatCard
+            label="Published"
+            value={published}
+            sub={`${pendingCount} pending review`}
+            icon={TrendingUp}
+            href="/properties?status=PUBLISHED"
+          />
+          <StatCard
+            label="Pending approval"
+            value={pendingCount}
+            sub="Properties awaiting review"
+            icon={Home}
+            href="/properties?status=PENDING_INSPECTION"
           />
         </div>
 

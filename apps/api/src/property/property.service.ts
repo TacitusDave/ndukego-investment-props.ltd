@@ -85,6 +85,7 @@ export class PropertyService {
     status?: PropertyStatus;
     category?: string;
     type?: string;
+    state?: string;
     estateId?: string;
     featured?: boolean;
     publicOnly?: boolean;
@@ -109,6 +110,7 @@ export class PropertyService {
       ...(query.category && VALID_CATEGORIES.has(query.category) && { category: query.category as never }),
       ...(query.type && VALID_TYPES.has(query.type) && { type: query.type as never }),
       ...(query.estateId && { estateId: query.estateId }),
+      ...(query.state && { state: { equals: query.state, mode: 'insensitive' } }),
       ...(query.featured !== undefined && { featured: query.featured }),
       ...(query.search && {
         OR: [
@@ -551,5 +553,17 @@ export class PropertyService {
 
     const total = parseInt(countRow?.count ?? '0', 10);
     return { items, meta: calculatePagination(page, limit, total) };
+  }
+
+  async updateInquiryStatus(id: string, status: string) {
+    const VALID = ['NEW', 'CONTACTED', 'CONVERTED', 'CLOSED'];
+    if (!VALID.includes(status)) throw new BadRequestException('Invalid status');
+    const result = await this.prisma.$executeRawUnsafe(
+      `UPDATE inquiries SET status = $1, updated_at = now() WHERE id = $2::uuid`,
+      status,
+      id,
+    );
+    if (result === 0) throw new NotFoundException('Inquiry not found');
+    return { success: true, status };
   }
 }

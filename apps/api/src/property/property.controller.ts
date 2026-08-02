@@ -33,11 +33,12 @@ export class PropertyController {
     @Query('search') search?: string,
     @Query('category') category?: string,
     @Query('type') type?: string,
+    @Query('state') state?: string,
     @Query('estateId') estateId?: string,
     @Query('featured') featured?: boolean,
   ) {
     return this.propertyService.findAll({
-      page, limit, search, category, type, estateId, featured, publicOnly: true,
+      page, limit, search, category, type, state, estateId, featured, publicOnly: true,
     });
   }
 
@@ -77,6 +78,16 @@ export class PropertyController {
     @Query('status') status?: string,
   ) {
     return this.propertyService.getInquiries({ page, limit, search, status });
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Patch('admin/inquiries/:id/status')
+  @RequirePermissions('property.update')
+  updateInquiryStatus(
+    @Param('id') id: string,
+    @Body() body: { status: string },
+  ) {
+    return this.propertyService.updateInquiryStatus(id, body.status);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
