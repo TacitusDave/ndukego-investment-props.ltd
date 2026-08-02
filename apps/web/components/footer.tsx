@@ -3,6 +3,18 @@ import { Phone, Mail, MapPin, ArrowRight } from "lucide-react";
 import { LogoIcon } from "@nhgp/assets";
 import { FooterCtaBand } from "./footer-cta-band";
 import { DynamicYear } from "./dynamic-year";
+import { publicFetch } from "@/lib/api";
+
+interface FooterEstate {
+  id: string;
+  name: string;
+  state: string;
+}
+
+interface EstatesResponse {
+  items: FooterEstate[];
+  meta: { total: number };
+}
 
 /* ── Social media icons ────────────────────────────────── */
 
@@ -84,13 +96,14 @@ const PROPERTIES = [
 
 const COMPANY = [
   { label: "About Us", href: "/about" },
-  { label: "Projects", href: "/projects" },
-  { label: "Insights", href: "/insights" },
-  { label: "Careers", href: "/careers" },
-  { label: "Contact", href: "/contact" },
+  { label: "Contact Us", href: "/contact" },
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Service", href: "/terms" },
 ];
 
-export function Footer() {
+export async function Footer() {
+  const estatesRes = await publicFetch<EstatesResponse>("/estates/public?limit=5");
+  const liveEstates = estatesRes.data?.items ?? [];
   return (
     <footer>
       <FooterCtaBand />
@@ -176,7 +189,7 @@ export function Footer() {
 
             {/* Links — 7 of 12 */}
             <div className="lg:col-span-7">
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
                 {/* Services */}
                 <div className="space-y-4">
                   <h4 className="text-[11px] font-bold uppercase tracking-widest text-gray-400">
@@ -206,6 +219,30 @@ export function Footer() {
                         </Link>
                       </li>
                     ))}
+                  </ul>
+                </div>
+
+                {/* Our Estates — live data */}
+                <div className="space-y-4">
+                  <h4 className="text-[11px] font-bold uppercase tracking-widest text-gray-400">
+                    Our Estates
+                  </h4>
+                  <ul className="space-y-2.5">
+                    <li>
+                      <Link href="/estates" className="text-sm text-gray-600 hover:text-[#C1121F] transition-colors">
+                        All Estates
+                      </Link>
+                    </li>
+                    {liveEstates.map((e) => (
+                      <li key={e.id}>
+                        <Link href={`/estates/${e.id}`} className="text-sm text-gray-600 hover:text-[#C1121F] transition-colors">
+                          {e.name}
+                        </Link>
+                      </li>
+                    ))}
+                    {liveEstates.length === 0 && (
+                      <li className="text-sm text-gray-400 italic">Coming soon</li>
+                    )}
                   </ul>
                 </div>
 
