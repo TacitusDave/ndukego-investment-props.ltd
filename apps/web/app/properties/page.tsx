@@ -117,7 +117,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             Real Estate
           </p>
           <h1 className="text-3xl font-bold text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
-            Properties of Ndukego Homes
+            Ndukego Homes
           </h1>
           <p className="text-sm text-gray-400 mt-0.5">
             Powered by Ndukego Investment &amp; Properties Ltd
