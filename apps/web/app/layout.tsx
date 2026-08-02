@@ -21,16 +21,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className="light">
       <body className={`${fraunces.variable} ${dmSans.variable} ${jetbrainsMono.variable} min-h-screen flex flex-col`}>
-        {/* ── Global morphing gradient background (always visible through all pages) ── */}
-        <div
-          aria-hidden
-          className="nhgp-gradient-bg"
-        />
-        {/* ── Global grid overlay ── */}
-        <div
-          aria-hidden
-          className="nhgp-grid-bg"
-        />
+        {/* ── Global paper dot texture ── */}
+        <div aria-hidden className="nhgp-paper-bg" />
 
         <Navbar />
         <main className="flex-1 pt-16">{children}</main>
