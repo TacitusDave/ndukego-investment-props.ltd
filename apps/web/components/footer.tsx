@@ -112,7 +112,7 @@ export function Footer() {
                     className="text-xl sm:text-2xl font-bold text-gray-900 leading-snug"
                     style={{ fontFamily: "var(--font-display)" }}
                   >
-                    Ndukego Investments<br />
+                    Ndukego Investment<br />
                     &amp; Properties Ltd
                   </p>
                 </div>
@@ -245,7 +245,7 @@ export function Footer() {
       <div className="bg-gray-900 py-4">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-gray-500">
-            © <DynamicYear /> Ndukego Investments &amp; Properties Limited. All rights reserved.
+            © <DynamicYear /> Ndukego Investment &amp; Properties Limited. All rights reserved.
           </p>
           <div className="flex items-center gap-4 text-xs text-gray-500">
             <Link href="/terms" className="hover:text-gray-300 transition-colors">Terms of Service</Link>

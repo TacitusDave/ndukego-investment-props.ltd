@@ -5,7 +5,7 @@ import { AnimateIn } from "@/components/animate-in";
 
 export const metadata: Metadata = {
   title: "Our Services",
-  description: "Real estate, LPO financing, investment financing, and consultancy services from Ndukego Investments & Properties Ltd.",
+  description: "Real estate, LPO financing, investment financing, and consultancy services from Ndukego Investment & Properties Ltd.",
 };
 
 const SERVICES = [
@@ -66,7 +66,7 @@ export default function ServicesPage() {
               Four pillars. One trusted group.
             </h1>
             <p className="text-lg text-gray-500 max-w-2xl leading-relaxed">
-              Ndukego Investments &amp; Properties Ltd brings real estate, financing, and expert
+              Ndukego Investment &amp; Properties Ltd brings real estate, financing, and expert
               advisory under one roof — so your wealth journey never has to leave us.
             </p>
           </AnimateIn>

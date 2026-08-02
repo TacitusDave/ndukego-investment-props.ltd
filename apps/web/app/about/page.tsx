@@ -45,7 +45,7 @@ export default function AboutPage() {
               About Ndukego Homes Gallery
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              A professional real estate platform powered by Ndukego Investments &amp; Properties Limited —
+              A professional real estate platform powered by Ndukego Investment &amp; Properties Limited —
               connecting buyers, investors, and renters with verified properties across Nigeria.
             </p>
           </div>
@@ -60,7 +60,7 @@ export default function AboutPage() {
               <h2 className="text-2xl font-bold text-foreground mb-4">Our story</h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  Ndukego Investments &amp; Properties Limited was founded on a simple belief:
+                  Ndukego Investment &amp; Properties Limited was founded on a simple belief:
                   real estate transactions in Nigeria should be as straightforward, transparent,
                   and trustworthy as they are in any world-class market.
                 </p>

@@ -135,7 +135,7 @@ export function HomeHero({ totalProperties }: { totalProperties: number }) {
           custom={2} variants={fadeUp} initial="hidden" animate="show"
           className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed mb-10"
         >
-          Ndukego Investments &amp; Properties Ltd delivers verified real estate,
+          Ndukego Investment &amp; Properties Ltd delivers verified real estate,
           LPO financing, investment capital, and expert consultancy — all under one roof.
         </motion.p>
 

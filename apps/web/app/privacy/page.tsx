@@ -16,7 +16,7 @@ export default function PrivacyPage() {
         <section className="space-y-3">
           <h2 className="text-lg font-semibold">1. Introduction</h2>
           <p className="text-muted-foreground leading-relaxed">
-            Ndukego Investments &amp; Properties Limited (&ldquo;Ndukego&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;) is committed to protecting your personal data and respecting your privacy. This Privacy Policy explains how we collect, use, store, and protect information about you when you use the Ndukego Homes Gallery Platform (&ldquo;Platform&rdquo;).
+            Ndukego Investment &amp; Properties Limited (&ldquo;Ndukego&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;) is committed to protecting your personal data and respecting your privacy. This Privacy Policy explains how we collect, use, store, and protect information about you when you use the Ndukego Homes Gallery Platform (&ldquo;Platform&rdquo;).
           </p>
           <p className="text-muted-foreground leading-relaxed">
             This Policy is compliant with the Nigeria Data Protection Act (NDPA) 2023 and the Nigeria Data Protection Regulation (NDPR).
@@ -110,7 +110,7 @@ export default function PrivacyPage() {
           </p>
           <div className="rounded-xl border bg-card p-4 text-sm space-y-1">
             <p className="font-semibold">Data Privacy Officer</p>
-            <p className="text-muted-foreground">Ndukego Investments &amp; Properties Limited</p>
+            <p className="text-muted-foreground">Ndukego Investment &amp; Properties Limited</p>
             <p className="text-muted-foreground">Nigeria</p>
             <p className="text-muted-foreground">Email: privacy@ndukegohomes.com</p>
           </div>

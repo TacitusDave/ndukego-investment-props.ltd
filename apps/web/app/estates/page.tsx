@@ -6,7 +6,7 @@ import { AnimateIn } from "@/components/animate-in";
 
 export const metadata: Metadata = {
   title: "Our Estates",
-  description: "Planned communities and residential developments by Ndukego Investments & Properties Ltd.",
+  description: "Planned communities and residential developments by Ndukego Investment & Properties Ltd.",
 };
 
 interface Estate {

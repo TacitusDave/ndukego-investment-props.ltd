@@ -249,8 +249,8 @@ async function main() {
       if (!company) {
         company = await prisma.company.create({
           data: {
-            name: process.env.COMPANY_NAME || 'Ndukego Investments & Properties',
-            legalName: process.env.COMPANY_LEGAL_NAME || 'Ndukego Investments & Properties Limited',
+            name: process.env.COMPANY_NAME || 'Ndukego Investment & Properties',
+            legalName: process.env.COMPANY_LEGAL_NAME || 'Ndukego Investment & Properties Limited',
             email: process.env.COMPANY_EMAIL || 'info@ndukego.com',
             phone: process.env.COMPANY_PHONE || '',
             country: 'Nigeria',

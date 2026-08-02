@@ -5,7 +5,7 @@ import { AnimateIn } from "@/components/animate-in";
 
 export const metadata: Metadata = {
   title: "LPO Financing",
-  description: "Fast working capital against your Local Purchase Orders and government contracts. Quick approval, competitive terms — Ndukego Investments & Properties Ltd.",
+  description: "Fast working capital against your Local Purchase Orders and government contracts. Quick approval, competitive terms — Ndukego Investment & Properties Ltd.",
 };
 
 const STEPS = [

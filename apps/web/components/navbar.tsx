@@ -91,10 +91,10 @@ export function Navbar() {
             >
               <LogoIcon width={28} height={28} />
               <span
-                className="text-[13px] font-bold text-gray-900 leading-tight hidden sm:block whitespace-nowrap"
-                style={{ fontFamily: "var(--font-display)" }}
+                className="text-[11px] font-bold text-gray-900 leading-tight hidden sm:block whitespace-nowrap tracking-widest uppercase"
+                style={{ fontFamily: "var(--font-sans)" }}
               >
-                Ndukego Investments &amp; Properties Ltd
+                Ndukego Investment &amp; Properties Ltd
               </span>
             </Link>
 

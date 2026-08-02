@@ -16,7 +16,7 @@ export function PropertyAgent() {
         <div>
           <p className="font-semibold text-foreground">Ndukego Properties</p>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Ndukego Investments &amp; Properties Ltd
+            Ndukego Investment &amp; Properties Ltd
           </p>
         </div>
       </div>

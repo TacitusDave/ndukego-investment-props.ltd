@@ -2,7 +2,7 @@
   "name": "api",
   "version": "0.0.1",
   "description": "NHGP NestJS API",
-  "author": "Ndukego Investments & Properties",
+  "author": "Ndukego Investment & Properties",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

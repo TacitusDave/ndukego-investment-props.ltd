@@ -10,8 +10,8 @@ const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jet
 
 export const metadata: Metadata = {
   title: {
-    default: "Ndukego Investments & Properties — Real Estate, Financing & Investment in Nigeria",
-    template: "%s | Ndukego Investments & Properties",
+    default: "Ndukego Investment & Properties — Real Estate, Financing & Investment in Nigeria",
+    template: "%s | Ndukego Investment & Properties",
   },
   description:
     "Nigeria's premier property and investment group. Real estate listings, LPO financing, investment financing, and expert consultancy across Nigeria.",

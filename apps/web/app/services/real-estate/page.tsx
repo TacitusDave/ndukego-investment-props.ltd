@@ -5,7 +5,7 @@ import { AnimateIn } from "@/components/animate-in";
 
 export const metadata: Metadata = {
   title: "Real Estate",
-  description: "Verified residential, commercial, and land listings across Nigeria. Every property is title-checked and inspection-cleared by Ndukego Investments & Properties Ltd.",
+  description: "Verified residential, commercial, and land listings across Nigeria. Every property is title-checked and inspection-cleared by Ndukego Investment & Properties Ltd.",
 };
 
 const OFFERINGS = [

@@ -6,7 +6,7 @@ import { AnimateIn } from "@/components/animate-in";
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
-    "Get in touch with Ndukego Investments & Properties Ltd — call, email, or visit our Abuja office.",
+    "Get in touch with Ndukego Investment & Properties Ltd — call, email, or visit our Abuja office.",
 };
 
 const CONTACT_DETAILS = [
@@ -136,7 +136,7 @@ export default async function ContactPage({
                       allowFullScreen
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
-                      title="Ndukego Investments & Properties — Office Location"
+                      title="Ndukego Investment & Properties — Office Location"
                     />
                   </div>
                   <a

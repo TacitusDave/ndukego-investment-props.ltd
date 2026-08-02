@@ -16,14 +16,14 @@ export default function TermsPage() {
         <section className="space-y-3">
           <h2 className="text-lg font-semibold">1. Agreement to Terms</h2>
           <p className="text-muted-foreground leading-relaxed">
-            By accessing or using the Ndukego Homes Gallery Platform (&ldquo;Platform&rdquo;), operated by Ndukego Investments &amp; Properties Limited (&ldquo;Ndukego&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Platform.
+            By accessing or using the Ndukego Homes Gallery Platform (&ldquo;Platform&rdquo;), operated by Ndukego Investment &amp; Properties Limited (&ldquo;Ndukego&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Platform.
           </p>
         </section>
 
         <section className="space-y-3">
           <h2 className="text-lg font-semibold">2. Use of the Platform</h2>
           <p className="text-muted-foreground leading-relaxed">
-            The Platform is provided for the purpose of browsing, inquiring about, and reserving real estate properties offered by Ndukego Investments &amp; Properties Limited. You agree to use the Platform only for lawful purposes and in a manner consistent with these Terms.
+            The Platform is provided for the purpose of browsing, inquiring about, and reserving real estate properties offered by Ndukego Investment &amp; Properties Limited. You agree to use the Platform only for lawful purposes and in a manner consistent with these Terms.
           </p>
           <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
             <li>You must provide accurate information when creating an account or submitting an inquiry</li>
@@ -53,14 +53,14 @@ export default function TermsPage() {
         <section className="space-y-3">
           <h2 className="text-lg font-semibold">5. Intellectual Property</h2>
           <p className="text-muted-foreground leading-relaxed">
-            All content on the Platform, including but not limited to text, images, logos, and software, is the property of Ndukego Investments &amp; Properties Limited and is protected by applicable intellectual property laws. You may not reproduce, distribute, or create derivative works without our express written permission.
+            All content on the Platform, including but not limited to text, images, logos, and software, is the property of Ndukego Investment &amp; Properties Limited and is protected by applicable intellectual property laws. You may not reproduce, distribute, or create derivative works without our express written permission.
           </p>
         </section>
 
         <section className="space-y-3">
           <h2 className="text-lg font-semibold">6. Limitation of Liability</h2>
           <p className="text-muted-foreground leading-relaxed">
-            To the fullest extent permitted by law, Ndukego Investments &amp; Properties Limited shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the Platform. Our total liability shall not exceed the amount, if any, paid by you for access to the Platform.
+            To the fullest extent permitted by law, Ndukego Investment &amp; Properties Limited shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the Platform. Our total liability shall not exceed the amount, if any, paid by you for access to the Platform.
           </p>
         </section>
 
@@ -77,7 +77,7 @@ export default function TermsPage() {
             If you have any questions about these Terms, please contact us at:
           </p>
           <div className="rounded-xl border bg-card p-4 text-sm space-y-1">
-            <p className="font-semibold">Ndukego Investments &amp; Properties Limited</p>
+            <p className="font-semibold">Ndukego Investment &amp; Properties Limited</p>
             <p className="text-muted-foreground">Nigeria</p>
             <p className="text-muted-foreground">Email: info@ndukegohomes.com</p>
           </div>

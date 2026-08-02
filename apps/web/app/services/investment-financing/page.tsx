@@ -5,7 +5,7 @@ import { AnimateIn } from "@/components/animate-in";
 
 export const metadata: Metadata = {
   title: "Investment Financing",
-  description: "Structured investment plans with transparent ROI timelines. Grow your capital with Ndukego Investments & Properties Ltd.",
+  description: "Structured investment plans with transparent ROI timelines. Grow your capital with Ndukego Investment & Properties Ltd.",
 };
 
 const PLANS = [
