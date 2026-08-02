@@ -6,20 +6,7 @@ export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getStats() {
-    const [
-      propertiesByStatus,
-      totalEstates,
-      estatesByStatus,
-      totalCustomers,
-      customersByStatus,
-      recentProperties,
-      recentActivity,
-      totalReservations,
-      reservationsByStatus,
-      totalSales,
-      salesByStatus,
-      inquiryCounts,
-    ] = await Promise.all([
+    const results = await Promise.allSettled([
       this.prisma.property.groupBy({
         by: ['status'],
         where: { deletedAt: null },
@@ -84,22 +71,37 @@ export class DashboardService {
       ),
     ]);
 
+    // Extract each result safely — a failed query becomes its default value.
+    function val<T>(idx: number, fallback: T): T {
+      const r = results[idx];
+      return r.status === 'fulfilled' ? (r.value as T) : fallback;
+    }
+
+    const propertiesByStatus   = val(0,  [] as { status: string; _count: { id: number } }[]);
+    const totalEstates         = val(1,  0);
+    const estatesByStatus      = val(2,  [] as { status: string; _count: { id: number } }[]);
+    const totalCustomers       = val(3,  0);
+    const customersByStatus    = val(4,  [] as { status: string; _count: { id: number } }[]);
+    const recentProperties     = val(5,  []);
+    const recentActivity       = val(6,  []);
+    const totalReservations    = val(7,  0);
+    const reservationsByStatus = val(8,  [] as { status: string; _count: { id: number } }[]);
+    const totalSales           = val(9,  0);
+    const salesByStatus        = val(10, [] as { status: string; _count: { id: number } }[]);
+    const inquiryCounts        = val(11, [] as { total: string; newCount: string }[]);
+
     const propertyStatusMap = Object.fromEntries(
       propertiesByStatus.map((r) => [r.status, r._count.id]),
     );
-
     const estateStatusMap = Object.fromEntries(
       estatesByStatus.map((r) => [r.status, r._count.id]),
     );
-
     const customerStatusMap = Object.fromEntries(
       customersByStatus.map((r) => [r.status, r._count.id]),
     );
-
     const reservationStatusMap = Object.fromEntries(
       reservationsByStatus.map((r) => [r.status, r._count.id]),
     );
-
     const salesStatusMap = Object.fromEntries(
       salesByStatus.map((r) => [r.status, r._count.id]),
     );
@@ -108,30 +110,12 @@ export class DashboardService {
     const iq = inquiryCounts[0] ?? { total: '0', newCount: '0' };
 
     return {
-      properties: {
-        total: totalProperties,
-        byStatus: propertyStatusMap,
-      },
-      estates: {
-        total: totalEstates,
-        byStatus: estateStatusMap,
-      },
-      customers: {
-        total: totalCustomers,
-        byStatus: customerStatusMap,
-      },
-      reservations: {
-        total: totalReservations,
-        byStatus: reservationStatusMap,
-      },
-      sales: {
-        total: totalSales,
-        byStatus: salesStatusMap,
-      },
-      inquiries: {
-        total: parseInt(iq.total, 10),
-        newCount: parseInt(iq.newCount, 10),
-      },
+      properties:    { total: totalProperties, byStatus: propertyStatusMap },
+      estates:       { total: totalEstates,    byStatus: estateStatusMap },
+      customers:     { total: totalCustomers,  byStatus: customerStatusMap },
+      reservations:  { total: totalReservations, byStatus: reservationStatusMap },
+      sales:         { total: totalSales,      byStatus: salesStatusMap },
+      inquiries:     { total: parseInt(iq.total, 10), newCount: parseInt(iq.newCount, 10) },
       recentProperties,
       recentActivity,
     };

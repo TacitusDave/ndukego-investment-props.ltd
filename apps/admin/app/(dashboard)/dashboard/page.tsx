@@ -80,11 +80,19 @@ const ACTION_LABELS: Record<string, string> = {
 export default async function DashboardPage() {
   const { data: stats } = await apiFetch<Stats>("/dashboard/stats");
 
-  const published = stats?.properties.byStatus["PUBLISHED"] ?? 0;
-  const draft = stats?.properties.byStatus["DRAFT"] ?? 0;
+  const published = stats?.properties?.byStatus?.["PUBLISHED"] ?? 0;
+  const draft = stats?.properties?.byStatus?.["DRAFT"] ?? 0;
   const pendingCount =
-    (stats?.properties.byStatus["PENDING_INSPECTION"] ?? 0) +
-    (stats?.properties.byStatus["PENDING_VERIFICATION"] ?? 0);
+    (stats?.properties?.byStatus?.["PENDING_INSPECTION"] ?? 0) +
+    (stats?.properties?.byStatus?.["PENDING_VERIFICATION"] ?? 0);
+
+  // Normalise nested objects so downstream code never hits undefined.total etc.
+  const propStats   = stats?.properties   ?? { total: 0, byStatus: {} };
+  const estateStats = stats?.estates      ?? { total: 0, byStatus: {} };
+  const custStats   = stats?.customers    ?? { total: 0, byStatus: {} };
+  const resStats    = stats?.reservations ?? { total: 0, byStatus: {} };
+  const saleStats   = stats?.sales        ?? { total: 0, byStatus: {} };
+  const iqStats     = stats?.inquiries    ?? { total: 0, newCount: 0 };
 
   return (
     <div className="flex flex-col h-full">
@@ -96,29 +104,29 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard
             label="Total properties"
-            value={stats?.properties.total ?? 0}
+            value={propStats.total}
             sub={`${published} published · ${draft} draft`}
             icon={Home}
             href="/properties"
           />
           <StatCard
             label="Estates"
-            value={stats?.estates.total ?? 0}
-            sub={`${stats?.estates.byStatus["ACTIVE"] ?? 0} active`}
+            value={estateStats.total}
+            sub={`${estateStats.byStatus["ACTIVE"] ?? 0} active`}
             icon={Building2}
             href="/estates"
           />
           <StatCard
             label="Customers"
-            value={stats?.customers.total ?? 0}
-            sub={`${stats?.customers.byStatus["ACTIVE"] ?? 0} active`}
+            value={custStats.total}
+            sub={`${custStats.byStatus["ACTIVE"] ?? 0} active`}
             icon={Users}
             href="/customers"
           />
           <StatCard
             label="Reservations"
-            value={stats?.reservations.total ?? 0}
-            sub={`${stats?.reservations.byStatus["PENDING"] ?? 0} pending`}
+            value={resStats.total}
+            sub={`${resStats.byStatus["PENDING"] ?? 0} pending`}
             icon={CalendarCheck}
             href="/reservations"
           />
@@ -126,15 +134,15 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard
             label="Sales"
-            value={stats?.sales.total ?? 0}
-            sub={`${stats?.sales.byStatus["ACTIVE"] ?? 0} active · ${stats?.sales.byStatus["COMPLETED"] ?? 0} completed`}
+            value={saleStats.total}
+            sub={`${saleStats.byStatus["ACTIVE"] ?? 0} active · ${saleStats.byStatus["COMPLETED"] ?? 0} completed`}
             icon={Receipt}
             href="/sales"
           />
           <StatCard
             label="New inquiries"
-            value={stats?.inquiries.newCount ?? 0}
-            sub={`${stats?.inquiries.total ?? 0} total received`}
+            value={iqStats.newCount}
+            sub={`${iqStats.total} total received`}
             icon={MessageSquare}
             href="/inquiries"
           />
