@@ -42,7 +42,7 @@ const NAV_GROUPS: {
   },
 ];
 
-export function Sidebar() {
+export function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -94,6 +94,7 @@ export function Sidebar() {
                   <Link
                     key={item.href}
                     href={item.href}
+                    onClick={() => onClose?.()}
                     className={cn(
                       "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150",
                       active
@@ -123,6 +124,7 @@ export function Sidebar() {
       <div className="px-2 py-3 border-t border-[#212121] space-y-0.5">
         <Link
           href="/settings"
+          onClick={() => onClose?.()}
           className={cn(
             "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150",
             isSettings
