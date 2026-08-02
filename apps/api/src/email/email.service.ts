@@ -80,7 +80,7 @@ export class EmailService {
         </div>
         <div style="background: #f8fafc; padding: 16px 24px; text-align: center;">
           <p style="color: #94a3b8; font-size: 12px; margin: 0;">
-            Ndukego Investments &amp; Properties Limited — Lagos, Nigeria<br>
+            Ndukego Investment &amp; Properties Limited — Lagos, Nigeria<br>
             This is an automated message. Please do not reply to this email.
           </p>
         </div>
@@ -122,7 +122,7 @@ export class EmailService {
         </div>
         <div style="background: #f8fafc; padding: 16px 24px; text-align: center;">
           <p style="color: #94a3b8; font-size: 12px; margin: 0;">
-            Ndukego Investments &amp; Properties Limited — Lagos, Nigeria
+            Ndukego Investment &amp; Properties Limited — Lagos, Nigeria
           </p>
         </div>
       </div>
@@ -184,7 +184,7 @@ export class EmailService {
         </div>
         <div style="background: #f8fafc; padding: 16px 24px; text-align: center;">
           <p style="color: #94a3b8; font-size: 12px; margin: 0;">
-            Ndukego Investments &amp; Properties Limited
+            Ndukego Investment &amp; Properties Limited
           </p>
         </div>
       </div>
@@ -215,7 +215,7 @@ export class EmailService {
         </div>
         <div style="background: #f8fafc; padding: 16px 24px; text-align: center;">
           <p style="color: #94a3b8; font-size: 12px; margin: 0;">
-            Ndukego Investments &amp; Properties Limited — Lagos, Nigeria
+            Ndukego Investment &amp; Properties Limited — Lagos, Nigeria
           </p>
         </div>
       </div>

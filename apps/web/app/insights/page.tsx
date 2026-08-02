@@ -5,7 +5,7 @@ import { AnimateIn } from "@/components/animate-in";
 
 export const metadata: Metadata = {
   title: "Insights",
-  description: "Property market analysis, investment guides, and real estate news from Ndukego Investments & Properties Ltd.",
+  description: "Property market analysis, investment guides, and real estate news from Ndukego Investment & Properties Ltd.",
 };
 
 const CATEGORIES = ["All", "Market Analysis", "Investment Tips", "Property Guide", "Legal & Title", "Company News"];
@@ -14,7 +14,7 @@ const ARTICLES = [
   {
     category: "Market Analysis",
     title: "Nigeria's Real Estate Market in 2025: What Investors Need to Know",
-    excerpt: "Rising demand in secondary cities, infrastructure development, and changing buyer demographics are reshaping Nigeria's property landscape. Here's what that means for your investments.",
+    excerpt: "Rising demand in secondary cities, infrastructure development, and changing buyer demographics are reshaping Nigeria's property landscape. Here's what that means for your Investment.",
     readTime: "6 min read",
     date: "July 2025",
     featured: true,

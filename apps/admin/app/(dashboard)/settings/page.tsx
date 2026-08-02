@@ -236,7 +236,7 @@ export default function SettingsPage() {
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="legalName">Legal Name <span className="text-destructive">*</span></Label>
-                  <Input id="legalName" value={form.legalName} onChange={(e) => setForm({ ...form, legalName: e.target.value })} required placeholder="Ndukego Investments & Properties Limited" />
+                  <Input id="legalName" value={form.legalName} onChange={(e) => setForm({ ...form, legalName: e.target.value })} required placeholder="Ndukego Investment & Properties Limited" />
                 </div>
               </div>
 

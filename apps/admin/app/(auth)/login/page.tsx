@@ -54,7 +54,7 @@ export default function LoginPage() {
           <LogoIcon width={32} height={32} className="shrink-0" />
           <div>
             <p className="text-[13px] font-semibold text-white leading-tight" style={{ fontFamily: "var(--font-display)" }}>
-              Ndukego Investments
+              Ndukego Investment
             </p>
             <p className="text-[10px] text-white/35 leading-tight">& Properties Ltd</p>
           </div>
@@ -90,7 +90,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <p className="text-[11px] text-white/20 mt-auto">
-          © {new Date().getFullYear()} Ndukego Investments & Properties Ltd. Staff access only.
+          © {new Date().getFullYear()} Ndukego Investment & Properties Ltd. Staff access only.
         </p>
       </div>
 
@@ -104,7 +104,7 @@ export default function LoginPage() {
             </div>
             <div>
               <p className="text-sm font-semibold text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
-                Ndukego Investments
+                Ndukego Investment
               </p>
               <p className="text-[10px] text-gray-400">& Properties Ltd</p>
             </div>

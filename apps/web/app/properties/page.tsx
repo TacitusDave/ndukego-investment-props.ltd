@@ -120,7 +120,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
             Properties of Ndukego Homes
           </h1>
           <p className="text-sm text-gray-400 mt-0.5">
-            Powered by Ndukego Investments &amp; Properties Ltd
+            Powered by Ndukego Investment &amp; Properties Ltd
           </p>
           <p className="text-gray-500 mt-2 text-sm">
             {meta ? `${meta.total} verified propert${meta.total === 1 ? "y" : "ies"} available` : "Explore our listings"}

@@ -5,7 +5,7 @@ import { AnimateIn } from "@/components/animate-in";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "Ongoing and completed real estate developments by Ndukego Investments & Properties Ltd across Nigeria.",
+  description: "Ongoing and completed real estate developments by Ndukego Investment & Properties Ltd across Nigeria.",
 };
 
 const STATUS_STYLES: Record<string, string> = {

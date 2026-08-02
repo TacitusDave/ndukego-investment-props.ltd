@@ -71,7 +71,7 @@ export function Sidebar() {
             className="text-[11.5px] font-semibold text-[#EBEBEB] leading-tight"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            Ndukego Investments
+            Ndukego Investment
           </span>
           <span className="text-[10px] text-[#5A5A5A] leading-tight">
             & Properties Ltd — Admin

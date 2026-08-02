@@ -5,7 +5,7 @@ import { AnimateIn } from "@/components/animate-in";
 
 export const metadata: Metadata = {
   title: "Investment Consultancy",
-  description: "Expert financial advisory, portfolio analysis, and market intelligence. Ndukego Investments & Properties Ltd helps you make smarter investment decisions.",
+  description: "Expert financial advisory, portfolio analysis, and market intelligence. Ndukego Investment & Properties Ltd helps you make smarter investment decisions.",
 };
 
 const SERVICES = [
@@ -17,7 +17,7 @@ const SERVICES = [
   {
     icon: LineChart,
     title: "Portfolio Analysis",
-    desc: "We review your existing investments, identify gaps and risks, and propose adjustments to align your holdings with your long-term goals.",
+    desc: "We review your existing Investment, identify gaps and risks, and propose adjustments to align your holdings with your long-term goals.",
   },
   {
     icon: Globe,

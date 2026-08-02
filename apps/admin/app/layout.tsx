@@ -8,8 +8,8 @@ const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans", display
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono", display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Ndukego Investments & Properties Ltd — Admin",
-  description: "Ndukego Investments & Properties Ltd — Staff Portal",
+  title: "Ndukego Investment & Properties Ltd — Admin",
+  description: "Ndukego Investment & Properties Ltd — Staff Portal",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
