@@ -69,50 +69,16 @@
 ::-webkit-scrollbar-thumb  { background: rgba(193,18,31,0.2); border-radius: 99px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(193,18,31,0.5); }
 
-/* ── Global background layers (applied in layout.tsx via class names) ── */
+/* ── Global background — paper texture ── */
 
-/* Morphing crimson gradient — single continuous flow, all directions */
-@keyframes gradient-morph {
-  0%   { background-position: 0%   50%; }
-  12%  { background-position: 80%  10%; }
-  25%  { background-position: 100% 70%; }
-  37%  { background-position: 40%  100%; }
-  50%  { background-position: 0%   40%; }
-  62%  { background-position: 60%  0%; }
-  75%  { background-position: 100% 60%; }
-  87%  { background-position: 20%  90%; }
-  100% { background-position: 0%   50%; }
-}
-
-.nhgp-gradient-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  background: linear-gradient(
-    -45deg,
-    #ffffff              0%,
-    rgba(255,220,220,.55) 18%,
-    #ffffff              35%,
-    rgba(255,235,235,.40) 50%,
-    #ffffff              65%,
-    rgba(255,210,210,.50) 80%,
-    #ffffff              100%
-  );
-  background-size: 400% 400%;
-  animation: gradient-morph 24s ease infinite;
-}
-
-/* Grid — always on, sits above gradient */
-.nhgp-grid-bg {
+/* Fine dot grid — like quality dot-ruled paper (Leuchtturm / Concur aesthetic) */
+.nhgp-paper-bg {
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background-image:
-    linear-gradient(to right, rgba(0,0,0,0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0,0,0,0.045) 1px, transparent 1px);
-  background-size: 60px 60px;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.07) 0.6px, transparent 0.6px);
+  background-size: 22px 22px;
 }
 
 /* ── Process-section style pulse (reusable) ── */
@@ -124,7 +90,7 @@
 @layer base {
   * { @apply border-border; }
   body {
-    background: transparent;  /* let .nhgp-gradient-bg show through */
+    background-color: #F8F6F3; /* warm off-white — paper base */
     @apply text-foreground;
     font-family: var(--font-sans);
     font-feature-settings: "rlig" 1, "calt" 1;
