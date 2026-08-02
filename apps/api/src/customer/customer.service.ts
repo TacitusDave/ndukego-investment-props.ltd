@@ -116,8 +116,35 @@ export class CustomerService {
     const customer = await this.prisma.customer.findFirst({
       where: { id, deletedAt: null },
       include: {
-        reservations: { orderBy: { createdAt: 'desc' }, take: 10 },
-        sales: { orderBy: { createdAt: 'desc' }, take: 10 },
+        reservations: {
+          orderBy: { createdAt: 'desc' },
+          take: 20,
+          select: {
+            id: true,
+            reservationNumber: true,
+            status: true,
+            reservationAmount: true,
+            reservedAt: true,
+            confirmedAt: true,
+            cancelledAt: true,
+            property: { select: { id: true, title: true, state: true, city: true } },
+          },
+        },
+        sales: {
+          orderBy: { createdAt: 'desc' },
+          take: 20,
+          select: {
+            id: true,
+            saleNumber: true,
+            status: true,
+            type: true,
+            finalPrice: true,
+            totalPaid: true,
+            balanceDue: true,
+            createdAt: true,
+            property: { select: { id: true, title: true, state: true, city: true } },
+          },
+        },
       },
     });
     if (!customer) throw new NotFoundException('Customer not found');

@@ -79,10 +79,10 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
     page: isMapView ? "1" : page,
     limit: isMapView ? "300" : "12",
   });
-  const effectiveSearch = search || state;
-  if (effectiveSearch) query.set("search", effectiveSearch);
+  if (search) query.set("search", search);
   if (type) query.set("type", type);
   if (category) query.set("category", category);
+  if (state) query.set("state", state);
   if (estateId) query.set("estateId", estateId);
 
   const { data, error } = await publicFetch<PropertiesResponse>(

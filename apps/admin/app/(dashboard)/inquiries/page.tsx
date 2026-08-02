@@ -1,9 +1,9 @@
-import Link from "next/link";
-import { MessageSquare, Search, Building2 } from "lucide-react";
-import { getSession } from "@/lib/auth";
-import { formatDate } from "@/lib/utils";
+"use client";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
+import { useState, useEffect, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { MessageSquare, Search, Building2, ChevronDown } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 
 interface Inquiry {
   id: string;
@@ -22,34 +22,71 @@ interface PageResponse {
   meta: { page: number; limit: number; total: number; totalPages: number };
 }
 
-interface PageProps {
-  searchParams: Promise<Record<string, string | undefined>>;
-}
-
-const STATUS_BADGE: Record<string, string> = {
-  NEW:         "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400",
-  CONTACTED:   "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400",
-  CONVERTED:   "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400",
-  CLOSED:      "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400",
+const STATUS_CONFIG: Record<string, { label: string; badge: string; next: string[] }> = {
+  NEW:       { label: "New",       badge: "bg-blue-100 text-blue-700",   next: ["CONTACTED", "CLOSED"] },
+  CONTACTED: { label: "Contacted", badge: "bg-yellow-100 text-yellow-700", next: ["CONVERTED", "CLOSED"] },
+  CONVERTED: { label: "Converted", badge: "bg-green-100 text-green-700",  next: ["CLOSED"] },
+  CLOSED:    { label: "Closed",    badge: "bg-zinc-100 text-zinc-500",    next: ["NEW"] },
 };
 
-export default async function InquiriesPage({ searchParams }: PageProps) {
-  const session = await getSession();
-  const params = await searchParams;
-  const search = params.search ?? "";
-  const page = params.page ?? "1";
+const STATUSES = [
+  { value: "", label: "All statuses" },
+  { value: "NEW", label: "New" },
+  { value: "CONTACTED", label: "Contacted" },
+  { value: "CONVERTED", label: "Converted" },
+  { value: "CLOSED", label: "Closed" },
+];
 
-  const query = new URLSearchParams({ page, limit: "20" });
-  if (search) query.set("search", search);
+export default function InquiriesPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  let data: PageResponse | null = null;
-  try {
-    const res = await fetch(`${API_BASE}/properties/admin/inquiries?${query}`, {
-      headers: { Authorization: `Bearer ${session?.token ?? ""}` },
-      cache: "no-store",
-    });
-    if (res.ok) data = await res.json();
-  } catch { /* pass */ }
+  const search = searchParams.get("search") ?? "";
+  const status = searchParams.get("status") ?? "";
+  const page = searchParams.get("page") ?? "1";
+
+  const [data, setData] = useState<PageResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState<string | null>(null);
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    const q = new URLSearchParams({ page, limit: "20" });
+    if (status) q.set("status", status);
+    if (search) q.set("search", search);
+    try {
+      const res = await fetch(`/api/proxy/properties/admin/inquiries?${q}`);
+      if (res.ok) setData(await res.json());
+    } catch { /* pass */ }
+    finally { setLoading(false); }
+  }, [page, status, search]);
+
+  useEffect(() => { fetchData(); }, [fetchData]);
+
+  async function updateStatus(id: string, newStatus: string) {
+    setUpdating(id);
+    try {
+      const res = await fetch(`/api/proxy/properties/admin/inquiries/${id}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (res.ok) {
+        setData((prev) => prev ? {
+          ...prev,
+          items: prev.items.map((i) => i.id === id ? { ...i, status: newStatus } : i),
+        } : prev);
+      }
+    } finally { setUpdating(null); }
+  }
+
+  function navigate(params: Record<string, string>) {
+    const q = new URLSearchParams({ search, status, page, ...params });
+    if (!q.get("search")) q.delete("search");
+    if (!q.get("status")) q.delete("status");
+    if (q.get("page") === "1") q.delete("page");
+    router.push(`/inquiries?${q.toString()}`);
+  }
 
   const items = data?.items ?? [];
   const meta = data?.meta;
@@ -60,13 +97,21 @@ export default async function InquiriesPage({ searchParams }: PageProps) {
         <div>
           <h1 className="text-xl font-bold">Inquiries</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            {meta ? `${meta.total} inquiry${meta.total === 1 ? "" : "s"} from the website` : "Leads from the public website inquiry form"}
+            {meta ? `${meta.total} inquiry${meta.total === 1 ? "" : "s"}` : "Leads from the public website"}
           </p>
         </div>
         <MessageSquare className="h-5 w-5 text-muted-foreground" />
       </div>
 
-      <form className="flex flex-wrap gap-2">
+      {/* Filters */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const fd = new FormData(e.currentTarget);
+          navigate({ search: (fd.get("search") as string) ?? "", status: (fd.get("status") as string) ?? "", page: "1" });
+        }}
+        className="flex flex-wrap gap-2"
+      >
         <div className="relative flex-1 min-w-48">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
           <input
@@ -76,25 +121,50 @@ export default async function InquiriesPage({ searchParams }: PageProps) {
             className="h-9 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </div>
+        <select
+          name="status"
+          defaultValue={status}
+          className="h-9 rounded-md border border-input bg-background px-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+        >
+          {STATUSES.map((s) => (
+            <option key={s.value} value={s.value}>{s.label}</option>
+          ))}
+        </select>
         <button
           type="submit"
           className="h-9 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90"
         >
-          Search
+          Filter
         </button>
-        {search && (
-          <Link href="/inquiries" className="h-9 flex items-center rounded-md px-3 text-sm text-muted-foreground hover:text-foreground">
+        {(search || status) && (
+          <button
+            type="button"
+            onClick={() => navigate({ search: "", status: "", page: "1" })}
+            className="h-9 flex items-center rounded-md px-3 text-sm text-muted-foreground hover:text-foreground"
+          >
             Clear
-          </Link>
+          </button>
         )}
       </form>
 
+      {/* Table */}
       <div className="rounded-xl border bg-card overflow-hidden">
-        {items.length === 0 ? (
+        {loading ? (
+          <div className="p-16 text-center">
+            <div className="h-6 w-6 mx-auto rounded-full border-2 border-primary border-t-transparent animate-spin" />
+          </div>
+        ) : items.length === 0 ? (
           <div className="p-16 text-center">
             <MessageSquare className="h-10 w-10 mx-auto text-muted-foreground/30 mb-3" />
-            <p className="font-medium text-muted-foreground">No inquiries yet</p>
-            <p className="text-sm text-muted-foreground mt-1">Inquiries submitted through the website will appear here</p>
+            <p className="font-medium text-muted-foreground">No inquiries found</p>
+            {(search || status) && (
+              <button
+                onClick={() => navigate({ search: "", status: "", page: "1" })}
+                className="mt-2 text-sm text-primary hover:underline"
+              >
+                Clear filters
+              </button>
+            )}
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -106,12 +176,14 @@ export default async function InquiriesPage({ searchParams }: PageProps) {
                   <th className="text-left font-medium text-muted-foreground px-4 py-3">Message</th>
                   <th className="text-left font-medium text-muted-foreground px-4 py-3">Status</th>
                   <th className="text-left font-medium text-muted-foreground px-4 py-3">Received</th>
+                  <th className="text-left font-medium text-muted-foreground px-4 py-3">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
                 {items.map((inquiry) => {
                   const name = [inquiry.firstName, inquiry.lastName].filter(Boolean).join(" ") || "—";
-                  const badge = STATUS_BADGE[inquiry.status] ?? "bg-zinc-100 text-zinc-500";
+                  const cfg = STATUS_CONFIG[inquiry.status] ?? { label: inquiry.status, badge: "bg-zinc-100 text-zinc-500", next: [] };
+                  const isUpdating = updating === inquiry.id;
                   return (
                     <tr key={inquiry.id} className="hover:bg-muted/20 transition-colors">
                       <td className="px-4 py-3">
@@ -135,12 +207,36 @@ export default async function InquiriesPage({ searchParams }: PageProps) {
                         </p>
                       </td>
                       <td className="px-4 py-3">
-                        <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${badge}`}>
-                          {inquiry.status}
+                        <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${cfg.badge}`}>
+                          {cfg.label}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
                         {formatDate(inquiry.createdAt)}
+                      </td>
+                      <td className="px-4 py-3">
+                        {cfg.next.length > 0 && (
+                          <div className="relative group inline-block">
+                            <button
+                              disabled={isUpdating}
+                              className="flex items-center gap-1 rounded-md border px-2.5 py-1.5 text-xs font-medium hover:bg-muted transition-colors disabled:opacity-50"
+                            >
+                              {isUpdating ? "Updating…" : "Update"}
+                              <ChevronDown className="h-3 w-3" />
+                            </button>
+                            <div className="absolute right-0 top-full mt-1 z-10 hidden group-hover:block bg-card border rounded-md shadow-lg min-w-[130px] py-1">
+                              {cfg.next.map((s) => (
+                                <button
+                                  key={s}
+                                  onClick={() => updateStatus(inquiry.id, s)}
+                                  className="w-full text-left px-3 py-1.5 text-xs hover:bg-muted transition-colors"
+                                >
+                                  Mark as {STATUS_CONFIG[s]?.label ?? s}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   );
@@ -151,16 +247,25 @@ export default async function InquiriesPage({ searchParams }: PageProps) {
         )}
       </div>
 
+      {/* Pagination */}
       {meta && meta.totalPages > 1 && (
         <div className="flex items-center justify-center gap-2">
           {meta.page > 1 && (
-            <Link href={`/inquiries?page=${meta.page - 1}${search ? `&search=${search}` : ""}`}
-              className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted">Previous</Link>
+            <button
+              onClick={() => navigate({ page: String(meta.page - 1) })}
+              className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted"
+            >
+              Previous
+            </button>
           )}
           <span className="text-sm text-muted-foreground">Page {meta.page} of {meta.totalPages}</span>
           {meta.page < meta.totalPages && (
-            <Link href={`/inquiries?page=${meta.page + 1}${search ? `&search=${search}` : ""}`}
-              className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted">Next</Link>
+            <button
+              onClick={() => navigate({ page: String(meta.page + 1) })}
+              className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted"
+            >
+              Next
+            </button>
           )}
         </div>
       )}

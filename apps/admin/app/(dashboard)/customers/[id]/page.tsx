@@ -6,13 +6,14 @@ import Link from "next/link";
 import {
   ChevronLeft, Mail, Phone, MapPin, User, CalendarCheck,
   CheckCircle, AlertCircle, Loader2, Edit2, X, Save, Trash2, ShieldOff, ShieldCheck,
+  Receipt,
 } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatCurrency } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
 interface Customer {
@@ -38,8 +39,27 @@ interface Customer {
   notes: string | null;
   createdAt: string;
   updatedAt: string;
-  reservations: { id: string; reservationNumber: string; status: string; createdAt: string }[];
-  sales: { id: string; createdAt: string }[];
+  reservations: {
+    id: string;
+    reservationNumber: string;
+    status: string;
+    reservationAmount: string;
+    reservedAt: string;
+    confirmedAt: string | null;
+    cancelledAt: string | null;
+    property: { id: string; title: string; state: string; city: string | null };
+  }[];
+  sales: {
+    id: string;
+    saleNumber: string;
+    status: string;
+    type: string;
+    finalPrice: string;
+    totalPaid: string;
+    balanceDue: string;
+    createdAt: string;
+    property: { id: string; title: string; state: string; city: string | null };
+  }[];
 }
 
 const STATUS_BADGE: Record<string, string> = {
@@ -58,11 +78,21 @@ const KYC_BADGE: Record<string, string> = {
 };
 
 const RESERVATION_BADGE: Record<string, string> = {
-  PENDING:           "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400",
-  CONFIRMED:         "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400",
-  EXPIRED:           "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-500",
-  CANCELLED:         "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400",
-  CONVERTED_TO_SALE: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400",
+  PENDING:           "bg-yellow-100 text-yellow-700",
+  CONFIRMED:         "bg-green-100 text-green-700",
+  EXPIRED:           "bg-zinc-100 text-zinc-500",
+  CANCELLED:         "bg-red-100 text-red-700",
+  CONVERTED_TO_SALE: "bg-blue-100 text-blue-700",
+};
+
+const SALE_BADGE: Record<string, string> = {
+  DRAFT:            "bg-zinc-100 text-zinc-600",
+  PENDING_APPROVAL: "bg-yellow-100 text-yellow-700",
+  APPROVED:         "bg-blue-100 text-blue-700",
+  ACTIVE:           "bg-green-100 text-green-700",
+  DISPUTED:         "bg-orange-100 text-orange-700",
+  COMPLETED:        "bg-emerald-100 text-emerald-700",
+  CANCELLED:        "bg-red-100 text-red-700",
 };
 
 const NIGERIAN_STATES = [
@@ -548,34 +578,122 @@ export default function CustomerDetailPage() {
 
         {/* Reservation history */}
         {customer.reservations.length > 0 && (
-          <div className="rounded-lg border bg-card">
-            <div className="px-5 py-4 border-b border-border">
-              <h2 className="text-sm font-semibold">Reservation history</h2>
+          <div className="rounded-lg border bg-card overflow-hidden">
+            <div className="px-5 py-4 border-b flex items-center justify-between">
+              <h2 className="text-sm font-semibold flex items-center gap-2">
+                <CalendarCheck className="h-4 w-4 text-muted-foreground" />
+                Reservations
+              </h2>
+              <span className="text-xs text-muted-foreground">{customer.reservations.length}</span>
             </div>
-            <ul className="divide-y divide-border">
-              {customer.reservations.map((r) => (
-                <li key={r.id} className="flex items-center justify-between px-5 py-3">
-                  <div className="flex items-center gap-3">
-                    <span className={cn(
-                      "inline-flex rounded-full px-2 py-0.5 text-xs font-medium",
-                      RESERVATION_BADGE[r.status] ?? "bg-muted text-muted-foreground",
-                    )}>
-                      {r.status?.replace(/_/g, " ")?.toLowerCase() ?? r.status}
-                    </span>
-                    <span className="font-mono text-xs text-muted-foreground">{r.reservationNumber}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-muted-foreground">{formatDate(r.createdAt)}</span>
-                    <Link
-                      href={`/reservations/${r.id}`}
-                      className="text-xs text-secondary hover:underline"
-                    >
-                      View →
-                    </Link>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b bg-muted/30">
+                    <th className="text-left font-medium text-muted-foreground px-4 py-2 text-xs">Ref</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-2 text-xs">Property</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-2 text-xs">Fee</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-2 text-xs">Status</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-2 text-xs">Date</th>
+                    <th className="px-4 py-2" />
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {customer.reservations.map((r) => (
+                    <tr key={r.id} className="hover:bg-muted/20 transition-colors">
+                      <td className="px-4 py-2.5">
+                        <span className="font-mono text-xs text-muted-foreground">{r.reservationNumber}</span>
+                      </td>
+                      <td className="px-4 py-2.5">
+                        <p className="font-medium text-xs truncate max-w-[160px]">{r.property.title}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {r.property.city ? `${r.property.city}, ` : ""}{r.property.state}
+                        </p>
+                      </td>
+                      <td className="px-4 py-2.5 text-xs">
+                        {Number(r.reservationAmount) > 0 ? formatCurrency(r.reservationAmount) : "—"}
+                      </td>
+                      <td className="px-4 py-2.5">
+                        <span className={cn("inline-flex rounded-full px-2 py-0.5 text-xs font-medium", RESERVATION_BADGE[r.status] ?? "bg-muted text-muted-foreground")}>
+                          {r.status.replace(/_/g, " ").toLowerCase()}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2.5 text-xs text-muted-foreground whitespace-nowrap">
+                        {formatDate(r.reservedAt)}
+                      </td>
+                      <td className="px-4 py-2.5">
+                        <Link href={`/reservations/${r.id}`} className="text-xs text-primary hover:underline">
+                          View →
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Sales history */}
+        {customer.sales.length > 0 && (
+          <div className="rounded-lg border bg-card overflow-hidden">
+            <div className="px-5 py-4 border-b flex items-center justify-between">
+              <h2 className="text-sm font-semibold flex items-center gap-2">
+                <Receipt className="h-4 w-4 text-muted-foreground" />
+                Sales
+              </h2>
+              <span className="text-xs text-muted-foreground">{customer.sales.length}</span>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b bg-muted/30">
+                    <th className="text-left font-medium text-muted-foreground px-4 py-2 text-xs">Sale #</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-2 text-xs">Property</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-2 text-xs">Final Price</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-2 text-xs">Balance</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-2 text-xs">Status</th>
+                    <th className="text-left font-medium text-muted-foreground px-4 py-2 text-xs">Date</th>
+                    <th className="px-4 py-2" />
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {customer.sales.map((s) => {
+                    const balance = Number(s.balanceDue);
+                    return (
+                      <tr key={s.id} className="hover:bg-muted/20 transition-colors">
+                        <td className="px-4 py-2.5">
+                          <span className="font-mono text-xs text-muted-foreground">{s.saleNumber}</span>
+                        </td>
+                        <td className="px-4 py-2.5">
+                          <p className="font-medium text-xs truncate max-w-[160px]">{s.property.title}</p>
+                          <p className="text-xs text-muted-foreground capitalize">{s.type.toLowerCase()}</p>
+                        </td>
+                        <td className="px-4 py-2.5 text-xs font-medium">{formatCurrency(s.finalPrice)}</td>
+                        <td className="px-4 py-2.5 text-xs">
+                          <span className={balance > 0 ? "text-amber-600 font-medium" : "text-green-600 font-medium"}>
+                            {balance > 0 ? formatCurrency(s.balanceDue) : "Paid"}
+                          </span>
+                        </td>
+                        <td className="px-4 py-2.5">
+                          <span className={cn("inline-flex rounded-full px-2 py-0.5 text-xs font-medium", SALE_BADGE[s.status] ?? "bg-muted text-muted-foreground")}>
+                            {s.status.replace(/_/g, " ").toLowerCase()}
+                          </span>
+                        </td>
+                        <td className="px-4 py-2.5 text-xs text-muted-foreground whitespace-nowrap">
+                          {formatDate(s.createdAt)}
+                        </td>
+                        <td className="px-4 py-2.5">
+                          <Link href={`/sales/${s.id}`} className="text-xs text-primary hover:underline">
+                            View →
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
