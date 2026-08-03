@@ -1,6 +1,6 @@
 # NHGP — Build Progress & Master Todo List
 
-_Updated: 2026-08-02 | Session 16_
+_Updated: 2026-08-03 | Session 17_
 
 > This file is the single source of truth for what's done, what's in progress, and what
 > remains until 100% production-ready. Read it at the start of every session.
@@ -10,7 +10,7 @@ _Updated: 2026-08-02 | Session 16_
 ## Project Vision (from spec)
 
 Build Nigeria's most trusted, transparent, and professional real estate operations platform
-for Ndukego Investments & Properties Limited. Three portals: Public Website (customers +
+for Ndukego Investment & Properties Limited. Three portals: Public Website (customers +
 visitors), Admin Portal (staff), API (backend). Eventually: Executive Dashboard, AI
 Assistant, Mobile App.
 
@@ -103,10 +103,10 @@ Target: Live and usable by company staff and customers.
 - [x] **Admin portal redesign (Session 11):**
   - [x] `globals.css` — light-only, dark sidebar tokens in `:root`, 3px crimson scrollbar, Fraunces/DM Sans font vars
   - [x] `ThemeProvider` — `forcedTheme="light"`, dark mode removed entirely
-  - [x] Sidebar — premium always-dark `#111111`, grouped nav (MAIN/OPERATIONS/ORGANISATION), crimson active dot + bg tint, correct branding "Ndukego Investments & Properties Ltd"
+  - [x] Sidebar — premium always-dark `#111111`, grouped nav (MAIN/OPERATIONS/ORGANISATION), crimson active dot + bg tint, correct branding "Ndukego Investment & Properties Ltd"
   - [x] Header — ThemeToggle removed, clean minimal white header with notification bell
   - [x] Login — split-screen: dark left brand panel (crimson glow, trust signals) + white right form panel (crimson CTA button, forgot password link)
-  - [x] Layout metadata title — "Ndukego Investments & Properties Ltd — Admin"
+  - [x] Layout metadata title — "Ndukego Investment & Properties Ltd — Admin"
 
 ### 1D. Public Website — Next.js 16, :3000 ✅ MOSTLY COMPLETE
 
@@ -278,7 +278,7 @@ Build after Phase 3 demonstrates ROI.
 
 ---
 
-## PRODUCTION DEPLOYMENT CHECKLIST `⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 0% done`
+## PRODUCTION DEPLOYMENT CHECKLIST `⬛⬜⬜⬜⬜⬜⬜⬜⬜⬜ ~10% done`
 
 Must be complete before any live traffic.
 
@@ -394,7 +394,7 @@ These exist in the Prisma schema and will be built in their respective phases:
 | 7 | 2026-07-27 | Branding fix (Ndukego Homes Gallery everywhere), design system (dark theme #050505 + crimson #C1121F), font system (Fraunces/DM Sans/JetBrains Mono) |
 | 8 | 2026-07-27 | Theme toggle (light/dark/system) on web + admin, CSS variable token system, ThemeProvider + ThemeToggle components, Company settings page built |
 | 9 | 2026-07-27 | Admin sidebar CSS variable tokens (light/dark), Staff password change page, Reports page (stats + pipeline + geographic breakdown), Documents placeholder, About page built, dark-mode badge fixes across all pages, property/estates/properties page theme fixes |
-| 10 | 2026-07-30 | API crash fix (employee.service.ts calculatePagination), web login/register logo fix, company identity realignment (Ndukego Investments & Properties Ltd), premium navbar rebuild (glassmorphism + corporate links + Services dropdown), corporate footer rebuild (4-col, correct contacts), homepage rebuild (premium dark hero + Framer Motion + 4 service cards + process steps + trust section), framer-motion + @react-three/fiber + drei + three installed |
+| 10 | 2026-07-30 | API crash fix (employee.service.ts calculatePagination), web login/register logo fix, company identity realignment (Ndukego Investment & Properties Ltd), premium navbar rebuild (glassmorphism + corporate links + Services dropdown), corporate footer rebuild (4-col, correct contacts), homepage rebuild (premium dark hero + Framer Motion + 4 service cards + process steps + trust section), framer-motion + @react-three/fiber + drei + three installed |
 | 10b | 2026-07-30 | Full light-theme overhaul of public web: removed dark mode entirely (forcedTheme="light"), global morphing crimson gradient (position:fixed, gradient-morph 24s keyframe), global 60px grid overlay, 3px thin crimson scrollbar, navbar centered-logo+hamburger redesign, footer crimson CTA band + 4-col section, homepage all sections converted to transparent/semi-transparent backgrounds |
 | 11 | 2026-07-30 | Admin portal redesign: globals.css (light-only, always-dark sidebar tokens, crimson scrollbar), ThemeProvider (forcedTheme="light"), sidebar (premium dark, grouped nav, correct branding, crimson active states), header (ThemeToggle removed, clean minimal), login (split-screen dark brand panel + white form), metadata title updated; all 7 web service/project/insight pages created with AnimateIn, full content, crimson design system |
 | 12 | 2026-07-30 | Stage 1: Hard delete for properties + estates (API + admin confirmation modal with name-typing), Stage 2: Estate badge on property cards (indigo chip), Stage 3: Per-estate site plan management in admin (site plan upload, building type editor with color picker + image upload), API proxy route (/api/proxy/[...path]/route.ts), EstateSitePlan component now accepts sitePlanUrl+buildingTypes props, Contact page rebuild (Google Maps embed + updated contact details + no CTA), FooterCtaBand extracted as client component (hidden on /contact), Prisma schema + db push for buildingTypesConfig JSON field on Estate |
@@ -402,3 +402,4 @@ These exist in the Prisma schema and will be built in their respective phases:
 | 14 | 2026-08-01 | Inquiries fix (dedicated Inquiry model + raw SQL, all form submissions captured); Employee/Customer deactivate + delete (soft-delete with User sync); Login deactivated-account message; Estate section redesign (horizontal split cards + site plan panel) |
 | 15 | 2026-08-01 | Admin Sales pages: `/sales` list (search, status filter, pagination, financials) + `/sales/:id` detail (customer, financials, sale details, payment history, full status transitions DRAFT→PENDING_APPROVAL→APPROVED→ACTIVE→COMPLETED/DISPUTED/CANCELLED) |
 | 16 | 2026-08-02 | Inquiry status updates (PATCH endpoint + inline dropdown UI + status filter); Dashboard 8 stat tiles (reservations, sales, new inquiries added); Reservation→Sale conversion form on confirmed reservations; Customer detail activity tables (reservations + sales with property info); Web state filter fixed (dedicated ?state= param, search and state can coexist) |
+| 17 | 2026-08-03 | Production build prep — fixed all build errors and prepped for Vercel deployment: (1) Admin mobile responsive — Shell client component with slide-in drawer sidebar, hamburger menu bar, backdrop click-to-close; (2) Investments→Investment rename throughout codebase; (3) Properties page heading "Ndukego Homes" (removed "Properties of"); (4) Featured estate cards — removed site plan image panel; (5) Footer live estate data (async fetch, real estate names as links replacing placeholder Projects/Insights/Careers); (6) Admin ThemeProvider removed (React 19 script-tag rejection); (7) Delete UX — full-screen loading overlay on property/estate delete dialog; (8) Dashboard stats crash fix — Promise.allSettled + normalized fallback objects + optional chaining; (9) Favicon — overwrote default Vercel favicon.ico in both web + admin apps; (10) packages/assets tsconfig.json + removed unnecessary React import; (11) dashboard.service.ts — removed deletedAt filter from Reservation/Sale (no soft delete on those models); (12) Admin login page — split useSearchParams into LoginContent client component wrapped in Suspense boundary; pnpm build PASSES CLEAN — all 8 packages, zero errors |

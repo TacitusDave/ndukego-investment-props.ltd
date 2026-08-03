@@ -52,16 +52,14 @@ export class DashboardService {
           createdAt: true,
         },
       }),
-      this.prisma.reservation.count({ where: { deletedAt: null } }),
+      this.prisma.reservation.count(),
       this.prisma.reservation.groupBy({
         by: ['status'],
-        where: { deletedAt: null },
         _count: { id: true },
       }),
-      this.prisma.sale.count({ where: { deletedAt: null } }),
+      this.prisma.sale.count(),
       this.prisma.sale.groupBy({
         by: ['status'],
-        where: { deletedAt: null },
         _count: { id: true },
       }),
       this.prisma.$queryRawUnsafe<{ total: string; newCount: string }[]>(
