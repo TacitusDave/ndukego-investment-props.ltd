@@ -1,6 +1,5 @@
 [build]
 builder = "nixpacks"
-buildCommand = "pnpm install --no-frozen-lockfile && pnpm turbo build --filter=api"
 
 [deploy]
 startCommand = "node apps/api/dist/main"
