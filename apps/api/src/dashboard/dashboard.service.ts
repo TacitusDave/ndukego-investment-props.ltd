@@ -64,7 +64,7 @@ export class DashboardService {
       }),
       this.prisma.$queryRawUnsafe<{ total: string; newCount: string }[]>(
         `SELECT COUNT(*)::text AS total,
-                SUM(CASE WHEN status = 'NEW' THEN 1 ELSE 0 END)::text AS "newCount"
+                COALESCE(SUM(CASE WHEN status = 'NEW' THEN 1 ELSE 0 END), 0)::text AS "newCount"
          FROM inquiries`,
       ),
     ]);

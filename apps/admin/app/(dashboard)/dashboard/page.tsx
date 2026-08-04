@@ -58,7 +58,7 @@ function StatCard({
         </span>
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
-      <p className="text-3xl font-bold tabular-nums">{value.toLocaleString()}</p>
+      <p className="text-3xl font-bold tabular-nums">{(value == null || !Number.isFinite(value) ? 0 : value).toLocaleString()}</p>
       {sub && <p className="text-xs text-muted-foreground mt-1">{sub}</p>}
     </Link>
   );
