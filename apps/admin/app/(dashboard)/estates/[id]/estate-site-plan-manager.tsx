@@ -37,6 +37,7 @@ export function EstateSitePlanManager({ estateId, masterPlanUrl, buildingTypes: 
   const [saving, startSave] = useTransition();
   const [uploadingPlan, setUploadingPlan] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const planInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -82,18 +83,25 @@ export function EstateSitePlanManager({ estateId, masterPlanUrl, buildingTypes: 
   }
 
   async function uploadTypeImage(typeId: string, file: File) {
+    setUploadError(null);
     const fd = new FormData();
     fd.append("file", file);
-    const res = await fetch(`/api/proxy/estates/${estateId}/building-type-image/${typeId}`, {
-      method: "POST",
-      body: fd,
-    });
-    if (res.ok) {
-      const j = await res.json();
-      // Use functional update to avoid stale closure on types
-      setTypes((prev) =>
-        prev.map((t) => (t.id === typeId ? { ...t, images: [...t.images, j.url] } : t)),
-      );
+    try {
+      const res = await fetch(`/api/proxy/estates/${estateId}/building-type-image/${typeId}`, {
+        method: "POST",
+        body: fd,
+      });
+      if (res.ok) {
+        const j = await res.json();
+        setTypes((prev) =>
+          prev.map((t) => (t.id === typeId ? { ...t, images: [...t.images, j.url] } : t)),
+        );
+      } else {
+        const j = await res.json().catch(() => ({}));
+        setUploadError(j.message ?? `Upload failed (${res.status})`);
+      }
+    } catch {
+      setUploadError("Cannot reach server. Check your connection and try again.");
     }
   }
 
@@ -137,6 +145,11 @@ export function EstateSitePlanManager({ estateId, masterPlanUrl, buildingTypes: 
 
       {error && (
         <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>
+      )}
+      {uploadError && (
+        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+          Image upload failed: {uploadError}
+        </p>
       )}
       {success && (
         <p className="text-sm text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">

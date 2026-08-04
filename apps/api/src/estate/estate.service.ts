@@ -109,9 +109,9 @@ export class EstateService {
   async uploadSitePlan(id: string, file: Express.Multer.File, user: AuthenticatedUser) {
     const estate = await this.findOne(id);
 
-    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
     if (!allowed.includes(file.mimetype)) {
-      throw new BadRequestException('Only JPEG, PNG, or WebP images are allowed');
+      throw new BadRequestException('Only JPEG, PNG, WebP, or HEIC images are allowed');
     }
     if (file.size > 20 * 1024 * 1024) {
       throw new BadRequestException('Site plan image must be smaller than 20 MB');
@@ -153,9 +153,9 @@ export class EstateService {
   ) {
     await this.findOne(id);
 
-    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
     if (!allowed.includes(file.mimetype)) {
-      throw new BadRequestException('Only JPEG, PNG, or WebP images are allowed');
+      throw new BadRequestException('Only JPEG, PNG, WebP, or HEIC images are allowed');
     }
     if (file.size > 10 * 1024 * 1024) {
       throw new BadRequestException('Image must be smaller than 10 MB');
