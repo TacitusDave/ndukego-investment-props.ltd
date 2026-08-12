@@ -63,6 +63,28 @@ export class AuthController {
     return { success: true, data: user };
   }
 
+  // ─── Super Admin TOTP Auth ─────────────────────────────────────
+
+  @Public()
+  @Post('super/setup')
+  setupSuperAdminTotp(@Body() body: { email: string; password: string }) {
+    return this.authService.setupSuperAdminTotp(body.email, body.password);
+  }
+
+  @Public()
+  @Post('super/login')
+  superAdminLogin(
+    @Body() body: { email: string; code: string },
+    @Req() req: Request,
+  ) {
+    return this.authService.superAdminLogin(
+      body.email,
+      body.code,
+      req.ip,
+      req.headers['user-agent'],
+    );
+  }
+
   // ─── Customer Auth ─────────────────────────────────────────────
 
   @Public()

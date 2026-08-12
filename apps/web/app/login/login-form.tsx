@@ -116,7 +116,7 @@ export function LoginForm() {
         <p className="text-center text-xs text-muted-foreground">
           Are you staff?{" "}
           <a
-            href="http://localhost:3001"
+            href="https://ndukego-investment-props-ltd-admin.vercel.app"
             className="hover:underline"
             target="_blank"
             rel="noopener noreferrer"

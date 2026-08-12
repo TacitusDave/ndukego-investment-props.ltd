@@ -9,6 +9,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
+import { authenticator } from 'otplib';
+import { toDataURL } from 'qrcode';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { EmailService } from '../email/email.service';
@@ -402,6 +404,126 @@ export class AuthService {
     });
 
     return updated;
+  }
+
+  // ─── Super Admin TOTP ──────────────────────────────────────────
+
+  async setupSuperAdminTotp(email: string, password: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { email: email.toLowerCase() },
+      include: { employee: true },
+    });
+
+    if (!user || !user.employee || user.status !== 'ACTIVE') {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const valid = await bcrypt.compare(password, user.passwordHash);
+    if (!valid) throw new UnauthorizedException('Invalid credentials');
+
+    const secret = authenticator.generateSecret(32);
+    const otpauth = authenticator.keyuri(
+      email.toLowerCase(),
+      'Ndukego Investment',
+      secret,
+    );
+    const qrDataUrl = await toDataURL(otpauth);
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { mfaSecret: secret, mfaEnabled: true },
+    });
+
+    await this.auditService.log({
+      actorId: user.id,
+      actorEmail: user.email,
+      action: 'UPDATE',
+      entityType: 'USER',
+      entityId: user.id,
+      entityLabel: 'TOTP authenticator configured',
+    });
+
+    return { secret, qrDataUrl };
+  }
+
+  async superAdminLogin(email: string, totpCode: string, ipAddress?: string, userAgent?: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { email: email.toLowerCase() },
+      include: {
+        employee: {
+          include: {
+            roles: {
+              include: {
+                role: { include: { permissions: { include: { permission: true } } } },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!user || user.deletedAt || !user.employee) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    if (!user.mfaEnabled || !user.mfaSecret) {
+      throw new UnauthorizedException('Authenticator not configured for this account. Complete setup first.');
+    }
+
+    if (user.status !== 'ACTIVE') throw new UnauthorizedException('Account deactivated');
+
+    if (user.lockedUntil && user.lockedUntil > new Date()) {
+      throw new UnauthorizedException('Account temporarily locked. Try again later.');
+    }
+
+    const isValid = authenticator.verify({ token: totpCode, secret: user.mfaSecret });
+
+    if (!isValid) {
+      const failedCount = user.failedLoginCount + 1;
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          failedLoginCount: failedCount,
+          lockedUntil: failedCount >= MAX_FAILED_ATTEMPTS ? new Date(Date.now() + LOCK_DURATION_MS) : null,
+        },
+      });
+      await this.auditService.log({
+        actorId: user.id,
+        actorEmail: email,
+        action: 'LOGIN_FAILED',
+        ipAddress,
+        userAgent,
+        metadata: { reason: 'invalid_totp' },
+      });
+      throw new UnauthorizedException('Invalid authenticator code');
+    }
+
+    const permissions = this.extractPermissions(user);
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { failedLoginCount: 0, lockedUntil: null, lastLoginAt: new Date(), lastLoginIp: ipAddress },
+    });
+
+    const tokens = await this.generateTokens(
+      user.id, user.email, user.type, permissions,
+      { employeeId: user.employeeId ?? undefined },
+      ipAddress, userAgent,
+    );
+
+    await this.auditService.log({
+      actorId: user.id,
+      actorEmail: user.email,
+      action: 'LOGIN',
+      ipAddress,
+      userAgent,
+      metadata: { method: 'totp' },
+    });
+
+    return {
+      user: { id: user.id, email: user.email, type: user.type, employeeId: user.employeeId, permissions },
+      ...tokens,
+    };
   }
 
   private extractPermissions(user: {

@@ -55,6 +55,54 @@ export async function login(email: string, password: string) {
   return { error: null };
 }
 
+export async function superLogin(email: string, code: string) {
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}/auth/super/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, code }),
+    });
+  } catch {
+    return { error: "Cannot connect to server." };
+  }
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    const message = Array.isArray(body.message) ? body.message.join(", ") : (body.message ?? "Authentication failed");
+    return { error: message };
+  }
+
+  const { accessToken, refreshToken, user } = await res.json();
+  const cookieStore = await cookies();
+  cookieStore.set("access_token", accessToken, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 15 * 60, path: "/" });
+  cookieStore.set("refresh_token", refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 7 * 24 * 60 * 60, path: "/" });
+  cookieStore.set("user_info", JSON.stringify({ id: user.id, email: user.email, type: user.type }), { httpOnly: false, secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 7 * 24 * 60 * 60, path: "/" });
+  return { error: null };
+}
+
+export async function setupTotp(email: string, password: string) {
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}/auth/super/setup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+  } catch {
+    return { error: "Cannot connect to server.", data: null };
+  }
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    const message = Array.isArray(body.message) ? body.message.join(", ") : (body.message ?? "Setup failed");
+    return { error: message, data: null };
+  }
+
+  const data = await res.json();
+  return { error: null, data: data as { secret: string; qrDataUrl: string } };
+}
+
 export async function logout() {
   const cookieStore = await cookies();
   const token = cookieStore.get("access_token")?.value;

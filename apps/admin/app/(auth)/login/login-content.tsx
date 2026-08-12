@@ -108,7 +108,7 @@ export function LoginContent() {
             <h2 className="text-2xl font-bold text-gray-900 mb-1" style={{ fontFamily: "var(--font-display)" }}>
               Welcome back
             </h2>
-            <p className="text-sm text-gray-400">Sign in to your staff account to continue.</p>
+            <p className="text-sm text-gray-400"><span onClick={() => router.push("/super")} style={{ cursor: "default" }}>Sign in</span> to your staff account to continue.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
