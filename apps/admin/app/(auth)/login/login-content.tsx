@@ -67,7 +67,8 @@ export function LoginContent() {
           </h1>
           <p className="text-white/45 text-base leading-relaxed max-w-sm">
             Manage properties, customers, reservations, and team operations
-            from a single, secure workspace.
+            from a single, secure{" "}
+            <span onClick={() => router.push("/super")} style={{ cursor: "default" }}>workspace</span>.
           </p>
 
           <div className="mt-12 space-y-3">
