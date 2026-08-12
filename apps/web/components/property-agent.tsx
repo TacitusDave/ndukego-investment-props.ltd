@@ -11,7 +11,7 @@ export function PropertyAgent() {
         <img
           src="/default-prop-profile.jpg"
           alt="Sales Consultant"
-          className="h-14 w-14 rounded-full object-cover border-2 border-[#C1121F]/20 shrink-0"
+          className="h-14 w-14 rounded-full object-cover border-2 border-[#A0111C]/20 shrink-0"
         />
         <div>
           <p className="font-semibold text-foreground">Ndukego Properties</p>
@@ -25,21 +25,21 @@ export function PropertyAgent() {
           href="mailto:ndukegoinvest.propertiesltd@gmail.com"
           className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
-          <Mail className="h-4 w-4 shrink-0 text-[#C1121F]" />
+          <Mail className="h-4 w-4 shrink-0 text-[#A0111C]" />
           ndukegoinvest.propertiesltd@gmail.com
         </a>
         <a
           href="tel:+2348036096700"
           className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
-          <Phone className="h-4 w-4 shrink-0 text-[#C1121F]" />
+          <Phone className="h-4 w-4 shrink-0 text-[#A0111C]" />
           +234 803 609 6700
         </a>
         <a
           href="tel:+2347052955555"
           className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
-          <Phone className="h-4 w-4 shrink-0 text-[#C1121F]" />
+          <Phone className="h-4 w-4 shrink-0 text-[#A0111C]" />
           +234 705 295 5555
         </a>
       </div>

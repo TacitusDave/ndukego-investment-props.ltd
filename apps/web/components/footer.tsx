@@ -73,9 +73,6 @@ function YouTubeIcon({ className }: { className?: string }) {
 const SOCIALS = [
   { label: "Instagram", href: "#", Icon: InstagramIcon },
   { label: "TikTok", href: "#", Icon: TikTokIcon },
-  { label: "Facebook", href: "#", Icon: FacebookIcon },
-  { label: "Twitter / X", href: "#", Icon: TwitterXIcon },
-  { label: "LinkedIn", href: "#", Icon: LinkedInIcon },
   { label: "YouTube", href: "#", Icon: YouTubeIcon },
 ];
 
@@ -140,29 +137,34 @@ export async function Footer() {
               <div className="space-y-2.5">
                 <a
                   href="tel:+2348036096700"
-                  className="flex items-center gap-2.5 text-sm text-gray-500 hover:text-[#C1121F] transition-colors"
+                  className="flex items-center gap-2.5 text-sm text-gray-500 hover:text-[#A0111C] transition-colors"
                 >
-                  <Phone className="h-3.5 w-3.5 text-[#C1121F] shrink-0" />
+                  <Phone className="h-3.5 w-3.5 text-[#A0111C] shrink-0" />
                   +234 803 609 6700
                 </a>
                 <a
                   href="tel:+2347052955555"
-                  className="flex items-center gap-2.5 text-sm text-gray-500 hover:text-[#C1121F] transition-colors"
+                  className="flex items-center gap-2.5 text-sm text-gray-500 hover:text-[#A0111C] transition-colors"
                 >
-                  <Phone className="h-3.5 w-3.5 text-[#C1121F] shrink-0" />
+                  <Phone className="h-3.5 w-3.5 text-[#A0111C] shrink-0" />
                   +234 705 295 5555
                 </a>
                 <a
                   href="mailto:ndukegoinvest.propertiesltd@gmail.com"
-                  className="flex items-center gap-2.5 text-sm text-gray-500 hover:text-[#C1121F] transition-colors"
+                  className="flex items-center gap-2.5 text-sm text-gray-500 hover:text-[#A0111C] transition-colors"
                 >
-                  <Mail className="h-3.5 w-3.5 text-[#C1121F] shrink-0" />
+                  <Mail className="h-3.5 w-3.5 text-[#A0111C] shrink-0" />
                   ndukegoinvest.propertiesltd@gmail.com
                 </a>
-                <span className="flex items-center gap-2.5 text-sm text-gray-400">
-                  <MapPin className="h-3.5 w-3.5 text-[#C1121F] shrink-0" />
-                  Nigeria
-                </span>
+                <a
+                  href="https://www.google.com/maps/place/758+Independence+Ave,+Central+Business+Dis,+Abuja+900103,+Federal+Capital+Territory/@9.0526716,7.4812931,19z"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2.5 text-sm text-gray-500 hover:text-[#A0111C] transition-colors"
+                >
+                  <MapPin className="h-3.5 w-3.5 text-[#A0111C] shrink-0" />
+                  Locate Us
+                </a>
               </div>
 
               {/* Social icons */}
@@ -178,7 +180,7 @@ export async function Footer() {
                       title={label}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center h-8 w-8 rounded-lg border border-gray-200 bg-gray-50 text-gray-500 hover:border-[#C1121F]/30 hover:bg-[#C1121F]/5 hover:text-[#C1121F] transition-all duration-200"
+                      className="flex items-center justify-center h-8 w-8 rounded-lg border border-gray-200 bg-gray-50 text-gray-500 hover:border-[#A0111C]/30 hover:bg-[#A0111C]/5 hover:text-[#A0111C] transition-all duration-200"
                     >
                       <Icon className="h-3.5 w-3.5" />
                     </a>
@@ -198,7 +200,7 @@ export async function Footer() {
                   <ul className="space-y-2.5">
                     {SERVICES.map((s) => (
                       <li key={s.href}>
-                        <Link href={s.href} className="text-sm text-gray-600 hover:text-[#C1121F] transition-colors">
+                        <Link href={s.href} className="text-sm text-gray-600 hover:text-[#A0111C] transition-colors">
                           {s.label}
                         </Link>
                       </li>
@@ -214,7 +216,7 @@ export async function Footer() {
                   <ul className="space-y-2.5">
                     {PROPERTIES.map((p) => (
                       <li key={p.href}>
-                        <Link href={p.href} className="text-sm text-gray-600 hover:text-[#C1121F] transition-colors">
+                        <Link href={p.href} className="text-sm text-gray-600 hover:text-[#A0111C] transition-colors">
                           {p.label}
                         </Link>
                       </li>
@@ -229,13 +231,13 @@ export async function Footer() {
                   </h4>
                   <ul className="space-y-2.5">
                     <li>
-                      <Link href="/estates" className="text-sm text-gray-600 hover:text-[#C1121F] transition-colors">
+                      <Link href="/estates" className="text-sm text-gray-600 hover:text-[#A0111C] transition-colors">
                         All Estates
                       </Link>
                     </li>
                     {liveEstates.map((e) => (
                       <li key={e.id}>
-                        <Link href={`/estates/${e.id}`} className="text-sm text-gray-600 hover:text-[#C1121F] transition-colors">
+                        <Link href={`/estates/${e.id}`} className="text-sm text-gray-600 hover:text-[#A0111C] transition-colors">
                           {e.name}
                         </Link>
                       </li>
@@ -254,7 +256,7 @@ export async function Footer() {
                   <ul className="space-y-2.5">
                     {COMPANY.map((c) => (
                       <li key={c.href}>
-                        <Link href={c.href} className="text-sm text-gray-600 hover:text-[#C1121F] transition-colors">
+                        <Link href={c.href} className="text-sm text-gray-600 hover:text-[#A0111C] transition-colors">
                           {c.label}
                         </Link>
                       </li>
@@ -268,7 +270,7 @@ export async function Footer() {
                 <p className="text-sm text-gray-400">Available Mon–Fri, 8 am – 6 pm WAT</p>
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#C1121F] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors shadow-sm shadow-[#C1121F]/15"
+                  className="inline-flex items-center gap-2 rounded bg-[#A0111C] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors shadow-sm shadow-[#A0111C]/15"
                 >
                   Contact Us <ArrowRight className="h-4 w-4" />
                 </Link>

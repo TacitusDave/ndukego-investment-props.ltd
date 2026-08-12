@@ -11,17 +11,17 @@
     --popover-foreground: 0 0% 8%;
     --primary: 0 0% 9%;                /* #181818 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 354 83% 41%;          /* #C1121F crimson */
+    --secondary: 355 81% 35%;          /* #A0111C crimson */
     --secondary-foreground: 0 0% 100%;
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 45%;
-    --accent: 354 63% 52%;             /* #D62839 */
+    --accent: 355 79% 39%;             /* #B41523 */
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 90%;                /* #E5E5E5 */
     --input: 0 0% 96%;
-    --ring: 354 83% 41%;
+    --ring: 355 81% 35%;
     --radius: 0.75rem;
 
     --nav-bg: rgba(255,255,255,0.88);
@@ -62,12 +62,12 @@
 /* ── Thin custom scrollbar (all pages) ── */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(193,18,31,0.2) transparent;
+  scrollbar-color: rgba(160,17,28,0.2) transparent;
 }
 ::-webkit-scrollbar        { width: 3px; height: 3px; }
 ::-webkit-scrollbar-track  { background: transparent; }
-::-webkit-scrollbar-thumb  { background: rgba(193,18,31,0.2); border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(193,18,31,0.5); }
+::-webkit-scrollbar-thumb  { background: rgba(160,17,28,0.2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(160,17,28,0.5); }
 
 /* ── Global background — paper texture ── */
 

@@ -89,7 +89,7 @@ export default async function MyReservationsPage() {
           </p>
           <Link
             href="/properties"
-            className="inline-flex items-center gap-1.5 mt-4 rounded-lg bg-[#C1121F] px-4 py-2 text-sm font-medium text-white hover:bg-[#D62839] transition-colors"
+            className="inline-flex items-center gap-1.5 mt-4 rounded-lg bg-[#A0111C] px-4 py-2 text-sm font-medium text-white hover:bg-[#B41523] transition-colors"
           >
             Browse properties <ArrowRight className="h-3.5 w-3.5" />
           </Link>

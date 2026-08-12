@@ -54,7 +54,7 @@ export default function InvestmentConsultancyPage() {
       <section className="relative py-24 pt-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateIn>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-4">Investment Consultancy</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-4">Investment Consultancy</p>
             <h1
               className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight max-w-3xl mb-6"
               style={{ fontFamily: "var(--font-display)" }}
@@ -67,10 +67,10 @@ export default function InvestmentConsultancyPage() {
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
-                href={`/contact?message=${encodeURIComponent("Hi, I'd like to book a free investment consultancy session with your advisors.")}`}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#C1121F] px-7 py-3.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors shadow-sm shadow-[#C1121F]/15"
+                href={`/contact?message=${encodeURIComponent("Hi, I'd like to book a session with your advisors.")}`}
+                className="inline-flex items-center gap-2 rounded bg-[#A0111C] px-7 py-3.5 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors shadow-sm shadow-[#A0111C]/15"
               >
-                Book a Free Session <ArrowRight className="h-4 w-4" />
+                Book a Session <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </AnimateIn>
@@ -81,7 +81,7 @@ export default function InvestmentConsultancyPage() {
       <section className="relative py-20 bg-white/40">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateIn>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">What We Do</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">What We Do</p>
             <h2 className="text-3xl font-bold text-gray-900 mb-12" style={{ fontFamily: "var(--font-display)" }}>
               Advisory that goes beyond a single product
             </h2>
@@ -92,8 +92,8 @@ export default function InvestmentConsultancyPage() {
               return (
                 <AnimateIn key={svc.title} delay={i * 0.07}>
                   <div className="flex gap-5 rounded-2xl border border-gray-100 bg-white/80 p-6 shadow-sm h-full">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#C1121F]/8">
-                      <Icon className="h-5 w-5 text-[#C1121F]" />
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#A0111C]/8">
+                      <Icon className="h-5 w-5 text-[#A0111C]" />
                     </div>
                     <div>
                       <h3 className="font-bold text-gray-900 mb-2">{svc.title}</h3>
@@ -111,7 +111,7 @@ export default function InvestmentConsultancyPage() {
       <section className="relative py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateIn>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">Our Process</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">Our Process</p>
             <h2 className="text-3xl font-bold text-gray-900 mb-12" style={{ fontFamily: "var(--font-display)" }}>
               How we work with you
             </h2>
@@ -123,7 +123,7 @@ export default function InvestmentConsultancyPage() {
                   <p
                     className="text-4xl font-bold mb-4"
                     style={{
-                      background: "linear-gradient(135deg, rgba(193,18,31,0.55), rgba(193,18,31,0.12))",
+                      background: "linear-gradient(135deg, rgba(160,17,28,0.55), rgba(160,17,28,0.12))",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
                     }}
@@ -144,14 +144,14 @@ export default function InvestmentConsultancyPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
             <AnimateIn>
-              <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">Who We Serve</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">Who We Serve</p>
               <h2 className="text-3xl font-bold text-gray-900 mb-8" style={{ fontFamily: "var(--font-display)" }}>
                 Built for everyone building wealth
               </h2>
               <div className="space-y-3">
                 {WHO_WE_SERVE.map((item) => (
                   <div key={item} className="flex items-start gap-3">
-                    <CheckCircle className="h-4 w-4 text-[#C1121F] mt-0.5 shrink-0" />
+                    <CheckCircle className="h-4 w-4 text-[#A0111C] mt-0.5 shrink-0" />
                     <p className="text-sm text-gray-600">{item}</p>
                   </div>
                 ))}
@@ -160,17 +160,17 @@ export default function InvestmentConsultancyPage() {
             <AnimateIn delay={0.12}>
               <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
                 <h3 className="text-xl font-bold text-gray-900 mb-2" style={{ fontFamily: "var(--font-display)" }}>
-                  Start with a free consultation
+                  Book a session
                 </h3>
                 <p className="text-sm text-gray-400 mb-8 leading-relaxed">
                   No commitment. No sales pressure. Just an honest conversation about your
                   financial goals and how we can help you reach them.
                 </p>
                 <Link
-                  href={`/contact?message=${encodeURIComponent("Hi, I'd like to book a free investment consultancy session with your advisors.")}`}
-                  className="block text-center rounded-xl bg-[#C1121F] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors mb-3"
+                  href={`/contact?message=${encodeURIComponent("Hi, I'd like to book a session with your advisors.")}`}
+                  className="block text-center rounded bg-[#A0111C] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors mb-3"
                 >
-                  Book Free Session
+                  Book a Session
                 </Link>
                 <p className="text-center text-xs text-gray-400">
                   Or email: ndukegoinvest.propertiesltd@gmail.com

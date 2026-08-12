@@ -53,7 +53,7 @@ export default function RealEstatePage() {
       <section className="relative py-24 pt-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateIn>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-4">Real Estate</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-4">Real Estate</p>
             <h1
               className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight max-w-3xl mb-6"
               style={{ fontFamily: "var(--font-display)" }}
@@ -68,7 +68,7 @@ export default function RealEstatePage() {
             <div className="flex flex-wrap gap-4">
               <Link
                 href="/properties"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#C1121F] px-7 py-3.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors shadow-sm shadow-[#C1121F]/15"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#A0111C] px-7 py-3.5 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors shadow-sm shadow-[#A0111C]/15"
               >
                 Browse Properties <ArrowRight className="h-4 w-4" />
               </Link>
@@ -87,7 +87,7 @@ export default function RealEstatePage() {
       <section className="relative py-20 bg-white/40">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateIn>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">What We Cover</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">What We Cover</p>
             <h2
               className="text-3xl font-bold text-gray-900 mb-12"
               style={{ fontFamily: "var(--font-display)" }}
@@ -118,7 +118,7 @@ export default function RealEstatePage() {
       <section className="relative py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateIn>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">How It Works</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">How It Works</p>
             <h2 className="text-3xl font-bold text-gray-900 mb-12" style={{ fontFamily: "var(--font-display)" }}>
               From listing to keys in hand
             </h2>
@@ -130,7 +130,7 @@ export default function RealEstatePage() {
                   <p
                     className="text-4xl font-bold mb-4"
                     style={{
-                      background: "linear-gradient(135deg, rgba(193,18,31,0.55), rgba(193,18,31,0.12))",
+                      background: "linear-gradient(135deg, rgba(160,17,28,0.55), rgba(160,17,28,0.12))",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
                     }}
@@ -151,7 +151,7 @@ export default function RealEstatePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <AnimateIn>
-              <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">Why Ndukego</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">Why Ndukego</p>
               <h2 className="text-3xl font-bold text-gray-900 mb-6" style={{ fontFamily: "var(--font-display)" }}>
                 The Ndukego standard
               </h2>
@@ -165,7 +165,7 @@ export default function RealEstatePage() {
                   "Licensed and experienced professionals with 10+ years in Nigerian real estate",
                 ].map((point) => (
                   <div key={point} className="flex items-start gap-3">
-                    <CheckCircle className="h-4 w-4 text-[#C1121F] mt-0.5 shrink-0" />
+                    <CheckCircle className="h-4 w-4 text-[#A0111C] mt-0.5 shrink-0" />
                     <p className="text-sm text-gray-600">{point}</p>
                   </div>
                 ))}
@@ -183,7 +183,7 @@ export default function RealEstatePage() {
                 </p>
                 <Link
                   href="/properties"
-                  className="block text-center rounded-xl bg-[#C1121F] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors"
+                  className="block text-center rounded-xl bg-[#A0111C] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors"
                 >
                   Browse All Properties
                 </Link>

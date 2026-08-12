@@ -104,13 +104,14 @@ export function HomeHero({ totalProperties }: { totalProperties: number }) {
       {/* ── Content — CENTERED ── */}
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full pt-20 sm:pt-28 pb-28 text-center">
 
-        {/* Eyebrow badge */}
+        {/* Eyebrow label */}
         <motion.div
           custom={0} variants={fadeUp} initial="hidden" animate="show"
-          className="inline-flex items-center gap-2 rounded-full border border-[#C1121F]/20 bg-[#C1121F]/6 px-4 py-1.5 text-xs font-semibold text-[#C1121F] mb-8"
+          className="mb-8"
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-[#C1121F] animate-pulse" />
-          Nigeria&apos;s Premier Property &amp; Investment Group
+          <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#A0111C]/70">
+            Nigeria&apos;s Premier Property &amp; Investment Group
+          </span>
         </motion.div>
 
         {/* Heading */}
@@ -122,7 +123,7 @@ export function HomeHero({ totalProperties }: { totalProperties: number }) {
           Build Wealth.<br />
           <span
             className="text-transparent bg-clip-text"
-            style={{ backgroundImage: "linear-gradient(135deg, #C1121F 0%, #E8303E 50%, #C1121F 100%)" }}
+            style={{ backgroundImage: "linear-gradient(135deg, #A0111C 0%, #C41826 50%, #A0111C 100%)" }}
           >
             Own Property.
           </span>
@@ -152,12 +153,12 @@ export function HomeHero({ totalProperties }: { totalProperties: number }) {
               onChange={(e) => setQuery(e.target.value)}
               type="text"
               placeholder="Search by location, title, or type…"
-              className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white border border-gray-200 text-gray-800 placeholder-gray-400 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-[#C1121F]/25 focus:border-[#C1121F]/40 transition-all"
+              className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white border border-gray-200 text-gray-800 placeholder-gray-400 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-[#A0111C]/25 focus:border-[#A0111C]/40 transition-all"
             />
           </div>
           <button
             type="submit"
-            className="rounded-xl bg-[#C1121F] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors shrink-0 shadow-sm"
+            className="rounded-xl bg-[#A0111C] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors shrink-0 shadow-sm"
           >
             Search
           </button>
@@ -170,15 +171,15 @@ export function HomeHero({ totalProperties }: { totalProperties: number }) {
         >
           <Link
             href="/properties"
-            className="inline-flex items-center gap-2.5 rounded-xl border border-gray-300 bg-white/90 px-8 py-3.5 text-sm font-semibold text-gray-700 hover:border-gray-400 hover:bg-white transition-all shadow-sm"
+            className="inline-flex items-center gap-2.5 rounded border border-gray-300 bg-white/90 px-8 py-3.5 text-sm font-semibold text-gray-700 hover:border-gray-400 hover:bg-white transition-all shadow-sm"
           >
             Browse Properties <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
-            href={`/contact?message=${encodeURIComponent("Hi, I'd like to book a free consultation with your team.")}`}
-            className="inline-flex items-center gap-2.5 rounded-xl bg-[#C1121F] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors shadow-sm shadow-[#C1121F]/20"
+            href={`/contact?message=${encodeURIComponent("Hi, I'd like to book a session with your team.")}`}
+            className="inline-flex items-center gap-2.5 rounded bg-[#A0111C] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors shadow-sm shadow-[#A0111C]/20"
           >
-            Book Consultation
+            Book a Session
           </Link>
         </motion.div>
 

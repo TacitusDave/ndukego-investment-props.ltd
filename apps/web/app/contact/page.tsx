@@ -68,7 +68,7 @@ export default async function ContactPage({
       <section className="relative py-20 pt-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateIn>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-4">
+            <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-4">
               Contact
             </p>
             <h1
@@ -96,8 +96,8 @@ export default async function ContactPage({
                 <div className="space-y-5">
                   {CONTACT_DETAILS.map(({ icon: Icon, label, items }) => (
                     <div key={label} className="flex items-start gap-4">
-                      <div className="shrink-0 flex h-10 w-10 items-center justify-center rounded-xl bg-[#C1121F]/8 border border-[#C1121F]/15">
-                        <Icon className="h-4 w-4 text-[#C1121F]" />
+                      <div className="shrink-0 flex h-10 w-10 items-center justify-center rounded-xl bg-[#A0111C]/8 border border-[#A0111C]/15">
+                        <Icon className="h-4 w-4 text-[#A0111C]" />
                       </div>
                       <div>
                         <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">
@@ -110,7 +110,7 @@ export default async function ContactPage({
                               href={item.href}
                               target={item.href.startsWith("http") ? "_blank" : undefined}
                               rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                              className="block text-sm text-gray-700 hover:text-[#C1121F] transition-colors leading-snug"
+                              className="block text-sm text-gray-700 hover:text-[#A0111C] transition-colors leading-snug"
                             >
                               {item.text}
                             </a>
@@ -143,7 +143,7 @@ export default async function ContactPage({
                     href={MAPS_LINK}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 py-3 text-xs font-semibold text-gray-500 hover:text-[#C1121F] bg-white border-t border-gray-100 transition-colors"
+                    className="flex items-center justify-center gap-2 py-3 text-xs font-semibold text-gray-500 hover:text-[#A0111C] bg-white border-t border-gray-100 transition-colors"
                   >
                     <ExternalLink className="h-3.5 w-3.5" />
                     Open in Google Maps · Get directions

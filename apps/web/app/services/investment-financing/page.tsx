@@ -46,7 +46,7 @@ export default function InvestmentFinancingPage() {
       <section className="relative py-24 pt-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateIn>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-4">Investment Financing</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-4">Investment Financing</p>
             <h1
               className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight max-w-3xl mb-6"
               style={{ fontFamily: "var(--font-display)" }}
@@ -61,7 +61,7 @@ export default function InvestmentFinancingPage() {
             <div className="flex flex-wrap gap-4">
               <Link
                 href={`/contact?message=${encodeURIComponent("Hi, I'm interested in your investment financing plans and would like to book a consultation.")}`}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#C1121F] px-7 py-3.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors shadow-sm shadow-[#C1121F]/15"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#A0111C] px-7 py-3.5 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors shadow-sm shadow-[#A0111C]/15"
               >
                 Book a Consultation <ArrowRight className="h-4 w-4" />
               </Link>
@@ -80,7 +80,7 @@ export default function InvestmentFinancingPage() {
       <section className="relative py-20 bg-white/40">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateIn>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">Investment Plans</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">Investment Plans</p>
             <h2 className="text-3xl font-bold text-gray-900 mb-12" style={{ fontFamily: "var(--font-display)" }}>
               Choose your investment horizon
             </h2>
@@ -98,7 +98,7 @@ export default function InvestmentFinancingPage() {
                   <p className="text-sm text-gray-500 leading-relaxed mb-5">{plan.desc}</p>
                   <Link
                     href={`/contact?message=${encodeURIComponent(`Hi, I'm interested in the ${plan.label} Investment Plan (${plan.duration}) and would like more information.`)}`}
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#C1121F] hover:gap-2.5 transition-all"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#A0111C] hover:gap-2.5 transition-all"
                   >
                     Enquire <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
@@ -118,7 +118,7 @@ export default function InvestmentFinancingPage() {
       <section className="relative py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateIn>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">Our Principles</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">Our Principles</p>
             <h2 className="text-3xl font-bold text-gray-900 mb-12" style={{ fontFamily: "var(--font-display)" }}>
               How we protect and grow your capital
             </h2>
@@ -129,8 +129,8 @@ export default function InvestmentFinancingPage() {
               return (
                 <AnimateIn key={item.title} delay={i * 0.07}>
                   <div className="flex gap-5 rounded-2xl border border-gray-100 bg-white/80 p-6 shadow-sm">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#C1121F]/8">
-                      <Icon className="h-5 w-5 text-[#C1121F]" />
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#A0111C]/8">
+                      <Icon className="h-5 w-5 text-[#A0111C]" />
                     </div>
                     <div>
                       <h3 className="font-bold text-gray-900 mb-1">{item.title}</h3>
@@ -149,12 +149,12 @@ export default function InvestmentFinancingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <AnimateIn>
-              <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">Get Started</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">Get Started</p>
               <h2 className="text-3xl font-bold text-gray-900 mb-5" style={{ fontFamily: "var(--font-display)" }}>
                 Ready to put your capital to work?
               </h2>
               <p className="text-gray-500 leading-relaxed mb-8">
-                Book a free consultation with our investment advisors. We&apos;ll review your
+                Book a session with our investment advisors. We&apos;ll review your
                 financial goals, risk appetite, and ideal timeline — then propose a plan built
                 specifically for you.
               </p>
@@ -165,7 +165,7 @@ export default function InvestmentFinancingPage() {
                   "Full documentation provided for every plan",
                 ].map((point) => (
                   <div key={point} className="flex items-start gap-3">
-                    <CheckCircle className="h-4 w-4 text-[#C1121F] mt-0.5 shrink-0" />
+                    <CheckCircle className="h-4 w-4 text-[#A0111C] mt-0.5 shrink-0" />
                     <p className="text-sm text-gray-600">{point}</p>
                   </div>
                 ))}
@@ -174,14 +174,14 @@ export default function InvestmentFinancingPage() {
             <AnimateIn delay={0.12}>
               <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
                 <h3 className="text-xl font-bold text-gray-900 mb-2" style={{ fontFamily: "var(--font-display)" }}>
-                  Book your free session
+                  Book a session
                 </h3>
                 <p className="text-sm text-gray-400 mb-8">Speak to an investment advisor — no obligation, no pressure.</p>
                 <Link
                   href={`/contact?message=${encodeURIComponent("Hi, I'm interested in your investment financing plans and would like to book a consultation.")}`}
-                  className="block text-center rounded-xl bg-[#C1121F] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors mb-3"
+                  className="block text-center rounded bg-[#A0111C] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors mb-3"
                 >
-                  Book Consultation
+                  Book a Session
                 </Link>
                 <p className="text-center text-xs text-gray-400">Or call: +234 803 609 6700</p>
               </div>

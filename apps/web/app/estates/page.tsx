@@ -37,7 +37,7 @@ export default async function EstatesPage() {
       <section className="relative py-24 pt-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateIn>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-4">Estates</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-4">Estates</p>
             <h1
               className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight max-w-2xl mb-6"
               style={{ fontFamily: "var(--font-display)" }}
@@ -65,10 +65,10 @@ export default async function EstatesPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {estates.map((e, i) => (
                 <AnimateIn key={e.id} delay={i * 0.06}>
-                  <div className="group rounded-2xl border border-gray-100 bg-white/80 p-6 space-y-4 hover:shadow-md hover:border-[#C1121F]/15 transition-all duration-300 flex flex-col">
+                  <div className="group rounded-2xl border border-gray-100 bg-white/80 p-6 space-y-4 hover:shadow-md hover:border-[#A0111C]/15 transition-all duration-300 flex flex-col">
                     <div className="flex items-start justify-between gap-2">
                       <h2
-                        className="font-bold text-lg text-gray-900 leading-tight group-hover:text-[#C1121F] transition-colors"
+                        className="font-bold text-lg text-gray-900 leading-tight group-hover:text-[#A0111C] transition-colors"
                         style={{ fontFamily: "var(--font-display)" }}
                       >
                         {e.name}
@@ -79,7 +79,7 @@ export default async function EstatesPage() {
                     </div>
 
                     <div className="flex items-center gap-1.5 text-sm text-gray-400">
-                      <MapPin className="h-3.5 w-3.5 shrink-0 text-[#C1121F]" />
+                      <MapPin className="h-3.5 w-3.5 shrink-0 text-[#A0111C]" />
                       {e.city ? `${e.city}, ` : ""}{e.state}
                     </div>
 
@@ -98,7 +98,7 @@ export default async function EstatesPage() {
 
                     <Link
                       href={`/estates/${e.id}`}
-                      className="flex items-center justify-center gap-2 rounded-xl bg-[#C1121F]/8 border border-[#C1121F]/15 text-[#C1121F] text-sm font-semibold py-2.5 hover:bg-[#C1121F] hover:text-white transition-all duration-200"
+                      className="flex items-center justify-center gap-2 rounded-xl bg-[#A0111C]/8 border border-[#A0111C]/15 text-[#A0111C] text-sm font-semibold py-2.5 hover:bg-[#A0111C] hover:text-white transition-all duration-200"
                     >
                       Explore estate <ArrowRight className="h-4 w-4" />
                     </Link>

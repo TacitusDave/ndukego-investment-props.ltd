@@ -58,7 +58,7 @@ export default function ServicesPage() {
       <section className="relative py-24 pt-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateIn>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-4">What We Offer</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-4">What We Offer</p>
             <h1
               className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight max-w-2xl mb-6"
               style={{ fontFamily: "var(--font-display)" }}
@@ -92,7 +92,7 @@ export default function ServicesPage() {
                       {svc.title}
                     </h2>
                     <p className="text-sm text-gray-500 leading-relaxed mb-5">{svc.desc}</p>
-                    <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#C1121F] group-hover:gap-2.5 transition-all">
+                    <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#A0111C] group-hover:gap-2.5 transition-all">
                       Explore service <ArrowRight className="h-4 w-4" />
                     </span>
                   </Link>
@@ -110,12 +110,12 @@ export default function ServicesPage() {
             <h2 className="text-2xl font-bold text-gray-900 mb-3" style={{ fontFamily: "var(--font-display)" }}>
               Not sure where to start?
             </h2>
-            <p className="text-gray-500 mb-8">Book a free consultation and we&apos;ll point you in the right direction.</p>
+            <p className="text-gray-500 mb-8">Book a session and we&apos;ll point you in the right direction.</p>
             <Link
-              href={`/contact?message=${encodeURIComponent("Hi, I'd like to book a free consultation to learn more about your services.")}`}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#C1121F] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors shadow-sm shadow-[#C1121F]/15"
+              href={`/contact?message=${encodeURIComponent("Hi, I'd like to book a session to learn more about your services.")}`}
+              className="inline-flex items-center gap-2 rounded bg-[#A0111C] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors shadow-sm shadow-[#A0111C]/15"
             >
-              Book Free Consultation <ArrowRight className="h-4 w-4" />
+              Book a Session <ArrowRight className="h-4 w-4" />
             </Link>
           </AnimateIn>
         </div>

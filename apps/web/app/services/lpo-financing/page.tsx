@@ -37,7 +37,7 @@ export default function LpoFinancingPage() {
       <section className="relative py-24 pt-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateIn>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-4">LPO Financing</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-4">LPO Financing</p>
             <h1
               className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight max-w-3xl mb-6"
               style={{ fontFamily: "var(--font-display)" }}
@@ -51,7 +51,7 @@ export default function LpoFinancingPage() {
             <div className="flex flex-wrap gap-4">
               <Link
                 href={`/contact?message=${encodeURIComponent("Hi, I have an LPO and would like to apply for LPO financing. Please contact me to discuss.")}`}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#C1121F] px-7 py-3.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors shadow-sm shadow-[#C1121F]/15"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#A0111C] px-7 py-3.5 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors shadow-sm shadow-[#A0111C]/15"
               >
                 Apply Now <ArrowRight className="h-4 w-4" />
               </Link>
@@ -71,7 +71,7 @@ export default function LpoFinancingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
             <AnimateIn>
-              <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">What Is It?</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">What Is It?</p>
               <h2 className="text-3xl font-bold text-gray-900 mb-5" style={{ fontFamily: "var(--font-display)" }}>
                 LPO Financing explained simply
               </h2>
@@ -107,7 +107,7 @@ export default function LpoFinancingPage() {
       <section className="relative py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateIn>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">How It Works</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">How It Works</p>
             <h2 className="text-3xl font-bold text-gray-900 mb-12" style={{ fontFamily: "var(--font-display)" }}>
               Four steps from contract to cash
             </h2>
@@ -119,13 +119,13 @@ export default function LpoFinancingPage() {
                 <AnimateIn key={step.step} delay={i * 0.08}>
                   <div className="rounded-2xl border border-gray-100 bg-white/80 p-6 shadow-sm h-full">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#C1121F]/8">
-                        <Icon className="h-4 w-4 text-[#C1121F]" />
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#A0111C]/8">
+                        <Icon className="h-4 w-4 text-[#A0111C]" />
                       </div>
                       <span
                         className="text-3xl font-bold"
                         style={{
-                          background: "linear-gradient(135deg, rgba(193,18,31,0.55), rgba(193,18,31,0.12))",
+                          background: "linear-gradient(135deg, rgba(160,17,28,0.55), rgba(160,17,28,0.12))",
                           WebkitBackgroundClip: "text",
                           WebkitTextFillColor: "transparent",
                         }}
@@ -148,14 +148,14 @@ export default function LpoFinancingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
             <AnimateIn>
-              <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">Benefits</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">Benefits</p>
               <h2 className="text-3xl font-bold text-gray-900 mb-8" style={{ fontFamily: "var(--font-display)" }}>
                 Why choose Ndukego for LPO financing
               </h2>
               <div className="space-y-4">
                 {BENEFITS.map((b) => (
                   <div key={b} className="flex items-start gap-3">
-                    <CheckCircle className="h-4 w-4 text-[#C1121F] mt-0.5 shrink-0" />
+                    <CheckCircle className="h-4 w-4 text-[#A0111C] mt-0.5 shrink-0" />
                     <p className="text-sm text-gray-600">{b}</p>
                   </div>
                 ))}
@@ -173,7 +173,7 @@ export default function LpoFinancingPage() {
                 </p>
                 <Link
                   href={`/contact?message=${encodeURIComponent("Hi, I have an LPO and would like to apply for LPO financing. Please contact me to discuss.")}`}
-                  className="block text-center rounded-xl bg-[#C1121F] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors mb-3"
+                  className="block text-center rounded-xl bg-[#A0111C] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors mb-3"
                 >
                   Submit Your LPO
                 </Link>

@@ -79,7 +79,7 @@ export default function InsightsPage() {
       <section className="relative py-24 pt-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateIn>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-4">Insights</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-4">Insights</p>
             <h1
               className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight max-w-2xl mb-6"
               style={{ fontFamily: "var(--font-display)" }}
@@ -100,8 +100,8 @@ export default function InsightsPage() {
                   key={cat}
                   className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${
                     cat === "All"
-                      ? "bg-[#C1121F] text-white"
-                      : "bg-white border border-gray-200 text-gray-600 hover:border-[#C1121F]/30 hover:text-[#C1121F]"
+                      ? "bg-[#A0111C] text-white"
+                      : "bg-white border border-gray-200 text-gray-600 hover:border-[#A0111C]/30 hover:text-[#A0111C]"
                   }`}
                 >
                   {cat}
@@ -117,9 +117,9 @@ export default function InsightsPage() {
         <section className="relative pb-8">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <AnimateIn>
-              <div className="group rounded-2xl border border-[#C1121F]/15 bg-white/80 p-8 sm:p-10 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer">
+              <div className="group rounded-2xl border border-[#A0111C]/15 bg-white/80 p-8 sm:p-10 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer">
                 <div className="flex flex-wrap items-center gap-3 mb-4">
-                  <span className="rounded-full bg-[#C1121F] px-3 py-0.5 text-xs font-bold text-white uppercase tracking-wider">
+                  <span className="rounded-full bg-[#A0111C] px-3 py-0.5 text-xs font-bold text-white uppercase tracking-wider">
                     Featured
                   </span>
                   <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${CATEGORY_COLORS[featured.category] ?? "bg-gray-100 text-gray-600"}`}>
@@ -127,7 +127,7 @@ export default function InsightsPage() {
                   </span>
                 </div>
                 <h2
-                  className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 group-hover:text-[#C1121F] transition-colors"
+                  className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 group-hover:text-[#A0111C] transition-colors"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
                   {featured.title}
@@ -138,7 +138,7 @@ export default function InsightsPage() {
                     <span className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" />{featured.readTime}</span>
                     <span>{featured.date}</span>
                   </div>
-                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#C1121F] group-hover:gap-2.5 transition-all">
+                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#A0111C] group-hover:gap-2.5 transition-all">
                     Read article <ArrowRight className="h-4 w-4" />
                   </span>
                 </div>
@@ -154,12 +154,12 @@ export default function InsightsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {rest.map((article, i) => (
               <AnimateIn key={article.title} delay={i * 0.06}>
-                <div className="group flex flex-col rounded-2xl border border-gray-100 bg-white/80 p-6 shadow-sm hover:shadow-md hover:border-[#C1121F]/15 transition-all duration-300 cursor-pointer h-full">
+                <div className="group flex flex-col rounded-2xl border border-gray-100 bg-white/80 p-6 shadow-sm hover:shadow-md hover:border-[#A0111C]/15 transition-all duration-300 cursor-pointer h-full">
                   <span className={`self-start rounded-full px-2.5 py-0.5 text-xs font-semibold mb-4 ${CATEGORY_COLORS[article.category] ?? "bg-gray-100 text-gray-600"}`}>
                     {article.category}
                   </span>
                   <h3
-                    className="font-bold text-gray-900 mb-3 group-hover:text-[#C1121F] transition-colors leading-snug"
+                    className="font-bold text-gray-900 mb-3 group-hover:text-[#A0111C] transition-colors leading-snug"
                     style={{ fontFamily: "var(--font-display)" }}
                   >
                     {article.title}
@@ -188,7 +188,7 @@ export default function InsightsPage() {
             </p>
             <Link
               href={`/contact?message=${encodeURIComponent("Hi, I'd like to subscribe to receive your latest market insights and investment guides.")}`}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#C1121F] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors shadow-sm shadow-[#C1121F]/15"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#A0111C] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors shadow-sm shadow-[#A0111C]/15"
             >
               Contact Us to Subscribe <ArrowRight className="h-4 w-4" />
             </Link>

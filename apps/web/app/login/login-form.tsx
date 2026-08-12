@@ -98,7 +98,7 @@ export function LoginForm() {
             <button
               type="submit"
               disabled={isPending}
-              className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#C1121F] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors duration-150 disabled:opacity-60"
+              className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#A0111C] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors duration-150 disabled:opacity-60"
             >
               {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
               Sign in
@@ -107,7 +107,7 @@ export function LoginForm() {
 
           <p className="text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-[#C1121F] font-medium hover:text-[#D62839] transition-colors">
+            <Link href="/register" className="text-[#A0111C] font-medium hover:text-[#B41523] transition-colors">
               Create one
             </Link>
           </p>

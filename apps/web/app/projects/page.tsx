@@ -69,7 +69,7 @@ export default function ProjectsPage() {
       <section className="relative py-24 pt-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimateIn>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-4">Projects</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-4">Projects</p>
             <h1
               className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight max-w-2xl mb-6"
               style={{ fontFamily: "var(--font-display)" }}
@@ -107,7 +107,7 @@ export default function ProjectsPage() {
           <div className="space-y-4">
             {PROJECTS.map((project, i) => (
               <AnimateIn key={project.title} delay={i * 0.07}>
-                <div className="group rounded-2xl border border-gray-100 bg-white/80 p-7 shadow-sm hover:shadow-md hover:border-[#C1121F]/15 transition-all duration-300">
+                <div className="group rounded-2xl border border-gray-100 bg-white/80 p-7 shadow-sm hover:shadow-md hover:border-[#A0111C]/15 transition-all duration-300">
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
                     <div>
                       <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -134,7 +134,7 @@ export default function ProjectsPage() {
                     </div>
                   </div>
                   <div className="flex items-start gap-1.5 text-sm text-gray-400 mb-3">
-                    <MapPin className="h-3.5 w-3.5 mt-0.5 text-[#C1121F] shrink-0" />
+                    <MapPin className="h-3.5 w-3.5 mt-0.5 text-[#A0111C] shrink-0" />
                     {project.location}
                   </div>
                   <p className="text-sm text-gray-500 leading-relaxed">{project.desc}</p>
@@ -158,7 +158,7 @@ export default function ProjectsPage() {
             </p>
             <Link
               href={`/contact?message=${encodeURIComponent("Hi, I'm interested in your off-plan property opportunities. Please contact me with pricing details.")}`}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#C1121F] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors shadow-sm shadow-[#C1121F]/15"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#A0111C] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors shadow-sm shadow-[#A0111C]/15"
             >
               Get in Touch <ArrowRight className="h-4 w-4" />
             </Link>

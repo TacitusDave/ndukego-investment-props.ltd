@@ -99,7 +99,7 @@ export default async function HomePage() {
 
           <AnimateIn>
             <div className="mb-14">
-              <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">
+              <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">
                 What We Do
               </p>
               <h2
@@ -147,7 +147,7 @@ export default async function HomePage() {
           <AnimateIn>
             <div className="flex items-end justify-between mb-14">
               <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">
+                <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">
                   Real Estate
                 </p>
                 <h2
@@ -159,7 +159,7 @@ export default async function HomePage() {
               </div>
               <Link
                 href="/properties"
-                className="flex items-center gap-1.5 text-sm font-semibold text-[#C1121F] hover:text-[#D62839] transition-colors"
+                className="flex items-center gap-1.5 text-sm font-semibold text-[#A0111C] hover:text-[#B41523] transition-colors"
               >
                 View all <ArrowRight className="h-4 w-4" />
               </Link>
@@ -195,7 +195,7 @@ export default async function HomePage() {
             <AnimateIn>
               <div className="flex items-end justify-between mb-14">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">
                     Our Estates
                   </p>
                   <h2
@@ -207,7 +207,7 @@ export default async function HomePage() {
                 </div>
                 <Link
                   href="/estates"
-                  className="flex items-center gap-1.5 text-sm font-semibold text-[#C1121F] hover:text-[#D62839] transition-colors"
+                  className="flex items-center gap-1.5 text-sm font-semibold text-[#A0111C] hover:text-[#B41523] transition-colors"
                 >
                   View all <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -217,14 +217,14 @@ export default async function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {featuredEstates.map((e, i) => (
                 <AnimateIn key={e.id} delay={i * 0.1}>
-                  <div className="group rounded-2xl border border-gray-100 bg-white/80 shadow-sm hover:shadow-lg hover:border-[#C1121F]/20 transition-all duration-300 overflow-hidden">
+                  <div className="group rounded-2xl border border-gray-100 bg-white/80 shadow-sm hover:shadow-lg hover:border-[#A0111C]/20 transition-all duration-300 overflow-hidden">
                     <div className="p-6 flex flex-col">
                       <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-3">
-                        <MapPin className="h-3 w-3 text-[#C1121F] shrink-0" />
+                        <MapPin className="h-3 w-3 text-[#A0111C] shrink-0" />
                         {e.city ? `${e.city}, ` : ""}{e.state}
                       </div>
                       <h3
-                        className="font-bold text-gray-900 text-lg mb-2 group-hover:text-[#C1121F] transition-colors leading-snug"
+                        className="font-bold text-gray-900 text-lg mb-2 group-hover:text-[#A0111C] transition-colors leading-snug"
                         style={{ fontFamily: "var(--font-display)" }}
                       >
                         {e.name}
@@ -249,7 +249,7 @@ export default async function HomePage() {
                       )}
                       <Link
                         href={`/estates/${e.id}`}
-                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#C1121F] hover:text-[#D62839] transition-colors mt-auto"
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#A0111C] hover:text-[#B41523] transition-colors mt-auto"
                       >
                         Explore estate <ArrowRight className="h-3.5 w-3.5" />
                       </Link>
@@ -273,7 +273,7 @@ export default async function HomePage() {
 
             <AnimateIn>
               <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">
+                <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">
                   Why Choose Us
                 </p>
                 <h2
@@ -295,7 +295,7 @@ export default async function HomePage() {
                     "End-to-end support from listing to handover",
                   ].map((point) => (
                     <div key={point} className="flex items-start gap-3">
-                      <CheckCircle className="h-4 w-4 text-[#C1121F] mt-0.5 shrink-0" />
+                      <CheckCircle className="h-4 w-4 text-[#A0111C] mt-0.5 shrink-0" />
                       <p className="text-sm text-gray-600">{point}</p>
                     </div>
                   ))}
@@ -307,7 +307,7 @@ export default async function HomePage() {
               <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Ready to get started?</h3>
                 <p className="text-sm text-gray-400 mb-8">
-                  Call us directly or book a free consultation and we&apos;ll connect you with the right opportunity.
+                  Call us directly or book a session and we&apos;ll connect you with the right opportunity.
                 </p>
 
                 <div className="space-y-3 mb-8">
@@ -318,14 +318,14 @@ export default async function HomePage() {
                     <a
                       key={item.href}
                       href={item.href}
-                      className="flex items-center gap-4 rounded-xl border border-gray-100 bg-gray-50/80 px-5 py-4 hover:border-[#C1121F]/20 hover:bg-[#C1121F]/4 transition-all group"
+                      className="flex items-center gap-4 rounded-lg border border-gray-100 bg-gray-50/80 px-5 py-4 hover:border-[#A0111C]/20 hover:bg-[#A0111C]/4 transition-all group"
                     >
-                      <div className="h-10 w-10 rounded-lg bg-[#C1121F]/8 border border-[#C1121F]/15 flex items-center justify-center shrink-0">
-                        <Phone className="h-4 w-4 text-[#C1121F]" />
+                      <div className="h-10 w-10 rounded-lg bg-[#A0111C]/8 border border-[#A0111C]/15 flex items-center justify-center shrink-0">
+                        <Phone className="h-4 w-4 text-[#A0111C]" />
                       </div>
                       <div>
                         <p className="text-[10px] text-gray-400 uppercase tracking-widest">{item.label}</p>
-                        <p className="text-sm font-semibold text-gray-700 group-hover:text-[#C1121F] transition-colors">
+                        <p className="text-sm font-semibold text-gray-700 group-hover:text-[#A0111C] transition-colors">
                           {item.number}
                         </p>
                       </div>
@@ -334,10 +334,10 @@ export default async function HomePage() {
                 </div>
 
                 <Link
-                  href={`/contact?message=${encodeURIComponent("Hi, I'd like to book a free consultation with your team.")}`}
-                  className="block w-full rounded-xl bg-[#C1121F] px-6 py-3.5 text-center text-sm font-semibold text-white hover:bg-[#D62839] transition-colors shadow-sm shadow-[#C1121F]/15"
+                  href={`/contact?message=${encodeURIComponent("Hi, I'd like to book a session with your team.")}`}
+                  className="block w-full rounded bg-[#A0111C] px-6 py-3.5 text-center text-sm font-semibold text-white hover:bg-[#B41523] transition-colors shadow-sm shadow-[#A0111C]/15"
                 >
-                  Book a Free Consultation
+                  Book a Session
                 </Link>
               </div>
             </AnimateIn>

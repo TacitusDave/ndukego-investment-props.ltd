@@ -34,7 +34,7 @@ export function HomeProcess() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 85% 65% at 50% 50%, rgba(193,18,31,0.10) 0%, transparent 70%)",
+            "radial-gradient(ellipse 85% 65% at 50% 50%, rgba(160,17,28,0.10) 0%, transparent 70%)",
         }}
         animate={{ opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
@@ -45,7 +45,7 @@ export function HomeProcess() {
         aria-hidden
         className="pointer-events-none absolute top-0 bottom-0 w-56"
         style={{
-          background: "linear-gradient(to right, transparent, rgba(193,18,31,0.04), transparent)",
+          background: "linear-gradient(to right, transparent, rgba(160,17,28,0.04), transparent)",
         }}
         animate={{ x: ["-240px", "calc(100vw + 240px)"] }}
         transition={{ duration: 5, repeat: Infinity, ease: "linear", repeatDelay: 2.5 }}
@@ -59,8 +59,8 @@ export function HomeProcess() {
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
       >
         <div
-          className="w-[560px] h-[560px] rounded-full border border-[#C1121F]/15"
-          style={{ boxShadow: "0 0 80px 0 rgba(193,18,31,0.06)" }}
+          className="w-[560px] h-[560px] rounded-full border border-[#A0111C]/15"
+          style={{ boxShadow: "0 0 80px 0 rgba(160,17,28,0.06)" }}
         />
       </motion.div>
 
@@ -71,7 +71,7 @@ export function HomeProcess() {
           transition={{ duration: 0.65, ease: "easeOut" }}
           className="mb-16 max-w-xl"
         >
-          <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-3">
+          <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-3">
             How It Works
           </p>
           <h2
@@ -90,7 +90,7 @@ export function HomeProcess() {
                   className="hidden lg:block absolute top-[2.25rem] left-full z-10 h-px"
                   style={{
                     width: "calc(100% + 1.25rem)",
-                    background: "linear-gradient(to right, rgba(193,18,31,0.5), rgba(193,18,31,0.08))",
+                    background: "linear-gradient(to right, rgba(160,17,28,0.5), rgba(160,17,28,0.08))",
                   }}
                   initial={{ scaleX: 0, originX: "left" }}
                   animate={{ scaleX: 1 }}
@@ -102,21 +102,21 @@ export function HomeProcess() {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 + i * 0.16, duration: 0.6, ease: "easeOut" }}
-                className="group relative rounded-2xl border border-gray-100 bg-white/80 backdrop-blur-sm p-6 h-full overflow-hidden shadow-sm hover:shadow-md hover:border-[#C1121F]/20 transition-all duration-300"
+                className="group relative rounded-2xl border border-gray-100 bg-white/80 backdrop-blur-sm p-6 h-full overflow-hidden shadow-sm hover:shadow-md hover:border-[#A0111C]/20 transition-all duration-300"
               >
                 {/* Hover glow */}
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
                   style={{
                     background:
-                      "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(193,18,31,0.07) 0%, transparent 70%)",
+                      "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(160,17,28,0.07) 0%, transparent 70%)",
                   }}
                 />
 
                 <motion.p
                   className="text-5xl font-bold tabular-nums mb-5 leading-none"
                   style={{
-                    background: "linear-gradient(135deg, rgba(193,18,31,0.55) 0%, rgba(193,18,31,0.12) 100%)",
+                    background: "linear-gradient(135deg, rgba(160,17,28,0.55) 0%, rgba(160,17,28,0.12) 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                   }}
@@ -139,7 +139,7 @@ export function HomeProcess() {
           className="mt-12 h-px mx-auto max-w-2xl"
           style={{
             background:
-              "linear-gradient(to right, transparent, rgba(193,18,31,0.4) 30%, rgba(193,18,31,0.15) 50%, rgba(193,18,31,0.4) 70%, transparent)",
+              "linear-gradient(to right, transparent, rgba(160,17,28,0.4) 30%, rgba(160,17,28,0.15) 50%, rgba(160,17,28,0.4) 70%, transparent)",
           }}
           animate={{ opacity: [0.35, 0.85, 0.35], scaleX: [0.85, 1, 0.85] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}

@@ -59,7 +59,7 @@ export function PropertyAmenities({ amenities, label = "Amenities & Features" }:
           const Icon = AMENITY_ICONS[amenity] ?? CheckCircle;
           return (
             <div key={amenity} className="flex items-center gap-2">
-              <Icon className="h-4 w-4 text-[#C1121F] shrink-0" aria-hidden />
+              <Icon className="h-4 w-4 text-[#A0111C] shrink-0" aria-hidden />
               <span className="text-sm text-foreground">{amenity}</span>
             </div>
           );

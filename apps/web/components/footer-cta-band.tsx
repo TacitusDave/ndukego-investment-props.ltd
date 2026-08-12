@@ -10,7 +10,7 @@ export function FooterCtaBand() {
   if (pathname === "/contact") return null;
 
   return (
-    <div className="relative overflow-hidden bg-[#C1121F]">
+    <div className="relative overflow-hidden bg-[#A0111C]">
       <div
         aria-hidden
         className="absolute inset-0 pointer-events-none opacity-10"
@@ -33,10 +33,10 @@ export function FooterCtaBand() {
           </p>
         </div>
         <Link
-          href={`/contact?message=${encodeURIComponent("Hi, I'd like to book a free consultation with your team.")}`}
-          className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-white px-7 py-3 text-sm font-bold text-[#C1121F] hover:bg-gray-50 transition-colors shadow-lg shadow-black/10"
+          href={`/contact?message=${encodeURIComponent("Hi, I'd like to book a session with your team.")}`}
+          className="shrink-0 inline-flex items-center gap-2 rounded bg-white px-7 py-3 text-sm font-bold text-[#A0111C] hover:bg-gray-50 transition-colors shadow-lg shadow-black/10"
         >
-          Book Free Consultation <ArrowRight className="h-4 w-4" />
+          Book a Session <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
     </div>

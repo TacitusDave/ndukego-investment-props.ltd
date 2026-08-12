@@ -199,7 +199,7 @@ export default function ProfilePage() {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#C1121F] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors disabled:opacity-60"
+          className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#A0111C] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors disabled:opacity-60"
         >
           {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
           Save changes

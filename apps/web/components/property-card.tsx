@@ -78,7 +78,7 @@ export function PropertyCard({ property }: { property: PropertyCardData }) {
           </div>
         )}
         <div className="absolute top-2 left-2 flex gap-1.5">
-          <span className="rounded-full bg-[#C1121F] px-2.5 py-0.5 text-[10px] font-semibold text-white">
+          <span className="rounded-full bg-[#A0111C] px-2.5 py-0.5 text-[10px] font-semibold text-white">
             {CATEGORY_LABEL[property.category] ?? property.category}
           </span>
         </div>
@@ -91,7 +91,7 @@ export function PropertyCard({ property }: { property: PropertyCardData }) {
 
       {/* Content */}
       <div className="flex flex-col flex-1 p-4 gap-2">
-        <p className="font-semibold text-foreground leading-tight line-clamp-2 group-hover:text-[#C1121F] transition-colors duration-150">
+        <p className="font-semibold text-foreground leading-tight line-clamp-2 group-hover:text-[#A0111C] transition-colors duration-150">
           {property.title}
         </p>
 
@@ -138,7 +138,7 @@ export function PropertyCard({ property }: { property: PropertyCardData }) {
         {/* Price */}
         <div className="mt-auto pt-2 border-t border-border">
           {property.listingPrice ? (
-            <p className="text-base font-bold text-[#C1121F]">
+            <p className="text-base font-bold text-[#A0111C]">
               {formatCurrency(property.listingPrice)}
             </p>
           ) : (

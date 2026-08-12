@@ -20,11 +20,11 @@ interface Props {
 
 const RED_DOT_ICON_HTML = `
   <div style="
-    background: #C1121F;
+    background: #A0111C;
     width: 22px; height: 22px;
     border-radius: 50%;
     border: 3px solid white;
-    box-shadow: 0 2px 8px rgba(193,18,31,0.5);
+    box-shadow: 0 2px 8px rgba(160,17,28,0.5);
     cursor: pointer;
   "></div>
 `;
@@ -85,9 +85,9 @@ export function PropertiesMapClient({ properties }: Props) {
             ${imgTag}
             <div style="padding:10px 2px 4px">
               <p style="font-weight:700;font-size:13px;margin:0 0 3px;line-height:1.3;color:#111">${prop.title}</p>
-              <p style="color:#C1121F;font-weight:700;font-size:13px;margin:0 0 10px">${priceText}</p>
+              <p style="color:#A0111C;font-weight:700;font-size:13px;margin:0 0 10px">${priceText}</p>
               <a href="/properties/${prop.id}"
-                style="display:inline-block;background:#C1121F;color:white;padding:5px 14px;border-radius:5px;text-decoration:none;font-size:12px;font-weight:600;">
+                style="display:inline-block;background:#A0111C;color:white;padding:5px 14px;border-radius:5px;text-decoration:none;font-size:12px;font-weight:600;">
                 View property →
               </a>
             </div>

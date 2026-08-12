@@ -70,14 +70,14 @@ export function Navbar() {
               <Link
                 href="/account"
                 title="My Account"
-                className="flex items-center justify-center h-9 w-9 rounded-xl text-gray-400 hover:text-[#C1121F] hover:bg-[#C1121F]/8 transition-all duration-200"
+                className="flex items-center justify-center h-9 w-9 rounded-xl text-gray-400 hover:text-[#A0111C] hover:bg-[#A0111C]/8 transition-all duration-200"
               >
                 <User className="h-[17px] w-[17px]" />
               </Link>
               <Link
                 href="/contact"
                 title="Book Consultation"
-                className="flex items-center justify-center h-9 w-9 rounded-xl text-gray-400 hover:text-[#C1121F] hover:bg-[#C1121F]/8 transition-all duration-200"
+                className="flex items-center justify-center h-9 w-9 rounded-xl text-gray-400 hover:text-[#A0111C] hover:bg-[#A0111C]/8 transition-all duration-200"
               >
                 <CalendarCheck className="h-[17px] w-[17px]" />
               </Link>
@@ -171,11 +171,11 @@ export function Navbar() {
                               className={cn(
                                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-150",
                                 isActive(child.href)
-                                  ? "text-[#C1121F] bg-[#C1121F]/6 font-semibold"
-                                  : "text-gray-500 hover:text-[#C1121F] hover:bg-[#C1121F]/5",
+                                  ? "text-[#A0111C] bg-[#A0111C]/6 font-semibold"
+                                  : "text-gray-500 hover:text-[#A0111C] hover:bg-[#A0111C]/5",
                               )}
                             >
-                              <span className="h-1 w-1 rounded-full bg-[#C1121F]/40 shrink-0" />
+                              <span className="h-1 w-1 rounded-full bg-[#A0111C]/40 shrink-0" />
                               {child.label}
                             </Link>
                           ))}
@@ -189,7 +189,7 @@ export function Navbar() {
                         onClick={close}
                         className={cn(
                           "flex items-center gap-4 py-4 group transition-colors duration-150",
-                          isActive(link.href) ? "text-[#C1121F]" : "text-gray-800 hover:text-[#C1121F]",
+                          isActive(link.href) ? "text-[#A0111C]" : "text-gray-800 hover:text-[#A0111C]",
                         )}
                       >
                         <span className="text-[11px] tabular-nums text-gray-300 w-5 shrink-0">
@@ -201,7 +201,7 @@ export function Navbar() {
                         >
                           {link.label}
                         </span>
-                        <ArrowRight className="ml-auto h-4 w-4 text-gray-200 group-hover:text-[#C1121F] group-hover:translate-x-1 transition-all duration-200" />
+                        <ArrowRight className="ml-auto h-4 w-4 text-gray-200 group-hover:text-[#A0111C] group-hover:translate-x-1 transition-all duration-200" />
                       </Link>
                     )
                   )}
@@ -212,14 +212,14 @@ export function Navbar() {
                   <Link
                     href="/properties"
                     onClick={close}
-                    className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-5 py-3 text-sm font-semibold text-gray-700 hover:border-gray-300 hover:bg-gray-50 transition-all"
+                    className="flex-1 flex items-center justify-center gap-2 rounded border border-gray-200 px-5 py-3 text-sm font-semibold text-gray-700 hover:border-gray-300 hover:bg-gray-50 transition-all"
                   >
                     Browse Properties
                   </Link>
                   <Link
                     href="/contact"
                     onClick={close}
-                    className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-[#C1121F] px-5 py-3 text-sm font-semibold text-white hover:bg-[#D62839] transition-colors"
+                    className="flex-1 flex items-center justify-center gap-2 rounded bg-[#A0111C] px-5 py-3 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors"
                   >
                     Book Consultation
                   </Link>

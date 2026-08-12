@@ -113,7 +113,7 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
       {/* Page header */}
       <section className="bg-white/60 border-b border-gray-100 py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#C1121F] mb-2">
+          <p className="text-xs font-bold uppercase tracking-widest text-[#A0111C] mb-2">
             Real Estate
           </p>
           <h1 className="text-3xl font-bold text-gray-900" style={{ fontFamily: "var(--font-display)" }}>

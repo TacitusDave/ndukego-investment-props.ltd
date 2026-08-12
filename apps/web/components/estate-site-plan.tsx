@@ -303,7 +303,7 @@ export function EstateSitePlan({ sitePlanUrl, buildingTypes }: EstateSitePlanPro
         {/* Hint */}
         <div className="absolute top-3 left-3 z-10">
           <div className="rounded-lg bg-white/90 shadow-sm border border-gray-200 px-3 py-1.5 text-xs text-gray-500 flex items-center gap-1.5">
-            <MapPin className="h-3 w-3 text-[#C1121F]" />
+            <MapPin className="h-3 w-3 text-[#A0111C]" />
             Click any coloured plot to view prototype
           </div>
         </div>
@@ -455,7 +455,7 @@ export function EstateSitePlan({ sitePlanUrl, buildingTypes }: EstateSitePlanPro
               {"comingSoon" in selected && selected.comingSoon ? null : (
                 <a
                   href={`/contact?message=${encodeURIComponent(`Hi, I'm interested in the ${selected.name} prototype and would like more information.`)}`}
-                  className="block w-full rounded-xl bg-[#C1121F] px-6 py-3 text-center text-sm font-semibold text-white hover:bg-[#D62839] transition-colors"
+                  className="block w-full rounded-xl bg-[#A0111C] px-6 py-3 text-center text-sm font-semibold text-white hover:bg-[#B41523] transition-colors"
                 >
                   Enquire about this prototype
                 </a>
