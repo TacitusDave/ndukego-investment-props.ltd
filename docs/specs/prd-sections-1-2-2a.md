@@ -15,7 +15,7 @@
 ### Product Overview
 
 Ndukego Homes Gallery is an enterprise real estate management platform enabling Ndukego
-Investments & Properties Limited to manage the complete lifecycle of its real estate
+Investment & Properties Limited to manage the complete lifecycle of its real estate
 business — from property acquisition through customer ownership — while providing customers
 with a trusted, transparent, and professional experience.
 
@@ -34,7 +34,7 @@ excellence.
 
 Simplify property discovery. Improve transparency. Digitize internal operations. Protect
 customer trust. Increase operational efficiency. Support long-term business growth.
-Establish a scalable digital foundation for Ndukego Investments & Properties.
+Establish a scalable digital foundation for Ndukego Investment & Properties.
 
 ### Product Goals
 

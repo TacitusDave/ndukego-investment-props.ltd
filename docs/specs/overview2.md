@@ -10,7 +10,7 @@ Before, we were designing Ndukego Homes as the product.
 
 Now we know the actual product is:
 
-Ndukego Investments & Properties LTD
+Ndukego Investment & Properties LTD
 
 And Ndukego Homes is not the company.
 
@@ -20,7 +20,7 @@ My CTO Understanding
 
 From this point onward, this is how I understand your company.
 
-NDUKEGO INVESTMENTS & PROPERTIES LTD
+NDUKEGO Investment & PROPERTIES LTD
 
 A diversified real estate and investment company providing
 comprehensive property solutions, financing services,
@@ -102,7 +102,7 @@ It is a corporate website with multiple service lines.
 
 Think of the structure like this:
 
-NDUKEGO INVESTMENTS & PROPERTIES LTD
+NDUKEGO Investment & PROPERTIES LTD
 
 │
 ├── Home
@@ -132,7 +132,7 @@ The homepage should answer three questions within the first 30 seconds.
 
 1. Who are you?
 
-Ndukego Investments & Properties LTD is a diversified real estate and investment company delivering trusted property solutions, financing services, and strategic investment advisory.
+Ndukego Investment & Properties LTD is a diversified real estate and investment company delivering trusted property solutions, financing services, and strategic investment advisory.
 
 2. What do you do?
 
@@ -325,7 +325,7 @@ What We Should Do Next
 
 I think this deserves a fresh start—not in code, but in documentation.
 
-We should create a new foundational document specifically for Ndukego Investments & Properties LTD.
+We should create a new foundational document specifically for Ndukego Investment & Properties LTD.
 
 Not a revision of the old one.
 
@@ -359,7 +359,7 @@ I don't think we should think of this as "starting over." The engineering work y
 
 From this point forward, every design decision should answer one question:
 
-"Does this represent Ndukego Investments & Properties LTD as a diversified real estate and investment company?"
+"Does this represent Ndukego Investment & Properties LTD as a diversified real estate and investment company?"
 
 If the answer is yes, then every service—Real Estate, LPO Financing, Investment Financing, and Investment Consultancy—will naturally fit into a coherent corporate platform rather than feeling like separate, disconnected websites. That will give the company a stronger brand identity today while leaving plenty of room for future growth.
 
@@ -367,7 +367,7 @@ Excellent. This is exactly where a CTO begins working hand-in-hand with UX archi
 
 From this point onward, we are no longer defining what the company is—we are defining how people experience it.
 
-For a corporate website like Ndukego Investments & Properties Ltd, the Information Architecture (IA) is arguably more important than the visual design. If the information is organized correctly, users can naturally find what they need, trust the company, and take action.
+For a corporate website like Ndukego Investment & Properties Ltd, the Information Architecture (IA) is arguably more important than the visual design. If the information is organized correctly, users can naturally find what they need, trust the company, and take action.
 
 Since you referenced Urban Shelter earlier, we'll adopt the same enterprise philosophy—clear corporate navigation, strong service presentation, and conversion-focused user journeys—but tailor it specifically to Ndukego's business model of Real Estate + Financing + Investment Consultancy.
 
@@ -1418,7 +1418,7 @@ Discuss LPO Financing
 
 Overview:
 
-Funding solutions designed to support business expansion, strategic investments, and growth opportunities.
+Funding solutions designed to support business expansion, strategic Investment, and growth opportunities.
 
 Explain:
 

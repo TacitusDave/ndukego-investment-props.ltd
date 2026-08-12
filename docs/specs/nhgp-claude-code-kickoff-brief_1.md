@@ -9,7 +9,7 @@ This brief tells Claude how to interpret that spec and how to structure the buil
 
 The attached documents (Enterprise Architecture Specification + Product Requirements Document)
 describe the **full, long-term vision** for NHGP — a real estate operations platform for
-Ndukego Investments & Properties Limited. That full vision is a 6–12 month build across 13
+Ndukego Investment & Properties Limited. That full vision is a 6–12 month build across 13
 business capabilities, 4 portals, and an AI layer.
 
 > **Note on spec completeness:** The EAS (Enterprise Architecture Specification) is complete.

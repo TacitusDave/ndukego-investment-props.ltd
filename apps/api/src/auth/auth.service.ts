@@ -10,7 +10,6 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { authenticator } from 'otplib';
-import { toDataURL } from 'qrcode';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { EmailService } from '../email/email.service';
@@ -408,44 +407,6 @@ export class AuthService {
 
   // ─── Super Admin TOTP ──────────────────────────────────────────
 
-  async setupSuperAdminTotp(email: string, password: string) {
-    const user = await this.prisma.user.findUnique({
-      where: { email: email.toLowerCase() },
-      include: { employee: true },
-    });
-
-    if (!user || !user.employee || user.status !== 'ACTIVE') {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-
-    const valid = await bcrypt.compare(password, user.passwordHash);
-    if (!valid) throw new UnauthorizedException('Invalid credentials');
-
-    const secret = authenticator.generateSecret(32);
-    const otpauth = authenticator.keyuri(
-      email.toLowerCase(),
-      'Ndukego Investment',
-      secret,
-    );
-    const qrDataUrl = await toDataURL(otpauth);
-
-    await this.prisma.user.update({
-      where: { id: user.id },
-      data: { mfaSecret: secret, mfaEnabled: true },
-    });
-
-    await this.auditService.log({
-      actorId: user.id,
-      actorEmail: user.email,
-      action: 'UPDATE',
-      entityType: 'USER',
-      entityId: user.id,
-      entityLabel: 'TOTP authenticator configured',
-    });
-
-    return { secret, qrDataUrl };
-  }
-
   async superAdminLogin(email: string, totpCode: string, ipAddress?: string, userAgent?: string) {
     const user = await this.prisma.user.findUnique({
       where: { email: email.toLowerCase() },
@@ -466,17 +427,16 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    if (!user.mfaEnabled || !user.mfaSecret) {
-      throw new UnauthorizedException('Authenticator not configured for this account. Complete setup first.');
-    }
-
     if (user.status !== 'ACTIVE') throw new UnauthorizedException('Account deactivated');
 
     if (user.lockedUntil && user.lockedUntil > new Date()) {
       throw new UnauthorizedException('Account temporarily locked. Try again later.');
     }
 
-    const isValid = authenticator.verify({ token: totpCode, secret: user.mfaSecret });
+    const totpSecret = this.configService.get<string>('SUPER_ADMIN_TOTP_SECRET');
+    if (!totpSecret) throw new UnauthorizedException('Super admin not configured');
+
+    const isValid = authenticator.verify({ token: totpCode, secret: totpSecret });
 
     if (!isValid) {
       const failedCount = user.failedLoginCount + 1;

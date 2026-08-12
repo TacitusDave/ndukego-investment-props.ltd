@@ -708,7 +708,7 @@ The PRD serves as the authoritative functional specification for implementation.
 
 Product Overview
 
-Ndukego Homes Gallery is an enterprise real estate management platform that enables Ndukego Investments & Properties Limited to manage the complete lifecycle of its real estate business—from property acquisition through customer ownership—while providing customers with a trusted, transparent, and professional experience.
+Ndukego Homes Gallery is an enterprise real estate management platform that enables Ndukego Investment & Properties Limited to manage the complete lifecycle of its real estate business—from property acquisition through customer ownership—while providing customers with a trusted, transparent, and professional experience.
 
 The platform consists of:
 
@@ -736,7 +736,7 @@ Digitize internal operations.
 Protect customer trust.
 Increase operational efficiency.
 Support long-term business growth.
-Establish a scalable digital foundation for Ndukego Investments & Properties.
+Establish a scalable digital foundation for Ndukego Investment & Properties.
 Product Goals
 
 The platform is designed to achieve several strategic goals.
@@ -1524,7 +1524,7 @@ Version: 1.0
 
 Purpose
 
-This section defines the core business capabilities that the Ndukego Homes Gallery platform must provide to support the operations of Ndukego Investments & Properties.
+This section defines the core business capabilities that the Ndukego Homes Gallery platform must provide to support the operations of Ndukego Investment & Properties.
 
 Each capability represents a complete business function that can be independently developed, expanded, and maintained.
 

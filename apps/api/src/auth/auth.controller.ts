@@ -66,12 +66,6 @@ export class AuthController {
   // ─── Super Admin TOTP Auth ─────────────────────────────────────
 
   @Public()
-  @Post('super/setup')
-  setupSuperAdminTotp(@Body() body: { email: string; password: string }) {
-    return this.authService.setupSuperAdminTotp(body.email, body.password);
-  }
-
-  @Public()
   @Post('super/login')
   superAdminLogin(
     @Body() body: { email: string; code: string },

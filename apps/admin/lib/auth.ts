@@ -81,28 +81,6 @@ export async function superLogin(email: string, code: string) {
   return { error: null };
 }
 
-export async function setupTotp(email: string, password: string) {
-  let res: Response;
-  try {
-    res = await fetch(`${API_BASE}/auth/super/setup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-  } catch {
-    return { error: "Cannot connect to server.", data: null };
-  }
-
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    const message = Array.isArray(body.message) ? body.message.join(", ") : (body.message ?? "Setup failed");
-    return { error: message, data: null };
-  }
-
-  const data = await res.json();
-  return { error: null, data: data as { secret: string; qrDataUrl: string } };
-}
-
 export async function logout() {
   const cookieStore = await cookies();
   const token = cookieStore.get("access_token")?.value;
