@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft, MapPin, Bed, Bath, Maximize2, Building2, Calendar, Eye } from "lucide-react";
-import { publicFetch, API_IMAGE_BASE } from "@/lib/api";
+import { publicFetch } from "@/lib/api";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { InquiryForm } from "@/components/inquiry-form";
 import { ReserveButton } from "@/components/reserve-button";
 import { FavoriteButton } from "@/components/favorite-button";
 import { PropertyAmenities } from "@/components/property-amenities";
 import { PropertyAgent } from "@/components/property-agent";
+import { PropertyGallery } from "@/components/property-gallery";
 
 interface Media {
   id: string;
@@ -110,8 +111,6 @@ export default async function PropertyDetailPage({
 
   const mapEmbedUrl = getMapEmbedUrl();
   const sortedMedia = [...property.media].sort((a, b) => a.sortOrder - b.sortOrder);
-  const cover = sortedMedia.find((m) => m.isCover) ?? sortedMedia[0];
-  const otherMedia = sortedMedia.filter((m) => m.id !== cover?.id);
 
   return (
     <div className="min-h-screen">
@@ -127,56 +126,23 @@ export default async function PropertyDetailPage({
         </div>
       </div>
 
-      {/* Image gallery */}
-      {sortedMedia.length > 0 ? (
-        <div className="bg-black">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex gap-2">
-              {/* Cover image */}
-              <div className="flex-1 min-w-0">
-                {cover && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={`${API_IMAGE_BASE}${cover.url}`}
-                    alt={property.title}
-                    className="w-full h-80 md:h-[420px] object-cover rounded-lg"
-                  />
-                )}
-              </div>
-              {/* Thumbnails */}
-              {otherMedia.length > 0 && (
-                <div className="hidden md:flex flex-col gap-2 w-40 shrink-0">
-                  {otherMedia.slice(0, 3).map((m, i) => (
-                    <div key={m.id} className="relative">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={`${API_IMAGE_BASE}${m.url}`}
-                        alt={m.title ?? `Photo ${i + 2}`}
-                        className="w-full h-[133px] object-cover rounded-lg opacity-90"
-                      />
-                      {i === 2 && otherMedia.length > 3 && (
-                        <div className="absolute inset-0 rounded-lg bg-black/60 flex items-center justify-center text-white text-sm font-medium">
-                          +{otherMedia.length - 3} more
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="bg-[var(--section-alt)] h-64 flex items-center justify-center">
-          <div className="text-center text-muted-foreground">
-            <Building2 className="h-12 w-12 mx-auto mb-2 opacity-30" />
-            <p className="text-sm">No photos available yet</p>
-          </div>
-        </div>
-      )}
-
       {/* Main content */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+
+        {/* Gallery */}
+        {sortedMedia.length > 0 ? (
+          <div className="mb-8">
+            <PropertyGallery media={sortedMedia} propertyTitle={property.title} />
+          </div>
+        ) : (
+          <div className="mb-8 rounded-2xl border border-dashed border-gray-200 bg-gray-50 h-64 flex items-center justify-center">
+            <div className="text-center text-muted-foreground">
+              <Building2 className="h-10 w-10 mx-auto mb-2 opacity-25" />
+              <p className="text-sm">No photos available yet</p>
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
           {/* Left: Details */}
@@ -300,24 +266,6 @@ export default async function PropertyDetailPage({
                     Open in Google Maps →
                   </a>
                 )}
-              </div>
-            )}
-
-            {/* More thumbnails (mobile) */}
-            {otherMedia.length > 0 && (
-              <div className="md:hidden">
-                <h2 className="font-semibold mb-3">Photos</h2>
-                <div className="grid grid-cols-3 gap-2">
-                  {otherMedia.map((m, i) => (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      key={m.id}
-                      src={`${API_IMAGE_BASE}${m.url}`}
-                      alt={m.title ?? `Photo ${i + 2}`}
-                      className="w-full aspect-square object-cover rounded-lg"
-                    />
-                  ))}
-                </div>
               </div>
             )}
 
