@@ -62,7 +62,7 @@ const HIGHLIGHTS = [
 
 const EXECUTIVES = [
   {
-    title: "President / Director",
+    title: "CEO & Executive Director",
     bio: "Leading the strategic direction and growth of Ndukego Investment & Properties Ltd with over a decade of real estate expertise.",
     photo: null as string | null,
     instagram: null as string | null,
@@ -70,7 +70,7 @@ const EXECUTIVES = [
     youtube: null as string | null,
   },
   {
-    title: "Director & Digital Administrator",
+    title: "Executive Director & Head of Digital",
     bio: "Overseeing daily operations and the company's digital presence, ensuring every client receives the highest standard of professional service.",
     photo: "/Profile-Picture.jpg",
     instagram: null as string | null,
@@ -78,7 +78,7 @@ const EXECUTIVES = [
     youtube: null as string | null,
   },
   {
-    title: "Director",
+    title: "Executive Director",
     bio: "Driving the company's investment financing and LPO financing divisions with rigorous financial oversight.",
     photo: null as string | null,
     instagram: null as string | null,
