@@ -70,7 +70,7 @@ const EXECUTIVES = [
     youtube: null as string | null,
   },
   {
-    title: "Executive Director & Head of Digital",
+    title: "Executive Director & Head of Digital Operations",
     bio: "Overseeing daily operations and the company's digital presence, ensuring every client receives the highest standard of professional service.",
     photo: "/Profile-Picture.jpg",
     instagram: null as string | null,
