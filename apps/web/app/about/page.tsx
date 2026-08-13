@@ -29,7 +29,7 @@ function YouTubeIcon({ className }: { className?: string }) {
   );
 }
 
-export const metadata: Metadata = { title: "About — Ndukego Investment & Properties Ltd" };
+export const metadata: Metadata = { title: "About" };
 
 const VALUES = [
   {
