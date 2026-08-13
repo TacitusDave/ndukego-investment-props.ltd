@@ -33,13 +33,13 @@ function GallerySlot({
   return (
     <div
       onClick={() => onOpen(index)}
-      className="relative overflow-hidden bg-gray-100 cursor-pointer group"
+      className="relative overflow-hidden bg-gray-100 cursor-pointer"
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={`${API_IMAGE_BASE}${m.url}`}
         alt={m.title ?? `Photo ${index + 1}`}
-        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+        className="w-full h-full object-cover"
       />
       {showOverlay && extraCount != null && extraCount > 0 && (
         <div className="absolute inset-0 bg-black/55 flex flex-col items-center justify-center">
@@ -104,7 +104,7 @@ export function PropertyGallery({ media, propertyTitle }: PropertyGalleryProps) 
       <div className="hidden md:block">
         {total === 1 && (
           <div
-            className="relative overflow-hidden rounded-2xl bg-gray-100 cursor-pointer group"
+            className="relative overflow-hidden rounded-2xl bg-gray-100 cursor-pointer"
             style={{ height: 460 }}
             onClick={() => openLightbox(0)}
           >
@@ -112,7 +112,7 @@ export function PropertyGallery({ media, propertyTitle }: PropertyGalleryProps) 
             <img
               src={`${API_IMAGE_BASE}${media[0].url}`}
               alt={propertyTitle}
-              className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+              className="w-full h-full object-cover"
             />
           </div>
         )}
@@ -303,12 +303,13 @@ export function PropertyGallery({ media, propertyTitle }: PropertyGalleryProps) 
                   key={m.id}
                   onClick={() => setLightboxIndex(i)}
                   aria-label={`Jump to photo ${i + 1}`}
-                  className={`shrink-0 rounded-lg overflow-hidden ring-2 transition-all ${
-                    i === lightboxIndex
-                      ? "ring-white opacity-100 scale-105"
-                      : "ring-transparent opacity-35 hover:opacity-65"
-                  }`}
-                  style={{ width: 60, height: 42 }}
+                  className="shrink-0 rounded-lg overflow-hidden transition-opacity"
+                  style={{
+                    width: 60,
+                    height: 42,
+                    opacity: i === lightboxIndex ? 1 : 0.35,
+                    boxShadow: i === lightboxIndex ? "inset 0 0 0 2.5px #fff" : "none",
+                  }}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
