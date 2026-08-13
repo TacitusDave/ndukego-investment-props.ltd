@@ -71,7 +71,7 @@ function YouTubeIcon({ className }: { className?: string }) {
 }
 
 const SOCIALS = [
-  { label: "Instagram", href: "#", Icon: InstagramIcon },
+  { label: "Instagram", href: "https://www.instagram.com/ndukego.ltd", Icon: InstagramIcon },
   { label: "TikTok", href: "#", Icon: TikTokIcon },
   { label: "YouTube", href: "#", Icon: YouTubeIcon },
 ];
