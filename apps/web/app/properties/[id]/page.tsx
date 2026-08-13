@@ -281,9 +281,15 @@ export default async function PropertyDetailPage({
               </span>
               <span className="font-mono">{property.internalNumber}</span>
             </div>
+
+            {/* Sales agent contact — directly below the metadata */}
+            <PropertyAgent
+              propertyTitle={property.title}
+              propertyId={property.internalNumber}
+            />
           </div>
 
-          {/* Right: Inquiry card + Agent */}
+          {/* Right: Inquiry card */}
           <div className="lg:col-span-1 space-y-4">
             <div className="sticky top-24 rounded-xl border bg-card p-6 shadow-sm space-y-5">
               {/* Reserve CTA */}
@@ -322,9 +328,6 @@ export default async function PropertyDetailPage({
                 <InquiryForm propertyId={property.id} propertyTitle={property.title} />
               </div>
             </div>
-
-            {/* Agent card — flows below the inquiry card, not sticky */}
-            <PropertyAgent />
           </div>
 
         </div>

@@ -1,47 +1,51 @@
-import { Mail, Phone } from "lucide-react";
+import Link from "next/link";
+import { Phone, MessageSquare } from "lucide-react";
 
-export function PropertyAgent() {
+interface PropertyAgentProps {
+  propertyTitle: string;
+  propertyId: string;
+}
+
+// UPDATE: replace with the actual sales agent direct line
+const AGENT_PHONE = "+2348036096663";
+const AGENT_PHONE_DISPLAY = "+234 803 609 6663";
+
+export function PropertyAgent({ propertyTitle, propertyId }: PropertyAgentProps) {
+  const enquiryHref = `/contact?message=${encodeURIComponent(
+    `Hi, I'm interested in the property "${propertyTitle}" (Ref: ${propertyId}). Please have a sales agent contact me.`
+  )}`;
+
   return (
-    <div className="rounded-xl border bg-card p-5 space-y-4">
-      <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-        Sales Consultant
-      </h3>
-      <div className="flex items-center gap-4">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/default-prop-profile.jpg"
-          alt="Sales Consultant"
-          className="h-14 w-14 rounded-full object-cover border-2 border-[#A0111C]/20 shrink-0"
-        />
-        <div>
-          <p className="font-semibold text-foreground">Ndukego Properties</p>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Ndukego Investment &amp; Properties Ltd
-          </p>
-        </div>
+    <div className="rounded-2xl border border-gray-100 bg-white p-6">
+      <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4">
+        Sales Agent
+      </p>
+
+      <div className="mb-5">
+        <p className="font-semibold text-gray-900 text-base leading-snug">
+          Ndukego Investment &amp; Properties Ltd
+        </p>
+        <p className="text-sm text-gray-400 mt-0.5">Available Mon – Fri · 8 am – 6 pm WAT</p>
       </div>
-      <div className="space-y-2">
+
+      <div className="space-y-2.5">
+        {/* Primary CTA — call */}
         <a
-          href="mailto:ndukegoinvest.propertiesltd@gmail.com"
-          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          href={`tel:${AGENT_PHONE}`}
+          className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-[#A0111C] px-5 py-3 text-sm font-semibold text-white hover:bg-[#B41523] transition-colors shadow-sm shadow-[#A0111C]/15"
         >
-          <Mail className="h-4 w-4 shrink-0 text-[#A0111C]" />
-          ndukegoinvest.propertiesltd@gmail.com
+          <Phone className="h-4 w-4" />
+          {AGENT_PHONE_DISPLAY}
         </a>
-        <a
-          href="tel:+2348036096700"
-          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+
+        {/* Secondary CTA — enquiry */}
+        <Link
+          href={enquiryHref}
+          className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-200 px-5 py-3 text-sm font-semibold text-gray-700 hover:border-[#A0111C]/25 hover:text-[#A0111C] transition-colors"
         >
-          <Phone className="h-4 w-4 shrink-0 text-[#A0111C]" />
-          +234 803 609 6700
-        </a>
-        <a
-          href="tel:+2347052955555"
-          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <Phone className="h-4 w-4 shrink-0 text-[#A0111C]" />
-          +234 705 295 5555
-        </a>
+          <MessageSquare className="h-4 w-4" />
+          Send Written Enquiry
+        </Link>
       </div>
     </div>
   );
