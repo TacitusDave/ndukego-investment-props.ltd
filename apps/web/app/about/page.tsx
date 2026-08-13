@@ -1,6 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Shield, Eye, TrendingUp, MapPin, ArrowRight, CheckCircle, Instagram } from "lucide-react";
+import { Shield, Eye, TrendingUp, MapPin, ArrowRight, CheckCircle } from "lucide-react";
+
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
 
 function TikTokIcon({ className }: { className?: string }) {
   return (
@@ -275,7 +285,7 @@ export default function AboutPage() {
                           title="Instagram"
                           className="flex items-center justify-center h-7 w-7 rounded-md border border-border text-muted-foreground hover:text-secondary hover:border-secondary/40 transition-colors"
                         >
-                          <Instagram className="h-3.5 w-3.5" />
+                          <InstagramIcon className="h-3.5 w-3.5" />
                         </a>
                       )}
                       {person.tiktok && (
