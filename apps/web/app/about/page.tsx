@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Shield, Eye, TrendingUp, MapPin, ArrowRight, CheckCircle } from "lucide-react";
 
-export const metadata: Metadata = { title: "About Us — Ndukego Investment & Properties Ltd" };
+export const metadata: Metadata = { title: "About — Ndukego Investment & Properties Ltd" };
 
 const VALUES = [
   {
@@ -35,20 +35,20 @@ const HIGHLIGHTS = [
 
 const EXECUTIVES = [
   {
-    name: "Executive Director",
-    title: "Executive Director",
+    name: "President / Director",
+    title: "President / Director",
     bio: "Leading the strategic direction and growth of Ndukego Investment & Properties Ltd with over a decade of real estate expertise.",
     photo: null as string | null,
   },
   {
-    name: "Managing Director",
-    title: "Managing Director",
-    bio: "Overseeing daily operations and ensuring every client receives the highest standard of professional service.",
+    name: "Director & Digital Administrator",
+    title: "Director & Digital Administrator",
+    bio: "Overseeing daily operations and the company's digital presence, ensuring every client receives the highest standard of professional service.",
     photo: null as string | null,
   },
   {
-    name: "Director of Finance",
-    title: "Director of Finance",
+    name: "Director",
+    title: "Director",
     bio: "Driving the company's investment financing and LPO financing divisions with rigorous financial oversight.",
     photo: null as string | null,
   },
@@ -61,15 +61,14 @@ const TEAM = [
   { name: "Sales Agent", title: "Sales Agent", photo: null as string | null },
 ];
 
-// ── Placeholder avatar when no photo is provided ─────────────────────────────
+// ── Photo placeholder — fills the top of a card like a property image ────────
 
-function AvatarPlaceholder({ size = "lg" }: { size?: "lg" | "sm" }) {
-  const dim = size === "lg" ? "w-28 h-28" : "w-20 h-20";
+function PhotoPlaceholder({ className }: { className?: string }) {
   return (
-    <div className={`${dim} rounded-full bg-gray-100 border-2 border-gray-200 flex items-center justify-center mx-auto`}>
-      <svg viewBox="0 0 24 24" fill="none" className="w-1/2 h-1/2 text-gray-300" stroke="currentColor" strokeWidth="1.5">
-        <circle cx="12" cy="8" r="4" />
-        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" strokeLinecap="round" />
+    <div className={`bg-gray-100 flex items-center justify-center ${className ?? ""}`}>
+      <svg viewBox="0 0 24 24" fill="none" className="w-16 h-16 text-gray-300" stroke="currentColor" strokeWidth="1.2">
+        <circle cx="12" cy="8" r="4.5" />
+        <path d="M3 21c0-5 4-8.5 9-8.5s9 3.5 9 8.5" strokeLinecap="round" />
       </svg>
     </div>
   );
@@ -214,22 +213,24 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {EXECUTIVES.map((person, i) => (
-              <div key={i} className="rounded-xl border border-border bg-card p-6 text-center flex flex-col items-center gap-4">
+              <div key={i} className="rounded-xl border border-border bg-card overflow-hidden flex flex-col">
+                {/* Photo — top of card, like a property listing image */}
                 {person.photo ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={person.photo}
                     alt={person.name}
-                    className="w-28 h-28 rounded-full object-cover border-2 border-border"
+                    className="w-full aspect-[4/3] object-cover object-top"
                   />
                 ) : (
-                  <AvatarPlaceholder size="lg" />
+                  <PhotoPlaceholder className="w-full aspect-[4/3]" />
                 )}
-                <div>
-                  <p className="font-semibold text-foreground text-base">{person.name}</p>
-                  <p className="text-xs font-medium uppercase tracking-widest text-secondary mt-0.5">{person.title}</p>
+                {/* Details — below the photo */}
+                <div className="p-5 flex flex-col gap-2">
+                  <p className="font-semibold text-foreground text-base leading-tight">{person.name}</p>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-secondary">{person.title}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed mt-1">{person.bio}</p>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">{person.bio}</p>
               </div>
             ))}
           </div>
@@ -248,19 +249,19 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
             {TEAM.map((person, i) => (
-              <div key={i} className="rounded-xl border border-border bg-card p-5 text-center flex flex-col items-center gap-3">
+              <div key={i} className="rounded-xl border border-border bg-card overflow-hidden flex flex-col">
                 {person.photo ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={person.photo}
                     alt={person.name}
-                    className="w-20 h-20 rounded-full object-cover border-2 border-border"
+                    className="w-full aspect-square object-cover object-top"
                   />
                 ) : (
-                  <AvatarPlaceholder size="sm" />
+                  <PhotoPlaceholder className="w-full aspect-square" />
                 )}
-                <div>
-                  <p className="font-semibold text-foreground text-sm">{person.name}</p>
+                <div className="p-3">
+                  <p className="font-semibold text-foreground text-sm leading-tight">{person.name}</p>
                   <p className="text-xs text-muted-foreground mt-0.5">{person.title}</p>
                 </div>
               </div>
