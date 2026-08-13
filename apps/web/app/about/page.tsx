@@ -1,6 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Shield, Eye, TrendingUp, MapPin, ArrowRight, CheckCircle } from "lucide-react";
+import { Shield, Eye, TrendingUp, MapPin, ArrowRight, CheckCircle, Instagram } from "lucide-react";
+
+function TikTokIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.17 8.17 0 0 0 4.84 1.56V6.78a4.85 4.85 0 0 1-1.07-.09z" />
+    </svg>
+  );
+}
+
+function YouTubeIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
+      <polygon fill="white" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" />
+    </svg>
+  );
+}
 
 export const metadata: Metadata = { title: "About — Ndukego Investment & Properties Ltd" };
 
@@ -31,26 +48,32 @@ const HIGHLIGHTS = [
   "Transparent pricing, always",
 ];
 
-// ── Team data — replace photo: null with the real image URL when ready ──────
+// ── Team data — replace photo: null with image URL, socials: null with profile link ──
 
 const EXECUTIVES = [
   {
-    name: "President / Director",
     title: "President / Director",
     bio: "Leading the strategic direction and growth of Ndukego Investment & Properties Ltd with over a decade of real estate expertise.",
     photo: null as string | null,
+    instagram: null as string | null,
+    tiktok: null as string | null,
+    youtube: null as string | null,
   },
   {
-    name: "Director & Digital Administrator",
     title: "Director & Digital Administrator",
     bio: "Overseeing daily operations and the company's digital presence, ensuring every client receives the highest standard of professional service.",
-    photo: null as string | null,
+    photo: "/Profile-Picture.jpg",
+    instagram: null as string | null,
+    tiktok: null as string | null,
+    youtube: null as string | null,
   },
   {
-    name: "Director",
     title: "Director",
     bio: "Driving the company's investment financing and LPO financing divisions with rigorous financial oversight.",
     photo: null as string | null,
+    instagram: null as string | null,
+    tiktok: null as string | null,
+    youtube: null as string | null,
   },
 ];
 
@@ -213,23 +236,72 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {EXECUTIVES.map((person, i) => (
-              <div key={i} className="rounded-xl border border-border bg-card overflow-hidden flex flex-col">
-                {/* Photo — top of card, like a property listing image */}
+              <div key={i} className="rounded-xl border border-border bg-card overflow-hidden flex flex-col shadow-sm">
+                {/* Photo — fills card top */}
                 {person.photo ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={person.photo}
-                    alt={person.name}
+                    alt={person.title}
                     className="w-full aspect-[4/3] object-cover object-top"
                   />
                 ) : (
                   <PhotoPlaceholder className="w-full aspect-[4/3]" />
                 )}
-                {/* Details — below the photo */}
-                <div className="p-5 flex flex-col gap-2">
-                  <p className="font-semibold text-foreground text-base leading-tight">{person.name}</p>
-                  <p className="text-xs font-semibold uppercase tracking-widest text-secondary">{person.title}</p>
-                  <p className="text-sm text-muted-foreground leading-relaxed mt-1">{person.bio}</p>
+
+                {/* Info — below photo, tight gap */}
+                <div className="px-4 pt-3 pb-4 flex flex-col flex-1">
+                  {/* Red title only — no duplicate black name */}
+                  <p
+                    className="text-[11px] font-bold uppercase tracking-[0.12em] text-secondary"
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
+                    {person.title}
+                  </p>
+
+                  {/* Thin accent rule under title */}
+                  <div className="w-8 h-[2px] bg-secondary/40 rounded-full mt-1.5 mb-2.5" />
+
+                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">{person.bio}</p>
+
+                  {/* Social icons — shown if at least one link is set */}
+                  {(person.instagram || person.tiktok || person.youtube) && (
+                    <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border">
+                      {person.instagram && (
+                        <a
+                          href={person.instagram}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Instagram"
+                          className="flex items-center justify-center h-7 w-7 rounded-md border border-border text-muted-foreground hover:text-secondary hover:border-secondary/40 transition-colors"
+                        >
+                          <Instagram className="h-3.5 w-3.5" />
+                        </a>
+                      )}
+                      {person.tiktok && (
+                        <a
+                          href={person.tiktok}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="TikTok"
+                          className="flex items-center justify-center h-7 w-7 rounded-md border border-border text-muted-foreground hover:text-secondary hover:border-secondary/40 transition-colors"
+                        >
+                          <TikTokIcon className="h-3.5 w-3.5" />
+                        </a>
+                      )}
+                      {person.youtube && (
+                        <a
+                          href={person.youtube}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="YouTube"
+                          className="flex items-center justify-center h-7 w-7 rounded-md border border-border text-muted-foreground hover:text-secondary hover:border-secondary/40 transition-colors"
+                        >
+                          <YouTubeIcon className="h-3.5 w-3.5" />
+                        </a>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
