@@ -29,7 +29,7 @@ function YouTubeIcon({ className }: { className?: string }) {
   );
 }
 
-export const metadata: Metadata = { title: "About" };
+export const metadata: Metadata = { title: { absolute: "About — Ndukego Investment & Properties Ltd" } };
 
 const VALUES = [
   {
@@ -238,7 +238,7 @@ export default function AboutPage() {
       <section className="py-16 bg-[var(--section-alt)] border-t border-[var(--nav-border)]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold text-foreground">Leadership</h2>
+            <h2 className="text-2xl font-bold text-foreground tracking-widest uppercase">Leadership</h2>
             <p className="text-muted-foreground mt-2 max-w-xl mx-auto">
               The executives and directors driving Ndukego Investment &amp; Properties Limited forward.
             </p>
@@ -323,7 +323,9 @@ export default function AboutPage() {
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-2xl font-bold text-foreground">Our Team</h2>
+            <h2 className="text-2xl font-bold text-foreground">
+              <span className="lowercase font-normal">the </span><span className="uppercase text-secondary tracking-widest">Team</span>
+            </h2>
             <p className="text-muted-foreground mt-2">
               The agents and professionals who serve our clients every day.
             </p>
