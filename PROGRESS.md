@@ -1,6 +1,6 @@
 # NHGP — Build Progress & Master Todo List
 
-_Updated: 2026-08-14 | Session 22_
+_Updated: 2026-08-14 | Session 23_
 
 > This file is the single source of truth for what's done, what's in progress, and what
 > remains until 100% production-ready. Read it at the start of every session.
@@ -348,6 +348,7 @@ Build after Phase 3 demonstrates ROI.
 | ~~BUG-02~~ | ~~apps/api~~ | ~~Inquiry submission doesn't send confirmation email~~ | ~~FIXED~~ |
 | ~~BUG-03~~ | ~~apps/web~~ | ~~Favorites — customer can view saved properties but cannot add/remove~~ | ~~FIXED~~ |
 | ~~BUG-04~~ | ~~apps/web~~ | ~~Profile page is read-only — no edit form~~ | ~~FIXED~~ |
+| ~~BUG-05~~ | ~~apps/api~~ | ~~Inquiry submission returns 500 — raw SQL used wrong column names for unmapped Prisma fields; fixed by switching to prisma.inquiry.create()~~ | ~~FIXED~~ |
 
 ---
 
@@ -378,3 +379,4 @@ Build after Phase 3 demonstrates ROI.
 | 20 | 2026-08-14 | Cookie consent banner (NDPA-compliant, localStorage, Accept/Essential/Learn more); Document management system — full API (upload/list/find/download/status-change/soft-delete, 44 document types, audit + version history); Admin documents list page (search + filters); Admin upload form (file picker + all metadata fields); Admin document detail page (approval workflow, status actions, version history) |
 | 21 | 2026-08-14 | Payment recording system — full API (record/verify/reject with transaction-safe Sale balance updates); Admin inline payment form on Sale detail; Inspection management system — full API with VALID_TRANSITIONS state machine (schedule/start/complete/fail/cancel); Admin inspections list, schedule form, detail page with action buttons; Railway auto-deploy reconnected to renamed GitHub repo; Staff notes on inquiries (inline expandable panel + PATCH API); Branch edit/delete + Department management (CRUD + employee count guard); Reservation status timeline (vertical audit history with actor + status transition badges) |
 | 22 | 2026-08-14 | Inquiry → Reservation one-click pipeline — "Reserve" button on inquiry row, API converts inquiry to PENDING reservation (auto-creates customer if new), returns reservation number + link |
+| 23 | 2026-08-14 | Fix inquiry form 500 error — replaced raw SQL INSERT with prisma.inquiry.create() to fix column name mismatch for unmapped camelCase Prisma fields |
