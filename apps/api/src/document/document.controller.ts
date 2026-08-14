@@ -30,7 +30,7 @@ export class DocumentController {
   constructor(private readonly documentService: DocumentService) {}
 
   @Post('upload')
-  @RequirePermissions('document.create')
+  @RequirePermissions('document.upload')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: memoryStorage(),
@@ -105,7 +105,7 @@ export class DocumentController {
   }
 
   @Patch(':id/status')
-  @RequirePermissions('document.update')
+  @RequirePermissions('document.verify')
   updateStatus(
     @Param('id') id: string,
     @Body('status') status: DocumentStatus,
@@ -120,7 +120,7 @@ export class DocumentController {
   }
 
   @Delete(':id')
-  @RequirePermissions('document.delete')
+  @RequirePermissions('document.approve')
   remove(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
     return this.documentService.remove(id, user.employeeId ?? user.id, user.email);
   }
