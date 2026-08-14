@@ -1,6 +1,6 @@
 # NHGP — Build Progress & Master Todo List
 
-_Updated: 2026-08-14 | Session 20_
+_Updated: 2026-08-14 | Session 21_
 
 > This file is the single source of truth for what's done, what's in progress, and what
 > remains until 100% production-ready. Read it at the start of every session.
@@ -146,14 +146,20 @@ Target: Live and usable by company staff and customers.
 - [ ] Customer portal: Approved documents visible to relevant customer
 - [ ] Admin: Document list filtered per property/estate/customer detail pages (links to /documents?entityId=…)
 
-### 2C. Inspection & Site Visit Management ❌ NOT STARTED
+### 2C. Inspection & Site Visit Management ✅ CORE COMPLETE (session 21)
 
-- [ ] API: Inspection model endpoints (create, list, update, complete)
-- [ ] Admin: Schedule inspection (property → assign inspector → date)
-- [ ] Admin: Inspection report upload (photos, findings, recommendation)
-- [ ] Admin: Mark property inspection-complete (unblocks publication workflow)
+- [x] API: `POST /inspections` — schedule, `VALID_TRANSITIONS` state machine
+- [x] API: `GET /inspections` — paginated list, filter by status/type/inspector/property/search
+- [x] API: `GET /inspections/:id` — full detail with property/inspector/customer relations
+- [x] API: `PATCH /inspections/:id/start` — SCHEDULED → IN_PROGRESS
+- [x] API: `PATCH /inspections/:id/complete` — IN_PROGRESS → COMPLETED (recommendation + score + summary)
+- [x] API: `PATCH /inspections/:id/cancel` — cancel with reason
+- [x] API: `PATCH /inspections/:id/fail` — mark failed with reason
+- [x] Admin: Inspections list page — paginated table, status/type/search filters
+- [x] Admin: Schedule inspection form — property ID, inspector ID, optional customer, type, datetime, notes
+- [x] Admin: Inspection detail page — timeline, property/inspector/customer cards, outcome section, action buttons (Start / Complete / Fail / Cancel)
 - [ ] Customer: Book a site visit request from property detail page
-- [ ] Admin: Manage appointment requests, confirm/reschedule
+- [ ] Admin: Inspection report photo upload
 
 ### 2D. Sales Tracking & Full Reservation Lifecycle ✅ MOSTLY COMPLETE
 
@@ -163,13 +169,18 @@ Target: Live and usable by company staff and customers.
 - [ ] Extend reservation statuses: UNDER_NEGOTIATION, UNDER_CONTRACT
 - [ ] Admin: Reservation timeline view — full status-change history with timestamps + notes
 
-### 2E. Financial Recording ❌ NOT STARTED
+### 2E. Financial Recording ✅ CORE COMPLETE (session 21)
 
-- [ ] API: Payment record endpoints (create, list per sale/reservation)
-- [ ] Admin: Record a payment (amount, method, date, notes — linked to Sale)
+- [x] API: `POST /payments` — record payment, updates Sale.totalPaid/balanceDue in transaction
+- [x] API: `GET /payments` — list with filters (saleId, customerId, status)
+- [x] API: `GET /payments/:id` — full detail with sale + customer + employee relations
+- [x] API: `PATCH /payments/:id/verify` — verify payment, sets verifiedAt
+- [x] API: `PATCH /payments/:id/reject` — reject + reverse Sale totals in transaction
+- [x] Admin: Record payment inline on Sale detail page (amount, type, method, date, reference, bank, notes)
+- [x] Admin: Verify / Reject buttons on pending payments
+- [x] Admin: Payment status badges (Pending / Verified / Rejected)
 - [ ] Admin: Generate receipt PDF (printable / downloadable)
-- [ ] Admin: Payment history per customer, per property
-- [ ] Admin: Outstanding balance tracker (total owed vs paid)
+- [ ] Admin: Payment history per customer (cross-sale view)
 - [ ] Note: NO online payment processing — all payments physical at company office
 
 ### 2F. CRM — Inquiry & Lead Management ✅ MOSTLY COMPLETE
@@ -317,11 +328,11 @@ Build after Phase 3 demonstrates ROI.
 | Model | Schema | API | Admin UI | Customer UI |
 |---|---|---|---|---|
 | Employee | ✅ | ✅ | ✅ | n/a |
-| Inspection | ✅ | ❌ | ❌ | Request only |
+| Inspection | ✅ | ✅ | ✅ | Request only |
 | Appointment | ✅ | ❌ | ❌ | ❌ |
-| Document | ✅ | ❌ | Placeholder only | ❌ |
+| Document | ✅ | ✅ | ✅ | ❌ |
 | Sale | ✅ | ✅ | ✅ | n/a |
-| Payment | ✅ | ❌ | ❌ | ❌ |
+| Payment | ✅ | ✅ | ✅ (on Sale page) | ❌ |
 | PropertyFavorite | ✅ | ✅ | n/a | ✅ |
 | Notification | ✅ | ❌ | ❌ | ❌ |
 | AuditLog | ✅ | Partial | View only | n/a |
@@ -364,3 +375,4 @@ Build after Phase 3 demonstrates ROI.
 | 18 | 2026-08-13 | Super admin TOTP auth (/super login page + env var secret + hidden entry points); Web login URL fixed (localhost → Vercel); Co-Authored-By removed from all 44 commits; Instagram link set; About page rewrite (Leadership + Team sections, executive property-card style, social slots); Speed Insights wired; Projects page rebuilt with live API estate data; Insights category filters fixed (client component); Article card links fixed |
 | 19 | 2026-08-14 | Property gallery redesigned — Airbnb-style grid (desktop: cover 2/3 + 2 stacked), mobile swipeable + dot indicators, full lightbox (arrows + thumbnail strip + keyboard + swipe + blur backdrop); "Speak to an Agent" section redesigned (no photo, left column under metadata, +234 903 550 5663, Call + Enquiry CTAs); Gallery ring/scale fixes; About executive titles updated (CEO & Executive Director · Executive Director & Head of Digital Operations · Executive Director); README fully rewritten with logo + badges + documentation |
 | 20 | 2026-08-14 | Cookie consent banner (NDPA-compliant, localStorage, Accept/Essential/Learn more); Document management system — full API (upload/list/find/download/status-change/soft-delete, 44 document types, audit + version history); Admin documents list page (search + filters); Admin upload form (file picker + all metadata fields); Admin document detail page (approval workflow, status actions, version history) |
+| 21 | 2026-08-14 | Payment recording system — full API (record/verify/reject with transaction-safe Sale balance updates); Admin inline payment form on Sale detail; Inspection management system — full API with VALID_TRANSITIONS state machine (schedule/start/complete/fail/cancel); Admin inspections list, schedule form, detail page with action buttons; Railway auto-deploy reconnected to renamed GitHub repo |
