@@ -101,6 +101,13 @@ export class PropertyController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Post('admin/inquiries/:id/convert')
+  @RequirePermissions('property.update')
+  convertInquiry(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.propertyService.convertInquiryToReservation(id, user);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Get(':id')
   @RequirePermissions('property.read')
   findOne(@Param('id') id: string) {

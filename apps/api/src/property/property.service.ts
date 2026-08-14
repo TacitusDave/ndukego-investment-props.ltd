@@ -577,4 +577,86 @@ export class PropertyService {
     if (result === 0) throw new NotFoundException('Inquiry not found');
     return { success: true };
   }
+
+  async convertInquiryToReservation(inquiryId: string, user: AuthenticatedUser) {
+    const rows = await this.prisma.$queryRawUnsafe<{
+      id: string; propertyId: string | null; email: string;
+      firstName: string | null; lastName: string | null;
+      phone: string; message: string | null; status: string;
+    }[]>(
+      `SELECT id, property_id as "propertyId", email, first_name as "firstName",
+              last_name as "lastName", phone, message, status
+       FROM inquiries WHERE id = $1::uuid`,
+      inquiryId,
+    );
+    const inquiry = rows[0];
+    if (!inquiry) throw new NotFoundException('Inquiry not found');
+    if (!inquiry.propertyId) throw new BadRequestException('This inquiry has no associated property — conversion requires a property');
+    if (inquiry.status === 'CONVERTED') throw new BadRequestException('This inquiry has already been converted to a reservation');
+    if (inquiry.status === 'CLOSED') throw new BadRequestException('Cannot convert a closed inquiry');
+
+    const property = await this.prisma.property.findUnique({
+      where: { id: inquiry.propertyId, deletedAt: null },
+      select: { id: true, title: true, reservationAmount: true },
+    });
+    if (!property) throw new NotFoundException('Property not found');
+
+    // Find or create customer record
+    let customerId: string;
+    const existing = await this.prisma.customer.findFirst({
+      where: { email: inquiry.email.toLowerCase() },
+    });
+    if (existing) {
+      customerId = existing.id;
+    } else {
+      const ts = Date.now().toString(36).toUpperCase();
+      const rnd = Math.random().toString(36).substring(2, 6).toUpperCase();
+      const customer = await this.prisma.customer.create({
+        data: {
+          customerNumber: `CUST-${ts}-${rnd}`,
+          type: 'INDIVIDUAL',
+          status: 'PROSPECT',
+          firstName: inquiry.firstName ?? '',
+          lastName: inquiry.lastName ?? '',
+          email: inquiry.email.toLowerCase(),
+          phone: inquiry.phone,
+          leadSource: 'Website Inquiry',
+        },
+      });
+      customerId = customer.id;
+    }
+
+    const ts = Date.now().toString(36).toUpperCase();
+    const rnd = Math.random().toString(36).substring(2, 5).toUpperCase();
+    const reservationNumber = `RES-${ts}-${rnd}`;
+
+    const reservation = await this.prisma.reservation.create({
+      data: {
+        reservationNumber,
+        propertyId: inquiry.propertyId,
+        customerId,
+        status: 'PENDING',
+        reservationAmount: property.reservationAmount ? Number(property.reservationAmount) : 0,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        notes: inquiry.message ?? null,
+      },
+    });
+
+    await this.prisma.$executeRawUnsafe(
+      `UPDATE inquiries SET status = 'CONVERTED', updated_at = now() WHERE id = $1::uuid`,
+      inquiryId,
+    );
+
+    await this.auditService.log({
+      actorId: user.id,
+      actorEmail: user.email,
+      action: 'CREATE',
+      entityType: 'RESERVATION',
+      entityId: reservation.id,
+      entityLabel: `${reservationNumber} — ${property.title}`,
+      newValues: { source: 'Converted from inquiry', inquiryId },
+    });
+
+    return { reservationId: reservation.id, reservationNumber };
+  }
 }

@@ -1,6 +1,6 @@
 # NHGP — Build Progress & Master Todo List
 
-_Updated: 2026-08-14 | Session 21_
+_Updated: 2026-08-14 | Session 22_
 
 > This file is the single source of truth for what's done, what's in progress, and what
 > remains until 100% production-ready. Read it at the start of every session.
@@ -166,8 +166,8 @@ Target: Live and usable by company staff and customers.
 - [x] Admin: Convert reservation → Sale record
 - [x] Sale model: sale date, agreed price, payment terms, discount
 - [x] Admin: Sale list page + detail page (full status transitions)
+- [x] Admin: Reservation timeline view — full status-change history with timestamps, actor, notes (session 21)
 - [ ] Extend reservation statuses: UNDER_NEGOTIATION, UNDER_CONTRACT
-- [ ] Admin: Reservation timeline view — full status-change history with timestamps + notes
 
 ### 2E. Financial Recording ✅ CORE COMPLETE (session 21)
 
@@ -187,8 +187,8 @@ Target: Live and usable by company staff and customers.
 
 - [x] Admin: Inquiry list with search + status filter
 - [x] Admin: Inquiry status tracking (NEW → CONTACTED → CONVERTED → CLOSED)
-- [ ] Admin: Log a staff response/note on an inquiry (text field + timestamp)
-- [ ] Admin: Formal inquiry → Reservation pipeline (one-click convert)
+- [x] Admin: Staff notes on inquiries — inline expandable panel, amber indicator, saved per-inquiry (session 21)
+- [x] Admin: Formal inquiry → Reservation pipeline — "Reserve" button converts inquiry to reservation, creates customer record if needed (session 22)
 - [ ] Admin: Customer communication history (all interactions per customer in one view)
 
 ### 2G. Notifications ✅ PARTIAL
@@ -205,7 +205,8 @@ Target: Live and usable by company staff and customers.
 ### 2H. Company & Platform Settings ✅ MOSTLY COMPLETE
 
 - [x] Admin: Company settings page (name, contact info, social links)
-- [ ] Admin: Branch management UI (add/edit/deactivate branches)
+- [x] Admin: Branch management UI — inline edit + soft-delete (session 21)
+- [x] Admin: Department management UI — full CRUD with employee count guard on delete (session 21)
 - [ ] Admin: System configuration (reservation expiry days, currencies)
 
 ---
@@ -375,4 +376,5 @@ Build after Phase 3 demonstrates ROI.
 | 18 | 2026-08-13 | Super admin TOTP auth (/super login page + env var secret + hidden entry points); Web login URL fixed (localhost → Vercel); Co-Authored-By removed from all 44 commits; Instagram link set; About page rewrite (Leadership + Team sections, executive property-card style, social slots); Speed Insights wired; Projects page rebuilt with live API estate data; Insights category filters fixed (client component); Article card links fixed |
 | 19 | 2026-08-14 | Property gallery redesigned — Airbnb-style grid (desktop: cover 2/3 + 2 stacked), mobile swipeable + dot indicators, full lightbox (arrows + thumbnail strip + keyboard + swipe + blur backdrop); "Speak to an Agent" section redesigned (no photo, left column under metadata, +234 903 550 5663, Call + Enquiry CTAs); Gallery ring/scale fixes; About executive titles updated (CEO & Executive Director · Executive Director & Head of Digital Operations · Executive Director); README fully rewritten with logo + badges + documentation |
 | 20 | 2026-08-14 | Cookie consent banner (NDPA-compliant, localStorage, Accept/Essential/Learn more); Document management system — full API (upload/list/find/download/status-change/soft-delete, 44 document types, audit + version history); Admin documents list page (search + filters); Admin upload form (file picker + all metadata fields); Admin document detail page (approval workflow, status actions, version history) |
-| 21 | 2026-08-14 | Payment recording system — full API (record/verify/reject with transaction-safe Sale balance updates); Admin inline payment form on Sale detail; Inspection management system — full API with VALID_TRANSITIONS state machine (schedule/start/complete/fail/cancel); Admin inspections list, schedule form, detail page with action buttons; Railway auto-deploy reconnected to renamed GitHub repo |
+| 21 | 2026-08-14 | Payment recording system — full API (record/verify/reject with transaction-safe Sale balance updates); Admin inline payment form on Sale detail; Inspection management system — full API with VALID_TRANSITIONS state machine (schedule/start/complete/fail/cancel); Admin inspections list, schedule form, detail page with action buttons; Railway auto-deploy reconnected to renamed GitHub repo; Staff notes on inquiries (inline expandable panel + PATCH API); Branch edit/delete + Department management (CRUD + employee count guard); Reservation status timeline (vertical audit history with actor + status transition badges) |
+| 22 | 2026-08-14 | Inquiry → Reservation one-click pipeline — "Reserve" button on inquiry row, API converts inquiry to PENDING reservation (auto-creates customer if new), returns reservation number + link |

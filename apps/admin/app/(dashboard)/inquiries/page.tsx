@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { MessageSquare, Search, Building2, ChevronDown, ChevronUp, StickyNote, Save } from "lucide-react";
+import { MessageSquare, Search, Building2, ChevronDown, ChevronUp, StickyNote, Save, ArrowRight, CheckCircle } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 interface Inquiry {
@@ -12,6 +12,7 @@ interface Inquiry {
   email: string;
   phone: string;
   message: string | null;
+  propertyId: string | null;
   propertyTitle: string | null;
   status: string;
   staffNotes: string | null;
@@ -55,6 +56,10 @@ export default function InquiriesPage() {
   // Per-inquiry notes state: { [id]: draftText }
   const [notes,       setNotes]       = useState<Record<string, string>>({});
   const [savingNotes, setSavingNotes] = useState<string | null>(null);
+
+  // Conversion state
+  const [converting,   setConverting]   = useState<string | null>(null);
+  const [convertResult, setConvertResult] = useState<Record<string, { reservationId: string; reservationNumber: string }>>({});
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -109,6 +114,27 @@ export default function InquiriesPage() {
         } : prev);
       }
     } finally { setSavingNotes(null); }
+  }
+
+  async function convertInquiry(id: string) {
+    setConverting(id);
+    try {
+      const res = await fetch(`/api/proxy/properties/admin/inquiries/${id}/convert`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (res.ok) {
+        const result = await res.json();
+        setConvertResult((prev) => ({ ...prev, [id]: result }));
+        setData((prev) => prev ? {
+          ...prev,
+          items: prev.items.map((i) => i.id === id ? { ...i, status: "CONVERTED" } : i),
+        } : prev);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(err.message ?? "Conversion failed. Please try again.");
+      }
+    } finally { setConverting(null); }
   }
 
   function navigate(params: Record<string, string>) {
@@ -212,13 +238,16 @@ export default function InquiriesPage() {
               </thead>
               <tbody className="divide-y">
                 {items.map((inquiry) => {
-                  const name       = [inquiry.firstName, inquiry.lastName].filter(Boolean).join(" ") || "—";
-                  const cfg        = STATUS_CONFIG[inquiry.status] ?? { label: inquiry.status, badge: "bg-zinc-100 text-zinc-500", next: [] };
-                  const isUpdating = updating === inquiry.id;
-                  const isOpen     = expanded === inquiry.id;
+                  const name         = [inquiry.firstName, inquiry.lastName].filter(Boolean).join(" ") || "—";
+                  const cfg          = STATUS_CONFIG[inquiry.status] ?? { label: inquiry.status, badge: "bg-zinc-100 text-zinc-500", next: [] };
+                  const isUpdating   = updating === inquiry.id;
+                  const isOpen       = expanded === inquiry.id;
                   const hasSavedNote = !!inquiry.staffNotes;
-                  const noteDraft  = notes[inquiry.id] ?? inquiry.staffNotes ?? "";
-                  const isDirty    = noteDraft !== (inquiry.staffNotes ?? "");
+                  const noteDraft    = notes[inquiry.id] ?? inquiry.staffNotes ?? "";
+                  const isDirty      = noteDraft !== (inquiry.staffNotes ?? "");
+                  const isConverting = converting === inquiry.id;
+                  const converted    = convertResult[inquiry.id];
+                  const canConvert   = !!inquiry.propertyId && (inquiry.status === "NEW" || inquiry.status === "CONTACTED");
 
                   return (
                     <>
@@ -262,6 +291,28 @@ export default function InquiriesPage() {
                               <StickyNote className="h-3 w-3" />
                               {isOpen ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                             </button>
+
+                            {/* Convert to reservation */}
+                            {converted ? (
+                              <a
+                                href={`/reservations/${converted.reservationId}`}
+                                className="flex items-center gap-1 rounded-md border border-green-300 bg-green-50 px-2 py-1.5 text-xs font-medium text-green-700 hover:bg-green-100 dark:border-green-800 dark:bg-green-950/40 dark:text-green-400"
+                              >
+                                <CheckCircle className="h-3 w-3" />
+                                {converted.reservationNumber}
+                              </a>
+                            ) : canConvert && (
+                              <button
+                                onClick={() => convertInquiry(inquiry.id)}
+                                disabled={isConverting}
+                                title="Convert to reservation"
+                                className="flex items-center gap-1 rounded-md border border-primary/40 px-2 py-1.5 text-xs font-medium text-primary hover:bg-primary/10 disabled:opacity-50 transition-colors"
+                              >
+                                {isConverting ? "Converting…" : (
+                                  <><ArrowRight className="h-3 w-3" /> Reserve</>
+                                )}
+                              </button>
+                            )}
 
                             {/* Status dropdown */}
                             {cfg.next.length > 0 && (
