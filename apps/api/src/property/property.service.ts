@@ -466,17 +466,18 @@ export class PropertyService {
     }
 
     // Always record a dedicated Inquiry entry
-    await this.prisma.$executeRawUnsafe(
-      `INSERT INTO inquiries (id, first_name, last_name, email, phone, message, property_id, property_title, status, created_at, updated_at)
-       VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6::uuid, $7, 'NEW', now(), now())`,
-      data.firstName ?? null,
-      data.lastName ?? null,
-      data.email,
-      data.phone,
-      data.message ?? null,
-      data.propertyId ?? null,
-      data.propertyTitle ?? null,
-    );
+    await this.prisma.inquiry.create({
+      data: {
+        firstName: data.firstName || null,
+        lastName: data.lastName || null,
+        email: data.email,
+        phone: data.phone,
+        message: data.message || null,
+        propertyId: data.propertyId || null,
+        propertyTitle: data.propertyTitle || null,
+        status: 'NEW',
+      },
+    });
 
     await this.auditService.log({
       action: 'CREATE',
