@@ -347,4 +347,16 @@ export class ReservationService {
       orderBy: { createdAt: 'desc' },
     });
   }
+
+  async getTimeline(reservationId: string) {
+    const logs = await this.prisma.auditLog.findMany({
+      where: { entityType: 'RESERVATION', entityId: reservationId },
+      orderBy: { createdAt: 'asc' },
+      select: {
+        id: true, action: true, actorEmail: true,
+        oldValues: true, newValues: true, createdAt: true,
+      },
+    });
+    return { items: logs };
+  }
 }

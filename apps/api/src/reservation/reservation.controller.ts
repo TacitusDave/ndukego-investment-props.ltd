@@ -69,6 +69,13 @@ export class ReservationController {
     return this.reservationService.findOne(id);
   }
 
+  /** Admin — reservation status history timeline */
+  @UseGuards(JwtAuthGuard)
+  @Get(':id/timeline')
+  getTimeline(@Param('id') id: string) {
+    return this.reservationService.getTimeline(id);
+  }
+
   /** Admin — update reservation status */
   @UseGuards(JwtAuthGuard)
   @Patch(':id/status')

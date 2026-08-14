@@ -3,8 +3,8 @@
 import { useState, useEffect, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, CheckCircle, XCircle, Loader2, Receipt } from "lucide-react";
-import { formatDate, formatCurrency } from "@/lib/utils";
+import { ChevronLeft, CheckCircle, XCircle, Loader2, Receipt, Clock } from "lucide-react";
+import { formatDate, formatDateTime, formatCurrency } from "@/lib/utils";
 
 interface Reservation {
   id: string;
@@ -64,6 +64,18 @@ export default function ReservationDetailPage({ params }: { params: Promise<{ id
   const [id, setId] = useState("");
   const [reservation, setReservation] = useState<Reservation | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Timeline
+  const [timeline, setTimeline] = useState<AuditEntry[]>([]);
+
+  interface AuditEntry {
+    id: string;
+    action: string;
+    actorEmail: string | null;
+    oldValues: Record<string,unknown> | null;
+    newValues: Record<string,unknown> | null;
+    createdAt: string;
+  }
   const [notes, setNotes] = useState("");
   const [isPending, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; msg: string } | null>(null);
@@ -86,6 +98,11 @@ export default function ReservationDetailPage({ params }: { params: Promise<{ id
             if (d?.id) {
               setReservation(d);
               if (d.property?.listingPrice) setSalePrice(d.property.listingPrice);
+              // Fetch timeline
+              fetch(`/api/proxy/reservations/${resolvedId}/timeline`)
+                .then((r) => r.ok ? r.json() : null)
+                .then((audit) => { if (audit?.items) setTimeline(audit.items); })
+                .catch(() => {});
             }
           }
         })
@@ -380,6 +397,51 @@ export default function ReservationDetailPage({ params }: { params: Promise<{ id
               </button>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Timeline */}
+      {timeline.length > 0 && (
+        <div className="rounded-xl border bg-card p-5 space-y-4">
+          <div className="flex items-center gap-2">
+            <Clock className="h-4 w-4 text-muted-foreground" />
+            <h2 className="font-semibold">Status History</h2>
+          </div>
+          <ol className="relative border-l border-border ml-2 space-y-5">
+            {timeline.map((entry) => {
+              const newStatus = (entry.newValues as Record<string,unknown>)?.status as string | undefined;
+              const oldStatus = (entry.oldValues as Record<string,unknown>)?.status as string | undefined;
+              const note      = (entry.newValues as Record<string,unknown>)?.notes as string | undefined;
+              return (
+                <li key={entry.id} className="ml-5">
+                  <span className="absolute -left-2 flex h-4 w-4 items-center justify-center rounded-full bg-card border-2 border-border" />
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <span className="text-sm font-medium">
+                      {entry.action === "CREATE" && "Reservation created"}
+                      {entry.action === "STATUS_CHANGE" && newStatus && (
+                        <>
+                          Status changed
+                          {oldStatus && <span className="text-muted-foreground"> from <span className="font-mono text-xs">{STATUS_CONFIG[oldStatus]?.label ?? oldStatus}</span></span>}
+                          {" → "}
+                          <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${STATUS_CONFIG[newStatus]?.badgeClass ?? "bg-muted text-muted-foreground"}`}>
+                            {STATUS_CONFIG[newStatus]?.label ?? newStatus}
+                          </span>
+                        </>
+                      )}
+                      {entry.action === "UPDATE" && "Details updated"}
+                    </span>
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">{formatDateTime(entry.createdAt)}</span>
+                  </div>
+                  {entry.actorEmail && (
+                    <p className="text-xs text-muted-foreground">by {entry.actorEmail}</p>
+                  )}
+                  {note && (
+                    <p className="text-sm mt-1 bg-muted/40 rounded px-2.5 py-1.5 text-muted-foreground italic">{note}</p>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
         </div>
       )}
 
