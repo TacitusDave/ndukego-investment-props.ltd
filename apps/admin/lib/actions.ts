@@ -256,3 +256,15 @@ export async function createCustomer(prevState: { error: string | null }, formDa
 
   redirect(`/customers/${(data as { id: string }).id}`);
 }
+
+export async function updateDocumentStatus(id: string, status: string) {
+  const { error } = await authPatch(`/documents/${id}/status`, { status });
+  if (error) return { error };
+  return { error: null };
+}
+
+export async function deleteDocument(id: string) {
+  const { error } = await authDelete(`/documents/${id}`);
+  if (error) return { error };
+  return { error: null };
+}

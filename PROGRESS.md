@@ -1,6 +1,6 @@
 # NHGP — Build Progress & Master Todo List
 
-_Updated: 2026-08-14 | Session 19_
+_Updated: 2026-08-14 | Session 20_
 
 > This file is the single source of truth for what's done, what's in progress, and what
 > remains until 100% production-ready. Read it at the start of every session.
@@ -106,8 +106,8 @@ Target: Live and usable by company staff and customers.
 - [x] Super admin TOTP configured — `SUPER_ADMIN_TOTP_SECRET` set in Railway
 - [ ] **SMTP env vars** — add to Railway API env to enable real email sending (currently logs to console)
 - [ ] **Change super admin password** — currently `ChangeMeNow123!` in DB seed
-- [ ] **Real company data** — estates, property listings with photos, staff accounts in admin
-- [ ] **Cookie consent banner** — required for NDPA/GDPR compliance before public launch
+- [x] **Real company data** — estates, property listings with photos, staff accounts created ✅
+- [x] **Cookie consent banner** — NDPA-compliant, localStorage persistence, Accept/Essential/Learn more ✅
 - [ ] End-to-end test: visitor → property → inquiry → email confirmation
 - [ ] End-to-end test: visitor → reserve → email → admin confirms → customer gets update
 - [ ] Mobile device testing (iOS Safari, Android Chrome)
@@ -128,15 +128,23 @@ Target: Live and usable by company staff and customers.
 - [ ] Admin: Department management UI (schema + data exists, no admin page to manage departments)
 - [ ] Public: Staff login display uses Employee name/role
 
-### 2B. Document & Records Management ❌ NOT STARTED
+### 2B. Document & Records Management ✅ CORE COMPLETE (session 20)
 
-- [ ] Document upload (Survey Plans, C of O, Deeds, Allocation Letters, etc.)
-- [ ] Document versioning — every upload creates a new version, old ones archived
-- [ ] Document categories and classification
-- [ ] Admin: Document list per property, per customer, per estate
-- [ ] Admin: Document approval workflow (upload → review → approve)
+- [x] API: `POST /documents/upload` — multer multipart, 20MB limit, PDF/Word/Excel/image
+- [x] API: `GET /documents` — paginated list, filter by category/status/entityType/entityId
+- [x] API: `GET /documents/:id` — full detail + version history + access logs
+- [x] API: `GET /documents/:id/download` — stream file with correct Content-Disposition
+- [x] API: `PATCH /documents/:id/status` — approval workflow (UPLOADED→VERIFIED→APPROVED→PUBLISHED→ARCHIVED)
+- [x] API: `DELETE /documents/:id` — soft delete with audit log
+- [x] Document versioning — v1 created on upload, schema supports further versions
+- [x] Document categories and classification (12 categories, 44 document types)
+- [x] Admin: Documents list page with search + category/status/entity filters
+- [x] Admin: Upload page — file picker, all metadata fields, direct FormData POST via proxy
+- [x] Admin: Document detail page — metadata, version history, approval action buttons
+- [x] Admin: Status transition buttons (Verify / Approve / Reject / Publish / Archive)
+- [x] Storage: Local filesystem (StorageService), interface ready to swap to R2/S3 via env `STORAGE_PROVIDER`
 - [ ] Customer portal: Approved documents visible to relevant customer
-- [ ] Storage: Move from local filesystem to Cloudflare R2 / AWS S3 (SETUP.md has config)
+- [ ] Admin: Document list filtered per property/estate/customer detail pages (links to /documents?entityId=…)
 
 ### 2C. Inspection & Site Visit Management ❌ NOT STARTED
 
@@ -355,3 +363,4 @@ Build after Phase 3 demonstrates ROI.
 | 17 | 2026-08-03 | Production build prep — fixed all build errors: Admin mobile responsive (Shell client + drawer sidebar); Investments→Investment rename; Featured estate cards fix; Footer live estate data; Admin ThemeProvider removed; Delete UX loading overlay; Dashboard stats crash fix; Favicon set; packages/assets tsconfig fix; pnpm build PASSES CLEAN |
 | 18 | 2026-08-13 | Super admin TOTP auth (/super login page + env var secret + hidden entry points); Web login URL fixed (localhost → Vercel); Co-Authored-By removed from all 44 commits; Instagram link set; About page rewrite (Leadership + Team sections, executive property-card style, social slots); Speed Insights wired; Projects page rebuilt with live API estate data; Insights category filters fixed (client component); Article card links fixed |
 | 19 | 2026-08-14 | Property gallery redesigned — Airbnb-style grid (desktop: cover 2/3 + 2 stacked), mobile swipeable + dot indicators, full lightbox (arrows + thumbnail strip + keyboard + swipe + blur backdrop); "Speak to an Agent" section redesigned (no photo, left column under metadata, +234 903 550 5663, Call + Enquiry CTAs); Gallery ring/scale fixes; About executive titles updated (CEO & Executive Director · Executive Director & Head of Digital Operations · Executive Director); README fully rewritten with logo + badges + documentation |
+| 20 | 2026-08-14 | Cookie consent banner (NDPA-compliant, localStorage, Accept/Essential/Learn more); Document management system — full API (upload/list/find/download/status-change/soft-delete, 44 document types, audit + version history); Admin documents list page (search + filters); Admin upload form (file picker + all metadata fields); Admin document detail page (approval workflow, status actions, version history) |
