@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { MessageSquare, Search, Building2, ChevronDown } from "lucide-react";
+import { MessageSquare, Search, Building2, ChevronDown, ChevronUp, StickyNote, Save } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 interface Inquiry {
@@ -14,7 +14,9 @@ interface Inquiry {
   message: string | null;
   propertyTitle: string | null;
   status: string;
+  staffNotes: string | null;
   createdAt: string;
+  updatedAt: string;
 }
 
 interface PageResponse {
@@ -23,10 +25,10 @@ interface PageResponse {
 }
 
 const STATUS_CONFIG: Record<string, { label: string; badge: string; next: string[] }> = {
-  NEW:       { label: "New",       badge: "bg-blue-100 text-blue-700",   next: ["CONTACTED", "CLOSED"] },
+  NEW:       { label: "New",       badge: "bg-blue-100 text-blue-700",    next: ["CONTACTED", "CLOSED"] },
   CONTACTED: { label: "Contacted", badge: "bg-yellow-100 text-yellow-700", next: ["CONVERTED", "CLOSED"] },
-  CONVERTED: { label: "Converted", badge: "bg-green-100 text-green-700",  next: ["CLOSED"] },
-  CLOSED:    { label: "Closed",    badge: "bg-zinc-100 text-zinc-500",    next: ["NEW"] },
+  CONVERTED: { label: "Converted", badge: "bg-green-100 text-green-700",   next: ["CLOSED"] },
+  CLOSED:    { label: "Closed",    badge: "bg-zinc-100 text-zinc-500",     next: ["NEW"] },
 };
 
 const STATUSES = [
@@ -43,11 +45,16 @@ export default function InquiriesPage() {
 
   const search = searchParams.get("search") ?? "";
   const status = searchParams.get("status") ?? "";
-  const page = searchParams.get("page") ?? "1";
+  const page   = searchParams.get("page")   ?? "1";
 
-  const [data, setData] = useState<PageResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [data,     setData]     = useState<PageResponse | null>(null);
+  const [loading,  setLoading]  = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  // Per-inquiry notes state: { [id]: draftText }
+  const [notes,       setNotes]       = useState<Record<string, string>>({});
+  const [savingNotes, setSavingNotes] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -56,7 +63,14 @@ export default function InquiriesPage() {
     if (search) q.set("search", search);
     try {
       const res = await fetch(`/api/proxy/properties/admin/inquiries?${q}`);
-      if (res.ok) setData(await res.json());
+      if (res.ok) {
+        const json: PageResponse = await res.json();
+        setData(json);
+        // Seed notes drafts from server values
+        const seeded: Record<string, string> = {};
+        json.items.forEach((i) => { seeded[i.id] = i.staffNotes ?? ""; });
+        setNotes((prev) => ({ ...seeded, ...prev }));
+      }
     } catch { /* pass */ }
     finally { setLoading(false); }
   }, [page, status, search]);
@@ -80,6 +94,23 @@ export default function InquiriesPage() {
     } finally { setUpdating(null); }
   }
 
+  async function saveNotes(id: string) {
+    setSavingNotes(id);
+    try {
+      const res = await fetch(`/api/proxy/properties/admin/inquiries/${id}/notes`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ staffNotes: notes[id] ?? "" }),
+      });
+      if (res.ok) {
+        setData((prev) => prev ? {
+          ...prev,
+          items: prev.items.map((i) => i.id === id ? { ...i, staffNotes: notes[id] ?? "" } : i),
+        } : prev);
+      }
+    } finally { setSavingNotes(null); }
+  }
+
   function navigate(params: Record<string, string>) {
     const q = new URLSearchParams({ search, status, page, ...params });
     if (!q.get("search")) q.delete("search");
@@ -89,7 +120,7 @@ export default function InquiriesPage() {
   }
 
   const items = data?.items ?? [];
-  const meta = data?.meta;
+  const meta  = data?.meta;
 
   return (
     <div className="p-6 space-y-5">
@@ -172,7 +203,7 @@ export default function InquiriesPage() {
               <thead>
                 <tr className="border-b bg-muted/40">
                   <th className="text-left font-medium text-muted-foreground px-4 py-3">Contact</th>
-                  <th className="text-left font-medium text-muted-foreground px-4 py-3">Property Enquired</th>
+                  <th className="text-left font-medium text-muted-foreground px-4 py-3">Property</th>
                   <th className="text-left font-medium text-muted-foreground px-4 py-3">Message</th>
                   <th className="text-left font-medium text-muted-foreground px-4 py-3">Status</th>
                   <th className="text-left font-medium text-muted-foreground px-4 py-3">Received</th>
@@ -181,64 +212,130 @@ export default function InquiriesPage() {
               </thead>
               <tbody className="divide-y">
                 {items.map((inquiry) => {
-                  const name = [inquiry.firstName, inquiry.lastName].filter(Boolean).join(" ") || "—";
-                  const cfg = STATUS_CONFIG[inquiry.status] ?? { label: inquiry.status, badge: "bg-zinc-100 text-zinc-500", next: [] };
+                  const name       = [inquiry.firstName, inquiry.lastName].filter(Boolean).join(" ") || "—";
+                  const cfg        = STATUS_CONFIG[inquiry.status] ?? { label: inquiry.status, badge: "bg-zinc-100 text-zinc-500", next: [] };
                   const isUpdating = updating === inquiry.id;
+                  const isOpen     = expanded === inquiry.id;
+                  const hasSavedNote = !!inquiry.staffNotes;
+                  const noteDraft  = notes[inquiry.id] ?? inquiry.staffNotes ?? "";
+                  const isDirty    = noteDraft !== (inquiry.staffNotes ?? "");
+
                   return (
-                    <tr key={inquiry.id} className="hover:bg-muted/20 transition-colors">
-                      <td className="px-4 py-3">
-                        <p className="font-medium">{name}</p>
-                        <p className="text-xs text-muted-foreground">{inquiry.email}</p>
-                        <p className="text-xs text-muted-foreground">{inquiry.phone}</p>
-                      </td>
-                      <td className="px-4 py-3">
-                        {inquiry.propertyTitle ? (
-                          <div className="flex items-center gap-1.5 text-sm">
-                            <Building2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                            <span className="truncate max-w-[180px]">{inquiry.propertyTitle}</span>
-                          </div>
-                        ) : (
-                          <span className="text-xs text-muted-foreground">General inquiry</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3">
-                        <p className="text-sm text-muted-foreground max-w-xs truncate">
-                          {inquiry.message ?? "—"}
-                        </p>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${cfg.badge}`}>
-                          {cfg.label}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
-                        {formatDate(inquiry.createdAt)}
-                      </td>
-                      <td className="px-4 py-3">
-                        {cfg.next.length > 0 && (
-                          <div className="relative group inline-block">
-                            <button
-                              disabled={isUpdating}
-                              className="flex items-center gap-1 rounded-md border px-2.5 py-1.5 text-xs font-medium hover:bg-muted transition-colors disabled:opacity-50"
-                            >
-                              {isUpdating ? "Updating…" : "Update"}
-                              <ChevronDown className="h-3 w-3" />
-                            </button>
-                            <div className="absolute right-0 top-full mt-1 z-10 hidden group-hover:block bg-card border rounded-md shadow-lg min-w-[130px] py-1">
-                              {cfg.next.map((s) => (
-                                <button
-                                  key={s}
-                                  onClick={() => updateStatus(inquiry.id, s)}
-                                  className="w-full text-left px-3 py-1.5 text-xs hover:bg-muted transition-colors"
-                                >
-                                  Mark as {STATUS_CONFIG[s]?.label ?? s}
-                                </button>
-                              ))}
+                    <>
+                      <tr key={inquiry.id} className={`hover:bg-muted/20 transition-colors ${isOpen ? "bg-muted/10" : ""}`}>
+                        <td className="px-4 py-3">
+                          <p className="font-medium">{name}</p>
+                          <p className="text-xs text-muted-foreground">{inquiry.email}</p>
+                          <p className="text-xs text-muted-foreground">{inquiry.phone}</p>
+                        </td>
+                        <td className="px-4 py-3">
+                          {inquiry.propertyTitle ? (
+                            <div className="flex items-center gap-1.5 text-sm">
+                              <Building2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                              <span className="truncate max-w-[180px]">{inquiry.propertyTitle}</span>
                             </div>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">General inquiry</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          <p className="text-sm text-muted-foreground max-w-xs truncate">
+                            {inquiry.message ?? "—"}
+                          </p>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${cfg.badge}`}>
+                            {cfg.label}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
+                          {formatDate(inquiry.createdAt)}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-1.5">
+                            {/* Notes toggle */}
+                            <button
+                              onClick={() => setExpanded(isOpen ? null : inquiry.id)}
+                              title={hasSavedNote ? "View/edit notes" : "Add notes"}
+                              className={`flex items-center gap-1 rounded-md border px-2 py-1.5 text-xs font-medium transition-colors ${hasSavedNote ? "border-amber-300 text-amber-700 bg-amber-50 hover:bg-amber-100 dark:border-amber-800 dark:text-amber-400 dark:bg-amber-950/40" : "hover:bg-muted"}`}
+                            >
+                              <StickyNote className="h-3 w-3" />
+                              {isOpen ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                            </button>
+
+                            {/* Status dropdown */}
+                            {cfg.next.length > 0 && (
+                              <div className="relative group inline-block">
+                                <button
+                                  disabled={isUpdating}
+                                  className="flex items-center gap-1 rounded-md border px-2.5 py-1.5 text-xs font-medium hover:bg-muted transition-colors disabled:opacity-50"
+                                >
+                                  {isUpdating ? "Updating…" : "Update"}
+                                  <ChevronDown className="h-3 w-3" />
+                                </button>
+                                <div className="absolute right-0 top-full mt-1 z-10 hidden group-hover:block bg-card border rounded-md shadow-lg min-w-[130px] py-1">
+                                  {cfg.next.map((s) => (
+                                    <button
+                                      key={s}
+                                      onClick={() => updateStatus(inquiry.id, s)}
+                                      className="w-full text-left px-3 py-1.5 text-xs hover:bg-muted transition-colors"
+                                    >
+                                      Mark as {STATUS_CONFIG[s]?.label ?? s}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </td>
-                    </tr>
+                        </td>
+                      </tr>
+
+                      {/* Expandable notes row */}
+                      {isOpen && (
+                        <tr key={`${inquiry.id}-notes`} className="bg-muted/5 border-b">
+                          <td colSpan={6} className="px-4 py-4">
+                            <div className="max-w-2xl space-y-2">
+                              <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                <StickyNote className="h-3.5 w-3.5" />
+                                Full message
+                              </div>
+                              {inquiry.message ? (
+                                <p className="text-sm bg-muted/40 rounded-md px-3 py-2 whitespace-pre-wrap">{inquiry.message}</p>
+                              ) : (
+                                <p className="text-sm text-muted-foreground italic">No message provided.</p>
+                              )}
+
+                              <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider pt-2">
+                                <StickyNote className="h-3.5 w-3.5" />
+                                Staff notes
+                              </div>
+                              <textarea
+                                rows={3}
+                                placeholder="Log call outcomes, follow-up actions, or any notes about this inquiry…"
+                                value={noteDraft}
+                                onChange={(e) => setNotes((prev) => ({ ...prev, [inquiry.id]: e.target.value }))}
+                                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+                              />
+                              <div className="flex items-center gap-3">
+                                <button
+                                  onClick={() => saveNotes(inquiry.id)}
+                                  disabled={savingNotes === inquiry.id || !isDirty}
+                                  className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
+                                >
+                                  <Save className="h-3 w-3" />
+                                  {savingNotes === inquiry.id ? "Saving…" : "Save notes"}
+                                </button>
+                                {!isDirty && inquiry.staffNotes && (
+                                  <span className="text-xs text-muted-foreground">
+                                    Last updated {formatDate(inquiry.updatedAt)}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </>
                   );
                 })}
               </tbody>

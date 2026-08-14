@@ -232,6 +232,7 @@ model Inquiry {
   propertyId    String?  @map("property_id") @db.Uuid
   propertyTitle String?  @map("property_title")
   status        String   @default("NEW")
+  staffNotes    String?  @map("staff_notes")
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 

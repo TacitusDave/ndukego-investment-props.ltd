@@ -525,7 +525,8 @@ export class PropertyService {
 
     const items = await this.prisma.$queryRawUnsafe<Record<string, unknown>[]>(
       `SELECT id, first_name as "firstName", last_name as "lastName", email, phone, message,
-              property_id as "propertyId", property_title as "propertyTitle", status, created_at as "createdAt"
+              property_id as "propertyId", property_title as "propertyTitle", status,
+              staff_notes as "staffNotes", created_at as "createdAt", updated_at as "updatedAt"
        FROM inquiries
        WHERE ($1::text IS NULL OR status = $1)
          AND ($2::text IS NULL OR (
@@ -565,5 +566,15 @@ export class PropertyService {
     );
     if (result === 0) throw new NotFoundException('Inquiry not found');
     return { success: true, status };
+  }
+
+  async updateInquiryNotes(id: string, staffNotes: string) {
+    const result = await this.prisma.$executeRawUnsafe(
+      `UPDATE inquiries SET staff_notes = $1, updated_at = now() WHERE id = $2::uuid`,
+      staffNotes,
+      id,
+    );
+    if (result === 0) throw new NotFoundException('Inquiry not found');
+    return { success: true };
   }
 }

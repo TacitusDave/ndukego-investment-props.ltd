@@ -91,6 +91,16 @@ export class PropertyController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Patch('admin/inquiries/:id/notes')
+  @RequirePermissions('property.update')
+  updateInquiryNotes(
+    @Param('id') id: string,
+    @Body() body: { staffNotes: string },
+  ) {
+    return this.propertyService.updateInquiryNotes(id, body.staffNotes ?? '');
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Get(':id')
   @RequirePermissions('property.read')
   findOne(@Param('id') id: string) {
