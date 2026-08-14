@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard, Home, MapPin, CalendarCheck, TrendingUp,
   Users, MessageSquare, UserCog, FileText, BarChart3, Settings, LogOut,
+  ClipboardList,
 } from "lucide-react";
 import { LogoIcon } from "@nhgp/assets";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,7 @@ const NAV_GROUPS: {
       { label: "Sales",        href: "/sales",        icon: TrendingUp },
       { label: "Customers",    href: "/customers",    icon: Users },
       { label: "Inquiries",    href: "/inquiries",    icon: MessageSquare },
+      { label: "Inspections",  href: "/inspections",  icon: ClipboardList },
       { label: "Documents",    href: "/documents",    icon: FileText },
     ],
   },
