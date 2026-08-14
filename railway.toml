@@ -1,6 +1,6 @@
 [build]
 builder = "nixpacks"
-buildCommand = "pnpm turbo build --filter=api"
+buildCommand = "pnpm --filter=@nhgp/types run build && pnpm --filter=@nhgp/database run build && pnpm --filter=@nhgp/lib run build && pnpm --filter=@nhgp/config run build && pnpm --filter=@nhgp/validation run build && pnpm --filter=api run build"
 
 [deploy]
 startCommand = "node apps/api/dist/main"
