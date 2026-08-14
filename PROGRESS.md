@@ -1,6 +1,6 @@
 # NHGP — Build Progress & Master Todo List
 
-_Updated: 2026-08-03 | Session 17_
+_Updated: 2026-08-14 | Session 19_
 
 > This file is the single source of truth for what's done, what's in progress, and what
 > remains until 100% production-ready. Read it at the start of every session.
@@ -19,7 +19,7 @@ Assistant, Mobile App.
 
 ---
 
-## PHASE 1 — Foundation (MVP) `⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛ ~98% done`
+## PHASE 1 — Foundation (MVP) `⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛ ~99% done`
 
 Target: Live and usable by company staff and customers.
 
@@ -38,135 +38,97 @@ Target: Live and usable by company staff and customers.
 - [x] AuditModule — immutable audit log service
 - [x] StorageModule — local file storage, static `/uploads` serving
 - [x] HealthController — `GET /health`
-- [x] PropertyModule
-  - [x] Full CRUD — create, read, update, delete (soft), status transitions
-  - [x] Media upload — cover photo + gallery, sort order
+- [x] PropertyModule — full CRUD, media upload, status transitions
   - [x] Public endpoints: `GET /properties/public`, `GET /properties/public/:id`
-  - [x] Inquiry endpoint: `POST /properties/public/inquiry` (creates/updates customer lead)
-  - [x] **Wire inquiry confirmation email** — `submitInquiry()` calls `emailService.sendInquiryConfirmation()`
+  - [x] Inquiry endpoint: `POST /properties/public/inquiry`
+  - [x] Inquiry email confirmation wired
 - [x] EstateModule — full CRUD + `GET /estates/public`
 - [x] CompanyModule — company info + branch management
-- [x] DashboardModule — `GET /dashboard/stats`
-- [x] CustomerModule — paginated list with search/filter, create, get, update, deactivate, activate, soft-delete (staff-only)
-- [x] Inquiry model — `inquiries` table added to Prisma schema + pushed to database; all form submissions captured as dedicated records
-- [x] EmailModule — global Nodemailer service, graceful SMTP degradation
-  - [x] sendWelcome, sendReservationConfirmation, sendReservationStatusUpdate
-  - [x] **sendInquiryConfirmation** — wired in email service, now called from property service
-- [x] Auth — customer register/login/profile endpoints (`/auth/customer/*`)
-- [x] ReservationModule
-  - [x] `POST /reservations/public` — no auth, creates reservation, sends email
-  - [x] `GET /reservations` — admin list with search/status/page filters
-  - [x] `GET /reservations/mine` — customer's reservations
-  - [x] `GET /reservations/:id` — admin detail
-  - [x] `PATCH /reservations/:id/status` — admin status update + audit + email
-  - [x] Status machine: PENDING → CONFIRMED | CANCELLED; CONFIRMED → CONVERTED_TO_SALE | CANCELLED | EXPIRED
-  - [ ] **Missing status: UNDER_NEGOTIATION** — spec defines this; not yet in transitions
-- [x] **FavoritesModule** — `POST /properties/:id/favorite` (toggles), `GET /properties/:id/favorite-status`
-- [x] **Customer profile update** — `PATCH /auth/customer/profile` (name, phone, city, state)
+- [x] DashboardModule — `GET /dashboard/stats` (8 stat tiles)
+- [x] CustomerModule — paginated list, create, get, update, deactivate, activate, soft-delete
+- [x] Inquiry model — dedicated `inquiries` table, all form submissions captured
+- [x] EmailModule — Nodemailer, graceful SMTP degradation, welcome/reservation/inquiry emails
+- [x] Auth — customer register/login/profile endpoints
+- [x] ReservationModule — public POST, admin list/detail, status machine, email on transitions
+- [x] FavoritesModule — toggle, status check
+- [x] Customer profile update — PATCH endpoint
+- [x] Super admin TOTP login — `POST /auth/super/login`, reads `SUPER_ADMIN_TOTP_SECRET` env var
+- [ ] **MISSING: UNDER_NEGOTIATION reservation status** — spec defines it; not yet in transitions
 
-### 1C. Admin Portal — Next.js 16, :3001 ✅ COMPLETE (Phase 1 scope)
+### 1C. Admin Portal — Next.js, :3001 ✅ COMPLETE (Phase 1 scope)
 
-- [x] Auth — login page, JWT in httpOnly cookies, route guard (proxy.ts)
-- [x] Dashboard home — stat tiles, recent properties, status breakdown, activity feed
+- [x] Auth — login page, JWT cookies, route guard, deactivated-account error message
+- [x] **Super admin TOTP login** — `/super` hidden page; two invisible entry points on login page
+- [x] Dashboard — 8 stat tiles, recent properties, status breakdown, activity feed
 - [x] Properties — list, create, detail/edit, status transitions, photo upload + gallery
-- [x] Estates — list, create, detail (phases, blocks, infrastructure)
-- [x] Customers — list, create, detail
-- [x] Reservations — list with search + status filter; detail/manage with status update + notes
-- [x] **Sales** — `/sales` list page (search, status filter, pagination; Sale#, property, customer, type, final price, balance, status); `/sales/:id` detail page (customer card, financials breakdown, sale details, payment history, status transitions with notes)
-- [x] `@nhgp/assets` logo — uses real logo-icon.png in sidebar
-- [x] **Employee management** — `/employees` list, `/employees/new` create, `/employees/:id` detail + role assignment
-- [x] **Staff password change** — `/settings/password` page with strength meter, uses POST /auth/change-password
-- [x] **Company settings page** — company info, branch addresses, contact details (`/settings`)
-- [x] **Inquiry management** — `/inquiries` page rebuilt to query dedicated `Inquiry` records (new model);
-      shows contact, property enquired, message, and status; all website form submissions captured regardless
-      of whether the email already exists as a customer
-- [x] **Inquiry status updates** — inline status update dropdown on inquiries page (NEW→CONTACTED→CONVERTED→CLOSED);
-      PATCH endpoint `PATCH /properties/admin/inquiries/:id/status`; status filter added to inquiries list
-- [x] **Dashboard enhancements** — 8 stat tiles across two rows: Properties, Estates, Customers, Reservations,
-      Sales, New Inquiries, Published, Pending Approval; dashboard API updated with reservations/sales/inquiries counts
-- [x] **Reservation → Sale conversion** — confirmed reservation detail shows "Convert to Sale" section with price/
-      type/discount form; creates Sale record then marks reservation CONVERTED_TO_SALE; redirects to new sale page
-- [x] **Customer detail: Activity history** — reservation history redesigned as a proper table (property name,
-      fee, status, date); new Sales history table added (sale#, property, final price, balance, status, date)
-- [x] **Web: State filter fixed** — properties public endpoint now accepts `state` as a dedicated query param
-      (case-insensitive exact match); web page passes state and search independently (both can be active together)
-- [x] **Account deactivation/deletion:**
-  - Employee detail: Deactivate (INACTIVE/ACTIVE/TERMINATED status buttons) + Delete button with dialog;
-    status change syncs linked User.status; deletion soft-deletes employee + deactivates user login
-  - Customer detail: Deactivate/Activate toggle button + Delete button with dialog; deactivation syncs
-    linked User.status so the customer cannot log in to the website
-  - Auth: deactivated accounts see "Your account has been deactivated until further notice. Contact the
-    Administrator" with mailto link on login
-- [x] **Admin login error for deactivated accounts** — specific UI shown instead of generic error
-- [x] **Landing page estate section redesigned** — 2-column wider cards with split layout: estate info left,
-      site plan/cover image right with "View site plan →" CTA
-- [x] **Admin portal redesign (Session 11):**
-  - [x] `globals.css` — light-only, dark sidebar tokens in `:root`, 3px crimson scrollbar, Fraunces/DM Sans font vars
-  - [x] `ThemeProvider` — `forcedTheme="light"`, dark mode removed entirely
-  - [x] Sidebar — premium always-dark `#111111`, grouped nav (MAIN/OPERATIONS/ORGANISATION), crimson active dot + bg tint, correct branding "Ndukego Investment & Properties Ltd"
-  - [x] Header — ThemeToggle removed, clean minimal white header with notification bell
-  - [x] Login — split-screen: dark left brand panel (crimson glow, trust signals) + white right form panel (crimson CTA button, forgot password link)
-  - [x] Layout metadata title — "Ndukego Investment & Properties Ltd — Admin"
+- [x] Estates — list, create, detail (phases, blocks, infrastructure, site plan, building types)
+- [x] Customers — list, create, detail (with reservation + sales activity tables)
+- [x] Reservations — list (search + status filter), detail/manage (status update + notes + sale conversion)
+- [x] Sales — `/sales` list + `/sales/:id` detail (financials, payment history, full status transitions)
+- [x] Employees — list, create, detail, role assignment, deactivate/delete
+- [x] Inquiries — list (search + status filter), inline status update (NEW→CONTACTED→CONVERTED→CLOSED)
+- [x] Staff password change — `/settings/password` with strength meter
+- [x] Company settings — `/settings` (company info, branches, contacts)
+- [x] Mobile responsive — slide-in drawer sidebar, hamburger menu
+- [x] Design system — always-dark sidebar, crimson accents, Fraunces/DM Sans, light-only forced theme
 
-### 1D. Public Website — Next.js 16, :3000 ✅ MOSTLY COMPLETE
+### 1D. Public Website — Next.js, :3000 ✅ COMPLETE (Phase 1 scope)
 
-- [x] Setup — Tailwind CSS v4, PostCSS, path aliases, fonts, framer-motion, @react-three/fiber + drei
-- [x] Theme — **LIGHT-ONLY** — dark mode removed entirely (`forcedTheme="light"` in ThemeProvider); crimson #C1121F accent on clean white base
-- [x] **Global background system** — `nhgp-gradient-bg` (fixed, z-index -2, morphing crimson gradient, 24s `gradient-morph` keyframe, organic all-directional motion) + `nhgp-grid-bg` (fixed, z-index -1, 60px subtle grid, rgba black/4.5%) — shows through all sections
-- [x] **Custom scrollbar** — 3px thin, barely-visible crimson, expands to 50% opacity on hover, applied globally
-- [x] Navbar — **REBUILT** — 3-column grid: left=User+CalendarCheck icon buttons; center=logo (LogoIcon in crimson square) + brand name stacked; right=hamburger; dropdown panel shows all nav links in grid (Services expands on hover); body scroll-locked when open; `Book Consultation` CTA at bottom of dropdown
-- [x] Footer — **REBUILT** — crimson CTA band (with inner grid overlay) + 4-column white/80 section (brand col with contacts, Services, Properties, Company) + dark gray-900 bottom bar
-- [x] Homepage — **REBUILT (light theme)** — transparent/semi-transparent sections let global gradient breathe through; hero (-mt-16, video bg at 12% opacity, white text+crimson gradient heading, white search bar, stat strip); 4 service cards (emerald/blue/violet/amber on white); Featured Properties (white/70 card on empty state); Process section (auto-playing Framer Motion, crimson radial pulse + scan beam + ring, 4 step cards white/80 with hover glow); Trust section (checklist + contact card with phone links + CTA)
-- [x] Properties listing `/properties` — sticky filters (search + category + state), grid, pagination
-- [x] Property detail `/properties/:id` — gallery, specs, description, reserve button + inquiry sidebar
-- [x] Inquiry form — success state, creates customer lead
-- [x] Reservation modal — full-screen, shows ref number on success
-- [x] Estates page `/estates` — grid with plot/property counts
-- [x] About page `/about` — company stub
-- [x] Contact page `/contact` — contact info + inquiry form
-- [x] Customer auth — `/login`, `/register`, route guard (proxy.ts)
-- [x] Customer account section `/account/**`
-  - [x] `/account` — dashboard with reservation/favorites counts, recent activity
-  - [x] `/account/reservations` — full list with status badges, expiry
-  - [x] `/account/favorites` — saved properties grid
-  - [x] `/account/profile` — editable form (name, phone, city, Nigerian state dropdown)
-- [x] Real logo images used (logo.png, logo-icon.png, logo-xicon.png)
-- [x] **Favorites** — heart button on property cards + detail page; toggle with login prompt
-- [x] **Terms of Service** `/terms` — NDPA-compliant
-- [x] **Privacy Policy** `/privacy` — NDPA/NDPR compliant; linked in footer
-- [x] **About page** — fully built with story, values (Trust/Transparency/Professionalism), mission/vision, stats
-- [ ] **React key prop warning** — homepage has a list element missing `key` (source unidentified)
+- [x] Light-only theme, global morphing crimson gradient + grid overlay, 3px crimson scrollbar
+- [x] Navbar — centered logo, hamburger dropdown with all nav + CTA
+- [x] Footer — crimson CTA band + 4-col section (live estate data) + dark bottom bar
+- [x] Homepage — hero, 4 service cards, featured properties, process steps, trust section
+- [x] Properties listing `/properties` — sticky filters (search + category + state), grid, map view
+- [x] Property detail `/properties/:id`
+  - [x] **Gallery redesigned** — Airbnb-style grid (desktop: cover 2/3 + 2 stacked thumbnails), mobile swipeable + dot indicators, full lightbox (arrows + thumbnail strip + keyboard + swipe)
+  - [x] Specs, description, amenities, map embed
+  - [x] **"Speak to an Agent"** — in left column below metadata; no photo; phone +234 903 550 5663; Call + Enquiry CTAs
+  - [x] Reserve button + inquiry form sidebar
+- [x] Estates page `/estates`
+- [x] About page `/about` — story, values, leadership (3 exec cards), team section
+  - [x] Executive titles: CEO & Executive Director · Executive Director & Head of Digital Operations · Executive Director
+- [x] Contact page `/contact` — Google Maps embed, real contacts, inquiry form
+- [x] Services pages — Real Estate, LPO Financing, Investment Financing, Consultancy
+- [x] **Projects page** — live data from `/estates/public` (real estate names, status, location, plots)
+- [x] **Insights page** — working category filters (client component), article cards link to contact
+- [x] Customer auth — `/login`, `/register`
+- [x] Customer account — dashboard, reservations, favorites, profile edit
+- [x] Terms of Service `/terms`, Privacy Policy `/privacy`
+- [x] Vercel Speed Insights wired
+- [x] Instagram link: https://www.instagram.com/ndukego.ltd
+- [ ] **BUG-01:** React `key` prop warning — some list on homepage (low priority)
 
-### 1E. Phase 1 Final Checklist (before going live)
+### 1E. Phase 1 Final Checklist (before maximum live use)
 
-- [ ] **Run full pnpm install** — to install nodemailer, link @nhgp/assets ✅ DONE this session
-- [ ] **Wire inquiry email** — property.service.ts → emailService.sendInquiryConfirmation()
-- [ ] **SMTP env vars** — add to apps/api/.env (see SETUP.md for options)
-- [ ] **Change super admin password** — currently `ChangeMeNow123!`
-- [ ] **Enter real company data** — at least 1 estate, 3-5 properties with photos, staff accounts
-- [ ] **Terms & Privacy pages** — required before any public launch
-- [ ] **Test full flows end-to-end:**
-  - [ ] Visitor searches → views property → submits inquiry → gets email
-  - [ ] Visitor → reserves property → gets confirmation email → admin sees reservation
-  - [ ] Admin confirms reservation → customer gets status update email
-  - [ ] Customer registers → logs in → views reservations → views saved properties
+- [x] Domain connected — ndukegoltd.com
+- [x] API deployed — Railway
+- [x] Web + Admin deployed — Vercel
+- [x] Super admin TOTP configured — `SUPER_ADMIN_TOTP_SECRET` set in Railway
+- [ ] **SMTP env vars** — add to Railway API env to enable real email sending (currently logs to console)
+- [ ] **Change super admin password** — currently `ChangeMeNow123!` in DB seed
+- [ ] **Real company data** — estates, property listings with photos, staff accounts in admin
+- [ ] **Cookie consent banner** — required for NDPA/GDPR compliance before public launch
+- [ ] End-to-end test: visitor → property → inquiry → email confirmation
+- [ ] End-to-end test: visitor → reserve → email → admin confirms → customer gets update
+- [ ] Mobile device testing (iOS Safari, Android Chrome)
 
 ---
 
-## PHASE 2 — Business Operations `⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 0% done`
+## PHASE 2 — Business Operations `⬛⬛⬜⬜⬜⬜⬜⬜⬜⬜ ~25% done`
 
-Build these after Phase 1 is live and stable.
+> Note: Several Phase 2 items were built ahead of schedule during Phase 1 sessions.
+> The items below reflect what is genuinely still outstanding.
 
-### 2A. Employee & Workforce Management
+### 2A. Employee & Workforce Management ✅ MOSTLY COMPLETE
 
-- [ ] Admin: Employee list, create, edit, deactivate
-- [ ] Admin: Department management
-- [ ] Admin: Role assignment to employees
-- [ ] Admin: Employee profile page (personal info, role, department)
-- [ ] Admin: Staff can change own password
-- [ ] Public: Staff login uses Employee.staffId for display
+- [x] Admin: Employee list, create, edit, deactivate, delete
+- [x] Admin: Role assignment to employees
+- [x] Admin: Employee profile page (personal info, role, department)
+- [x] Admin: Staff password change
+- [ ] Admin: Department management UI (schema + data exists, no admin page to manage departments)
+- [ ] Public: Staff login display uses Employee name/role
 
-### 2B. Document & Records Management
+### 2B. Document & Records Management ❌ NOT STARTED
 
 - [ ] Document upload (Survey Plans, C of O, Deeds, Allocation Letters, etc.)
 - [ ] Document versioning — every upload creates a new version, old ones archived
@@ -174,58 +136,58 @@ Build these after Phase 1 is live and stable.
 - [ ] Admin: Document list per property, per customer, per estate
 - [ ] Admin: Document approval workflow (upload → review → approve)
 - [ ] Customer portal: Approved documents visible to relevant customer
-- [ ] Storage: Move from local filesystem to cloud storage (Cloudflare R2 / AWS S3)
-  - See SETUP.md for R2 configuration details
+- [ ] Storage: Move from local filesystem to Cloudflare R2 / AWS S3 (SETUP.md has config)
 
-### 2C. Inspection & Site Visit Management
+### 2C. Inspection & Site Visit Management ❌ NOT STARTED
 
 - [ ] API: Inspection model endpoints (create, list, update, complete)
 - [ ] Admin: Schedule inspection (property → assign inspector → date)
 - [ ] Admin: Inspection report upload (photos, findings, recommendation)
-- [ ] Admin: Mark property as inspection-complete (unblocks publication)
+- [ ] Admin: Mark property inspection-complete (unblocks publication workflow)
 - [ ] Customer: Book a site visit request from property detail page
 - [ ] Admin: Manage appointment requests, confirm/reschedule
 
-### 2D. Sales Tracking & Full Reservation Lifecycle
+### 2D. Sales Tracking & Full Reservation Lifecycle ✅ MOSTLY COMPLETE
 
-- [ ] Extend reservation status: add UNDER_NEGOTIATION, UNDER_CONTRACT
-- [ ] Admin: Reservation timeline view — show all status changes with timestamps/notes
-- [ ] Admin: Convert reservation → Sale record (when contract is signed)
-- [ ] Sale model: record sale date, agreed price, payment terms
-- [ ] Admin: Sale list page
+- [x] Admin: Convert reservation → Sale record
+- [x] Sale model: sale date, agreed price, payment terms, discount
+- [x] Admin: Sale list page + detail page (full status transitions)
+- [ ] Extend reservation statuses: UNDER_NEGOTIATION, UNDER_CONTRACT
+- [ ] Admin: Reservation timeline view — full status-change history with timestamps + notes
 
-### 2E. Financial Recording
+### 2E. Financial Recording ❌ NOT STARTED
 
-- [ ] Payment record model endpoints
-- [ ] Admin: Record a payment (linked to Sale or Reservation)
-- [ ] Admin: Generate receipt PDF (printable)
+- [ ] API: Payment record endpoints (create, list per sale/reservation)
+- [ ] Admin: Record a payment (amount, method, date, notes — linked to Sale)
+- [ ] Admin: Generate receipt PDF (printable / downloadable)
 - [ ] Admin: Payment history per customer, per property
-- [ ] Admin: Outstanding balance tracker
+- [ ] Admin: Outstanding balance tracker (total owed vs paid)
 - [ ] Note: NO online payment processing — all payments physical at company office
 
-### 2F. CRM — Inquiry & Lead Management
+### 2F. CRM — Inquiry & Lead Management ✅ MOSTLY COMPLETE
 
-- [ ] Admin: Inquiry list (all inquiries from website + direct)
-- [ ] Admin: Inquiry detail — view message, customer info, property, date
-- [ ] Admin: Respond to inquiry (logged response)
-- [ ] Admin: Convert inquiry → Lead → Reservation pipeline
-- [ ] Admin: Lead status tracking (New → Contacted → Interested → Converted → Lost)
-- [ ] Admin: Customer communication history per customer
+- [x] Admin: Inquiry list with search + status filter
+- [x] Admin: Inquiry status tracking (NEW → CONTACTED → CONVERTED → CLOSED)
+- [ ] Admin: Log a staff response/note on an inquiry (text field + timestamp)
+- [ ] Admin: Formal inquiry → Reservation pipeline (one-click convert)
+- [ ] Admin: Customer communication history (all interactions per customer in one view)
 
-### 2G. Notifications (Enhanced)
+### 2G. Notifications ✅ PARTIAL
 
-- [ ] In-app notifications for staff (new reservation, new inquiry, status change)
-- [ ] Email: Inquiry received → notify assigned Sales Executive
-- [ ] Email: Reservation approved → notify customer
+- [x] Email: Reservation confirmation → customer
+- [x] Email: Reservation status update → customer
+- [x] Email: Inquiry confirmation → customer
+- [ ] In-app notifications for staff (new reservation, new inquiry, document uploaded)
+- [ ] Email: New inquiry received → notify assigned sales agent
 - [ ] Email: Document approved → notify customer
-- [ ] Email: Appointment confirmed → notify customer
-- [ ] SMS notifications (future — needs SMS provider, e.g. Termii for Nigeria)
+- [ ] Email: Appointment/site visit confirmed → notify customer
+- [ ] SMS notifications (future — Termii for Nigeria)
 
-### 2H. Company & Platform Settings
+### 2H. Company & Platform Settings ✅ MOSTLY COMPLETE
 
-- [ ] Admin: Company settings page (name, logo, contact info, social links)
-- [ ] Admin: Branch management (add/edit/deactivate branches)
-- [ ] Admin: System configuration (reservation expiry days, currencies, etc.)
+- [x] Admin: Company settings page (name, contact info, social links)
+- [ ] Admin: Branch management UI (add/edit/deactivate branches)
+- [ ] Admin: System configuration (reservation expiry days, currencies)
 
 ---
 
@@ -256,11 +218,11 @@ Build after Phase 2 is stable.
 - [ ] AI Knowledge Base — import property data, company FAQs
 - [ ] Customer assistant — answer questions about properties, estates, pricing
 - [ ] Employee assistant — help draft communications, summarize customer history
-- [ ] Property recommendations — suggest suitable properties to customers based on inquiry history
+- [ ] Property recommendations — suggest suitable properties based on inquiry history
 - [ ] Auto-generate marketing descriptions from property attributes
 - [ ] Flag incomplete listings before publication
 - [ ] **Rule: AI may recommend/assist but never execute irreversible actions without human approval**
-- [ ] Integration: Claude API or OpenAI (model TBD based on performance + cost)
+- [ ] Integration: Claude API (preferred) or OpenAI
 
 ---
 
@@ -268,103 +230,91 @@ Build after Phase 2 is stable.
 
 Build after Phase 3 demonstrates ROI.
 
-- [ ] Mobile applications (iOS + Android) — React Native likely, reusing API
-- [ ] GIS / Interactive Map — search properties on a map, plot boundaries
+- [ ] Mobile applications (iOS + Android) — React Native, reusing the existing API
+- [ ] GIS / Interactive Map — search properties on a full map, draw plot boundaries
 - [ ] Smart estate integrations — construction progress updates, sensor data
 - [ ] Government API integrations — title verification, planning approvals
-- [ ] Partner/Vendor portal — external contractors, surveyors, legal advisors
-- [ ] Multi-company support — if Ndukego expands into subsidiaries or related businesses
-- [ ] Predictive analytics — AI-driven market forecasting, demand prediction
+- [ ] Partner/Vendor portal — contractors, surveyors, legal advisors
+- [ ] Multi-company support — subsidiaries or related businesses
+- [ ] Predictive analytics — AI-driven market forecasting and demand prediction
 
 ---
 
-## PRODUCTION DEPLOYMENT CHECKLIST `⬛⬜⬜⬜⬜⬜⬜⬜⬜⬜ ~10% done`
-
-Must be complete before any live traffic.
+## PRODUCTION DEPLOYMENT CHECKLIST `⬛⬛⬛⬜⬜⬜⬜⬜⬜⬜ ~35% done`
 
 ### Infrastructure
 
-- [ ] **Domain name** — register (ndukegohomes.com or ndukegoproperties.com)
-- [ ] **API hosting** — Railway or Render.com (deploy from GitHub)
-- [ ] **Web + Admin hosting** — Vercel (connects to GitHub, auto-deploys)
-- [ ] **Database** — already on Neon PostgreSQL; no change needed for launch
-- [ ] **File storage** — migrate from local filesystem to Cloudflare R2 / AWS S3
-- [ ] **Email SMTP** — configure Resend, SendGrid, or Gmail App Password (see SETUP.md)
+- [x] **Domain name** — ndukegoltd.com registered and connected
+- [x] **API hosting** — Railway (auto-deploys from GitHub main branch)
+- [x] **Web + Admin hosting** — Vercel (auto-deploys from GitHub main branch)
+- [x] **Database** — Neon PostgreSQL, migrated, seeded
+- [ ] **File storage** — migrate from local filesystem to Cloudflare R2 / AWS S3 (needed for production media reliability)
+- [ ] **Email SMTP** — configure Resend/SendGrid/Gmail App Password in Railway env
 
-### Environment Variables (production)
+### Environment Variables
 
-- [ ] `DATABASE_URL` — Neon connection string (already exists, keep secret)
-- [ ] `JWT_SECRET` / `JWT_REFRESH_SECRET` — strong random strings
-- [ ] `SUPER_ADMIN_PASSWORD` — change from default `ChangeMeNow123!`
-- [ ] `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`
-- [ ] `WEB_URL` — production URL (e.g. https://ndukegohomes.com)
-- [ ] `NEXT_PUBLIC_API_URL` — production API URL
-- [ ] `NEXT_PUBLIC_API_BASE` — production API base (for media)
-- [ ] Storage env vars when R2/S3 is set up
+- [x] `DATABASE_URL` — Neon connection string set in Railway
+- [x] `JWT_SECRET` / `JWT_REFRESH_SECRET` — set in Railway
+- [x] `SUPER_ADMIN_TOTP_SECRET` — set in Railway (`IBVSDUVB5OHXQLWO5AD6`)
+- [x] `NEXT_PUBLIC_API_URL` — set in Vercel (both web + admin)
+- [ ] `SUPER_ADMIN_PASSWORD` — change from seed default `ChangeMeNow123!`
+- [ ] `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` — not yet set
+- [ ] `WEB_URL` — set to https://ndukegoltd.com in Railway
+- [ ] `NEXT_PUBLIC_API_BASE` — confirm set to Railway API URL in Vercel
 
 ### Security Hardening
 
-- [ ] HTTPS enforced (Vercel handles this automatically)
-- [ ] Rate limiting on API — especially auth endpoints (prevent brute force)
-- [ ] CORS configuration — restrict to known origins only
-- [ ] Helmet.js headers — already partially configured in NestJS
-- [ ] Input sanitization audit — check all public API endpoints
-- [ ] JWT secret rotation plan
-- [ ] Super admin 2FA (future)
-
-### Performance
-
-- [ ] Next.js Image optimization configured for production media
-- [ ] API response caching for public endpoints (properties list, estates list)
-- [ ] Database connection pooling (Neon handles this, but verify)
+- [x] HTTPS enforced — Vercel handles automatically
+- [x] Super admin 2FA — TOTP via Google Authenticator
+- [ ] Rate limiting on API auth endpoints (prevent brute force)
+- [ ] CORS configuration — restrict to ndukegoltd.com and admin subdomain only
+- [ ] Input sanitization audit — review all public API endpoints
 - [ ] Remove all `console.log` debug statements from production API
 
 ### Data & Legal
 
-- [ ] **Real company data entered** — estate records, property listings with photos, staff accounts
-- [ ] **Terms of Service page** — `/terms` on public website
-- [ ] **Privacy Policy page** — `/privacy` on public website
-- [ ] **Cookie notice** — required for GDPR/NDPA compliance (Nigeria Data Protection Act)
-- [ ] **About page content** — real company description, mission, team
-- [ ] **Contact info** — real phone, email, address in footer and contact page
+- [x] Terms of Service page `/terms`
+- [x] Privacy Policy page `/privacy`
+- [x] About page — real company description, leadership titles
+- [x] Contact info — real phone, email, address in footer + contact page
+- [ ] **Real company data** — estate records, property listings with photos, staff accounts (user task)
+- [ ] **Cookie consent banner** — required for NDPA compliance
 
 ### Testing Before Launch
 
-- [ ] Full end-to-end test of all customer flows (browse → reserve → receive email)
-- [ ] Full end-to-end test of all admin flows (create property → publish → manage reservation)
-- [ ] Test on mobile devices (iOS Safari, Android Chrome)
-- [ ] Test with slow 3G connection
-- [ ] Load test API endpoints
-- [ ] Security scan (check for exposed .env, open admin routes, etc.)
+- [ ] Full end-to-end flow: browse → reserve → receive email
+- [ ] Full admin flow: create property → publish → manage reservation → convert to sale
+- [ ] Test on mobile (iOS Safari + Android Chrome)
+- [ ] Test on slow 3G connection
+- [ ] Security scan (exposed .env, open admin routes, etc.)
 
-### Go-Live Steps
+### Go-Live Steps (remaining)
 
-1. [ ] Set all production env vars in Vercel + Railway/Render
-2. [ ] Deploy API to Railway/Render, verify health endpoint
-3. [ ] Deploy web + admin to Vercel, verify both load
-4. [ ] Connect domain name to Vercel
-5. [ ] Update `NEXT_PUBLIC_API_URL` to point to deployed API
-6. [ ] Run database migration on production (if any pending)
-7. [ ] Create real staff accounts (not the seeded test accounts)
-8. [ ] Enter real property and estate data
-9. [ ] Test all flows on live domain
-10. [ ] Announce to company
+1. [x] Deploy API to Railway ✅
+2. [x] Deploy web + admin to Vercel ✅
+3. [x] Connect ndukegoltd.com domain ✅
+4. [ ] Set SMTP env vars in Railway
+5. [ ] Set `WEB_URL` + `NEXT_PUBLIC_API_BASE` in Railway/Vercel
+6. [ ] Change super admin password
+7. [ ] Create real staff accounts (not seeded test data)
+8. [ ] Enter real estate + property data with photos
+9. [ ] Run all end-to-end tests on live domain
+10. [ ] Add cookie consent banner
+11. [ ] Announce to company
 
 ---
 
 ## What's Stubbed (schema exists, no UI yet)
 
-These exist in the Prisma schema and will be built in their respective phases:
-
 | Model | Schema | API | Admin UI | Customer UI |
 |---|---|---|---|---|
-| Employee | ✅ | ❌ | ❌ | n/a |
+| Employee | ✅ | ✅ | ✅ | n/a |
 | Inspection | ✅ | ❌ | ❌ | Request only |
 | Appointment | ✅ | ❌ | ❌ | ❌ |
-| Document | ✅ | ❌ | ❌ | View only |
+| Document | ✅ | ❌ | Placeholder only | ❌ |
 | Sale | ✅ | ✅ | ✅ | n/a |
-| Payment | ✅ | ❌ | ❌ | View only |
-| PropertyFavorite | ✅ | ❌ | n/a | View only |
+| Payment | ✅ | ❌ | ❌ | ❌ |
+| PropertyFavorite | ✅ | ✅ | n/a | ✅ |
 | Notification | ✅ | ❌ | ❌ | ❌ |
 | AuditLog | ✅ | Partial | View only | n/a |
 
@@ -397,9 +347,11 @@ These exist in the Prisma schema and will be built in their respective phases:
 | 10 | 2026-07-30 | API crash fix (employee.service.ts calculatePagination), web login/register logo fix, company identity realignment (Ndukego Investment & Properties Ltd), premium navbar rebuild (glassmorphism + corporate links + Services dropdown), corporate footer rebuild (4-col, correct contacts), homepage rebuild (premium dark hero + Framer Motion + 4 service cards + process steps + trust section), framer-motion + @react-three/fiber + drei + three installed |
 | 10b | 2026-07-30 | Full light-theme overhaul of public web: removed dark mode entirely (forcedTheme="light"), global morphing crimson gradient (position:fixed, gradient-morph 24s keyframe), global 60px grid overlay, 3px thin crimson scrollbar, navbar centered-logo+hamburger redesign, footer crimson CTA band + 4-col section, homepage all sections converted to transparent/semi-transparent backgrounds |
 | 11 | 2026-07-30 | Admin portal redesign: globals.css (light-only, always-dark sidebar tokens, crimson scrollbar), ThemeProvider (forcedTheme="light"), sidebar (premium dark, grouped nav, correct branding, crimson active states), header (ThemeToggle removed, clean minimal), login (split-screen dark brand panel + white form), metadata title updated; all 7 web service/project/insight pages created with AnimateIn, full content, crimson design system |
-| 12 | 2026-07-30 | Stage 1: Hard delete for properties + estates (API + admin confirmation modal with name-typing), Stage 2: Estate badge on property cards (indigo chip), Stage 3: Per-estate site plan management in admin (site plan upload, building type editor with color picker + image upload), API proxy route (/api/proxy/[...path]/route.ts), EstateSitePlan component now accepts sitePlanUrl+buildingTypes props, Contact page rebuild (Google Maps embed + updated contact details + no CTA), FooterCtaBand extracted as client component (hidden on /contact), Prisma schema + db push for buildingTypesConfig JSON field on Estate |
-| 13 | 2026-07-31 | Amenities toggle system (Property + Estate): comprehensive list (5 categories, 30+ items) stored as String[] in DB — admin toggles, web display as emoji grid; Default sales agent card on property detail pages (profile photo /default-prop-profile.jpg, contact details); Per-property/estate Google Maps URL field in admin (coordinates auto-extracted from URL, stored to latitude/longitude, map embed shown on detail pages); Properties listing Map View (Leaflet + OpenStreetMap, red marker pins, click popup with property info, navigate to detail page); Schema updated (amenities + mapUrl on Property + Estate), db push completed, ArrowRight import fix in footer.tsx |
-| 14 | 2026-08-01 | Inquiries fix (dedicated Inquiry model + raw SQL, all form submissions captured); Employee/Customer deactivate + delete (soft-delete with User sync); Login deactivated-account message; Estate section redesign (horizontal split cards + site plan panel) |
-| 15 | 2026-08-01 | Admin Sales pages: `/sales` list (search, status filter, pagination, financials) + `/sales/:id` detail (customer, financials, sale details, payment history, full status transitions DRAFT→PENDING_APPROVAL→APPROVED→ACTIVE→COMPLETED/DISPUTED/CANCELLED) |
-| 16 | 2026-08-02 | Inquiry status updates (PATCH endpoint + inline dropdown UI + status filter); Dashboard 8 stat tiles (reservations, sales, new inquiries added); Reservation→Sale conversion form on confirmed reservations; Customer detail activity tables (reservations + sales with property info); Web state filter fixed (dedicated ?state= param, search and state can coexist) |
-| 17 | 2026-08-03 | Production build prep — fixed all build errors and prepped for Vercel deployment: (1) Admin mobile responsive — Shell client component with slide-in drawer sidebar, hamburger menu bar, backdrop click-to-close; (2) Investments→Investment rename throughout codebase; (3) Properties page heading "Ndukego Homes" (removed "Properties of"); (4) Featured estate cards — removed site plan image panel; (5) Footer live estate data (async fetch, real estate names as links replacing placeholder Projects/Insights/Careers); (6) Admin ThemeProvider removed (React 19 script-tag rejection); (7) Delete UX — full-screen loading overlay on property/estate delete dialog; (8) Dashboard stats crash fix — Promise.allSettled + normalized fallback objects + optional chaining; (9) Favicon — overwrote default Vercel favicon.ico in both web + admin apps; (10) packages/assets tsconfig.json + removed unnecessary React import; (11) dashboard.service.ts — removed deletedAt filter from Reservation/Sale (no soft delete on those models); (12) Admin login page — split useSearchParams into LoginContent client component wrapped in Suspense boundary; pnpm build PASSES CLEAN — all 8 packages, zero errors |
+| 12 | 2026-07-30 | Hard delete for properties + estates; Estate badge on property cards; Per-estate site plan management (upload + building type editor); API proxy route; Contact page rebuild (Maps embed + real contacts); FooterCtaBand extracted as client component; Prisma schema + db push for buildingTypesConfig |
+| 13 | 2026-07-31 | Amenities toggle system (Property + Estate, 30+ items, emoji grid on web); Sales agent card on property detail; Per-property/estate Google Maps URL field; Properties listing Map View (Leaflet + OpenStreetMap, red pins); Schema updated (amenities + mapUrl), db push completed |
+| 14 | 2026-08-01 | Inquiries fix (dedicated Inquiry model + raw SQL); Employee/Customer deactivate + delete (soft-delete + User sync); Login deactivated-account message; Estate section redesign |
+| 15 | 2026-08-01 | Admin Sales pages: /sales list + /sales/:id detail (financials, payment history, full status transitions) |
+| 16 | 2026-08-02 | Inquiry status updates (PATCH + inline dropdown + status filter); Dashboard 8 stat tiles; Reservation→Sale conversion form; Customer detail activity tables; Web state filter fixed |
+| 17 | 2026-08-03 | Production build prep — fixed all build errors: Admin mobile responsive (Shell client + drawer sidebar); Investments→Investment rename; Featured estate cards fix; Footer live estate data; Admin ThemeProvider removed; Delete UX loading overlay; Dashboard stats crash fix; Favicon set; packages/assets tsconfig fix; pnpm build PASSES CLEAN |
+| 18 | 2026-08-13 | Super admin TOTP auth (/super login page + env var secret + hidden entry points); Web login URL fixed (localhost → Vercel); Co-Authored-By removed from all 44 commits; Instagram link set; About page rewrite (Leadership + Team sections, executive property-card style, social slots); Speed Insights wired; Projects page rebuilt with live API estate data; Insights category filters fixed (client component); Article card links fixed |
+| 19 | 2026-08-14 | Property gallery redesigned — Airbnb-style grid (desktop: cover 2/3 + 2 stacked), mobile swipeable + dot indicators, full lightbox (arrows + thumbnail strip + keyboard + swipe + blur backdrop); "Speak to an Agent" section redesigned (no photo, left column under metadata, +234 903 550 5663, Call + Enquiry CTAs); Gallery ring/scale fixes; About executive titles updated (CEO & Executive Director · Executive Director & Head of Digital Operations · Executive Director); README fully rewritten with logo + badges + documentation |
