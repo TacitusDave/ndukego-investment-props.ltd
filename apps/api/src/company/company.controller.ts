@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
@@ -23,6 +23,12 @@ export class CompanyController {
     return this.companyService.findAll(page, limit);
   }
 
+  @Get('departments')
+  @RequirePermissions('company.read')
+  findDepartments() {
+    return this.companyService.findDepartments();
+  }
+
   @Get(':id')
   @RequirePermissions('company.read')
   findOne(@Param('id') id: string) {
@@ -39,5 +45,42 @@ export class CompanyController {
   @RequirePermissions('company.update')
   createBranch(@Param('id') id: string, @Body() body: Record<string, unknown>, @CurrentUser() user: AuthenticatedUser) {
     return this.companyService.createBranch(id, body as never, user);
+  }
+
+  @Patch('branches/:branchId')
+  @RequirePermissions('company.update')
+  updateBranch(@Param('branchId') branchId: string, @Body() body: Record<string, unknown>, @CurrentUser() user: AuthenticatedUser) {
+    return this.companyService.updateBranch(branchId, body as never, user);
+  }
+
+  @Delete('branches/:branchId')
+  @RequirePermissions('company.update')
+  deleteBranch(@Param('branchId') branchId: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.companyService.deleteBranch(branchId, user);
+  }
+
+  @Post('departments')
+  @RequirePermissions('company.update')
+  createDepartment(
+    @Body() body: { name: string; code: string; description?: string; headId?: string },
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.companyService.createDepartment(body, user);
+  }
+
+  @Patch('departments/:id')
+  @RequirePermissions('company.update')
+  updateDepartment(
+    @Param('id') id: string,
+    @Body() body: { name?: string; description?: string; headId?: string | null },
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.companyService.updateDepartment(id, body, user);
+  }
+
+  @Delete('departments/:id')
+  @RequirePermissions('company.update')
+  deleteDepartment(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.companyService.deleteDepartment(id, user);
   }
 }
