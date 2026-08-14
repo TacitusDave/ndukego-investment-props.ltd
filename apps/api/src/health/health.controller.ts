@@ -13,6 +13,7 @@ export class HealthController {
       data: {
         status: 'healthy',
         service: 'NHGP API',
+        version: '1.22.0',
         timestamp: new Date().toISOString(),
       },
     };
