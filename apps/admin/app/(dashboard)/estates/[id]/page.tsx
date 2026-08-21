@@ -31,6 +31,8 @@ interface Estate {
   buildingTypesConfig: BuildingType[] | null;
   amenities: string[];
   mapUrl: string | null;
+  latitude: string | null;
+  longitude: string | null;
   phases: { id: string; name: string; code: string; totalPlots: number | null }[];
   blocks: { id: string; name: string; code: string; section: string | null; totalPlots: number | null }[];
   infrastructure: { id: string; name: string; type: string; description: string | null }[];
@@ -81,6 +83,8 @@ export default async function EstateDetailPage({
           estateId={estate.id}
           initialAmenities={estate.amenities ?? []}
           initialMapUrl={estate.mapUrl}
+          initialLatitude={estate.latitude}
+          initialLongitude={estate.longitude}
         />
 
         {/* Danger zone */}

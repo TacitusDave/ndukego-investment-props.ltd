@@ -79,7 +79,10 @@ export class EstateService {
 
   async update(id: string, data: Prisma.EstateUpdateInput, user: AuthenticatedUser) {
     await this.findOne(id);
-    if (data.mapUrl && typeof data.mapUrl === 'string') {
+    const hasExplicitCoords =
+      (data as Record<string, unknown>).latitude != null &&
+      (data as Record<string, unknown>).longitude != null;
+    if (!hasExplicitCoords && data.mapUrl && typeof data.mapUrl === 'string') {
       const coords = extractCoordsFromUrl(data.mapUrl);
       if (coords) {
         (data as Record<string, unknown>).latitude = coords.lat;

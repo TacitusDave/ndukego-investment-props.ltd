@@ -68,14 +68,20 @@ export default async function EstateDetailPage({
   if (!estate) notFound();
 
   function getMapEmbedUrl(): string | null {
+    let lat: number | null = null;
+    let lng: number | null = null;
+
     if (estate!.latitude && estate!.longitude) {
-      return `https://maps.google.com/maps?q=${estate!.latitude},${estate!.longitude}&hl=en&z=17&output=embed`;
-    }
-    if (estate!.mapUrl) {
+      lat = parseFloat(String(estate!.latitude));
+      lng = parseFloat(String(estate!.longitude));
+    } else if (estate!.mapUrl) {
       const coords = extractCoordsFromUrl(estate!.mapUrl);
-      if (coords) return `https://maps.google.com/maps?q=${coords.lat},${coords.lng}&hl=en&z=17&output=embed`;
+      if (coords) { lat = coords.lat; lng = coords.lng; }
     }
-    return null;
+
+    if (lat === null || lng === null || isNaN(lat) || isNaN(lng)) return null;
+    const d = 0.004;
+    return `https://www.openstreetmap.org/export/embed.html?bbox=${lng - d},${lat - d},${lng + d},${lat + d}&layer=mapnik&marker=${lat},${lng}`;
   }
 
   const mapEmbedUrl = getMapEmbedUrl();
@@ -208,16 +214,19 @@ export default async function EstateDetailPage({
                   title="Estate location map"
                 />
               </div>
-              {estate.mapUrl && (
+              {(estate.latitude && estate.longitude) || estate.mapUrl ? (
                 <a
-                  href={estate.mapUrl}
+                  href={
+                    estate.mapUrl ??
+                    `https://www.google.com/maps?q=${estate.latitude},${estate.longitude}`
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-3 inline-block text-sm text-[#C1121F] hover:underline"
                 >
                   Open in Google Maps →
                 </a>
-              )}
+              ) : null}
             </AnimateIn>
           </div>
         </section>

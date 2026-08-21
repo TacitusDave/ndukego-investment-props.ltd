@@ -42,6 +42,8 @@ interface Property {
   featured: boolean;
   amenities: string[];
   mapUrl: string | null;
+  latitude: string | null;
+  longitude: string | null;
   estate: { id: string; name: string; code: string } | null;
   media: MediaItem[];
   createdAt: string;

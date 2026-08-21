@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
 
@@ -179,7 +180,7 @@ export async function toggleEstateFeatured(id: string, featured: boolean) {
 
 export async function updateProperty(
   id: string,
-  prevState: { error: string | null },
+  prevState: { error: string | null; success?: boolean },
   formData: FormData,
 ) {
   const amenitiesJson = formData.get("amenitiesJson") as string | null;
@@ -198,19 +199,27 @@ export async function updateProperty(
     reservationAmount: num(formData.get("reservationAmount")),
     mapUrl: str(formData.get("mapUrl")),
     amenities: amenitiesJson ? JSON.parse(amenitiesJson) : undefined,
+    latitude: str(formData.get("latitude")),
+    longitude: str(formData.get("longitude")),
   };
 
   const { error } = await authPatch(`/properties/${id}`, body);
-  if (error) return { error };
-  return { error: null };
+  if (error) return { error, success: false };
+  revalidatePath(`/properties/${id}`);
+  revalidatePath("/properties");
+  return { error: null, success: true };
 }
 
 export async function updateEstateDetails(id: string, fields: {
   amenities?: string[];
   mapUrl?: string;
+  latitude?: string;
+  longitude?: string;
 }) {
   const { error } = await authPatch(`/estates/${id}`, fields);
   if (error) return { error };
+  revalidatePath(`/estates/${id}`);
+  revalidatePath("/estates");
   return { error: null };
 }
 

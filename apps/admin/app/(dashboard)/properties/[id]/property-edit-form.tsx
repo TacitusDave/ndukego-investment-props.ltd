@@ -90,6 +90,8 @@ interface Property {
   reservationAmount: string | null;
   amenities: string[];
   mapUrl: string | null;
+  latitude: string | null;
+  longitude: string | null;
 }
 
 function SubmitButton() {
@@ -107,7 +109,7 @@ export function PropertyEditForm({ property }: { property: Property }) {
   );
 
   const boundAction = updateProperty.bind(null, property.id);
-  const [state, action] = useActionState(boundAction, { error: null });
+  const [state, action] = useActionState(boundAction, { error: null, success: false });
 
   function toggleAmenity(key: string) {
     setAmenities((prev) => {
@@ -123,6 +125,11 @@ export function PropertyEditForm({ property }: { property: Property }) {
       {state.error && (
         <div className="rounded-md bg-destructive/10 p-4 text-sm text-destructive">
           {state.error}
+        </div>
+      )}
+      {!state.error && state.success && (
+        <div className="rounded-md bg-green-50 border border-green-200 p-4 text-sm text-green-700">
+          Changes saved successfully.
         </div>
       )}
 
@@ -206,21 +213,51 @@ export function PropertyEditForm({ property }: { property: Property }) {
         </div>
       </div>
 
-      {/* Google Maps URL */}
-      <div className="space-y-2 rounded-md border bg-muted/30 p-4">
-        <Label htmlFor="mapUrl" className="text-sm font-medium">
-          Google Maps URL
-        </Label>
-        <Input
-          id="mapUrl"
-          name="mapUrl"
-          placeholder="Paste the Google Maps URL for this property's location…"
-          defaultValue={property.mapUrl ?? ""}
-          className="bg-background"
-        />
+      {/* Location */}
+      <div className="space-y-3 rounded-md border bg-muted/30 p-4">
+        <div>
+          <p className="text-sm font-medium">Location &amp; Map</p>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Enter coordinates directly, or paste a Google Maps URL and they will be auto-extracted.
+            Coordinates take priority over the URL when both are filled in.
+          </p>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-1.5">
+            <Label htmlFor="latitude">Latitude</Label>
+            <Input
+              id="latitude"
+              name="latitude"
+              type="text"
+              placeholder="e.g. 9.0538"
+              defaultValue={property.latitude ?? ""}
+              className="bg-background"
+            />
+          </div>
+          <div className="grid gap-1.5">
+            <Label htmlFor="longitude">Longitude</Label>
+            <Input
+              id="longitude"
+              name="longitude"
+              type="text"
+              placeholder="e.g. 7.4928"
+              defaultValue={property.longitude ?? ""}
+              className="bg-background"
+            />
+          </div>
+        </div>
+        <div className="grid gap-1.5">
+          <Label htmlFor="mapUrl">Google Maps URL <span className="text-muted-foreground font-normal">(optional)</span></Label>
+          <Input
+            id="mapUrl"
+            name="mapUrl"
+            placeholder="Paste a Google Maps link to this location…"
+            defaultValue={property.mapUrl ?? ""}
+            className="bg-background"
+          />
+        </div>
         <p className="text-xs text-muted-foreground">
-          Copy the URL from your browser when viewing this property's location on Google Maps.
-          Coordinates are auto-extracted and the detail page will show an interactive map.
+          To get coordinates: open Google Maps, right-click on the exact location, and copy the lat/lng shown at the top of the menu.
         </p>
       </div>
 

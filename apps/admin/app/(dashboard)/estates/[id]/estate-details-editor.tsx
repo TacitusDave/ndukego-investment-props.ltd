@@ -64,11 +64,15 @@ interface Props {
   estateId: string;
   initialAmenities: string[];
   initialMapUrl: string | null;
+  initialLatitude: string | null;
+  initialLongitude: string | null;
 }
 
-export function EstateDetailsEditor({ estateId, initialAmenities, initialMapUrl }: Props) {
+export function EstateDetailsEditor({ estateId, initialAmenities, initialMapUrl, initialLatitude, initialLongitude }: Props) {
   const [amenities, setAmenities] = useState<Set<string>>(new Set(initialAmenities));
   const [mapUrl, setMapUrl] = useState(initialMapUrl ?? "");
+  const [latitude, setLatitude] = useState(initialLatitude ?? "");
+  const [longitude, setLongitude] = useState(initialLongitude ?? "");
   const [isPending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -88,6 +92,8 @@ export function EstateDetailsEditor({ estateId, initialAmenities, initialMapUrl 
       const result = await updateEstateDetails(estateId, {
         amenities: [...amenities],
         mapUrl: mapUrl.trim() || undefined,
+        latitude: latitude.trim() || undefined,
+        longitude: longitude.trim() || undefined,
       });
       if (result.error) {
         setError(result.error);
@@ -111,19 +117,46 @@ export function EstateDetailsEditor({ estateId, initialAmenities, initialMapUrl 
         <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
       )}
 
-      {/* Map URL */}
-      <div className="space-y-2">
-        <Label htmlFor="estate-map-url" className="text-sm font-medium">
-          Google Maps URL
-        </Label>
-        <Input
-          id="estate-map-url"
-          value={mapUrl}
-          onChange={(e) => { setMapUrl(e.target.value); setSaved(false); }}
-          placeholder="Paste the Google Maps URL for this estate's location…"
-        />
+      {/* Location */}
+      <div className="space-y-3">
+        <div>
+          <p className="text-sm font-medium">Location &amp; Map</p>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Enter coordinates directly, or paste a Google Maps URL and they will be auto-extracted.
+            Coordinates take priority when both are set.
+          </p>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-1.5">
+            <Label htmlFor="estate-lat">Latitude</Label>
+            <Input
+              id="estate-lat"
+              value={latitude}
+              onChange={(e) => { setLatitude(e.target.value); setSaved(false); }}
+              placeholder="e.g. 9.0538"
+            />
+          </div>
+          <div className="grid gap-1.5">
+            <Label htmlFor="estate-lng">Longitude</Label>
+            <Input
+              id="estate-lng"
+              value={longitude}
+              onChange={(e) => { setLongitude(e.target.value); setSaved(false); }}
+              placeholder="e.g. 7.4928"
+            />
+          </div>
+        </div>
+        <div className="grid gap-1.5">
+          <Label htmlFor="estate-map-url">Google Maps URL <span className="text-muted-foreground font-normal">(optional)</span></Label>
+          <Input
+            id="estate-map-url"
+            value={mapUrl}
+            onChange={(e) => { setMapUrl(e.target.value); setSaved(false); }}
+            placeholder="Paste a Google Maps link to this location…"
+          />
+        </div>
         <p className="text-xs text-muted-foreground">
-          Coordinates are auto-extracted and shown as an interactive map on the estate page.
+          To get coordinates: open Google Maps, right-click on the exact location, and copy the lat/lng shown at the top of the menu.
         </p>
       </div>
 

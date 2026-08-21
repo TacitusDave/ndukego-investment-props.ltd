@@ -99,14 +99,20 @@ export default async function PropertyDetailPage({
   if (error || !property) notFound();
 
   function getMapEmbedUrl(): string | null {
+    let lat: number | null = null;
+    let lng: number | null = null;
+
     if (property!.latitude && property!.longitude) {
-      return `https://maps.google.com/maps?q=${property!.latitude},${property!.longitude}&hl=en&z=17&output=embed`;
-    }
-    if (property!.mapUrl) {
+      lat = parseFloat(String(property!.latitude));
+      lng = parseFloat(String(property!.longitude));
+    } else if (property!.mapUrl) {
       const coords = extractCoordsFromUrl(property!.mapUrl);
-      if (coords) return `https://maps.google.com/maps?q=${coords.lat},${coords.lng}&hl=en&z=17&output=embed`;
+      if (coords) { lat = coords.lat; lng = coords.lng; }
     }
-    return null;
+
+    if (lat === null || lng === null || isNaN(lat) || isNaN(lng)) return null;
+    const d = 0.004;
+    return `https://www.openstreetmap.org/export/embed.html?bbox=${lng - d},${lat - d},${lng + d},${lat + d}&layer=mapnik&marker=${lat},${lng}`;
   }
 
   const mapEmbedUrl = getMapEmbedUrl();
@@ -256,16 +262,19 @@ export default async function PropertyDetailPage({
                     title="Property location map"
                   />
                 </div>
-                {property.mapUrl && (
+                {(property.latitude && property.longitude) || property.mapUrl ? (
                   <a
-                    href={property.mapUrl}
+                    href={
+                      property.mapUrl ??
+                      `https://www.google.com/maps?q=${property.latitude},${property.longitude}`
+                    }
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xs text-[#C1121F] hover:underline"
                   >
                     Open in Google Maps →
                   </a>
-                )}
+                ) : null}
               </div>
             )}
 
